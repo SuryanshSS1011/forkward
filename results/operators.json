@@ -1,0 +1,571 @@
+[
+ {
+  "split": "train",
+  "n": 70,
+  "classes": {
+   "merge": 11,
+   "take_upstream": 7,
+   "keep_vendor": 52
+  },
+  "operators": [
+   {
+    "operator": "keep_vendor",
+    "before": {
+     "produced": 70,
+     "correct": 52,
+     "voting": 70,
+     "voting_correct": 52,
+     "correct:merge": 0,
+     "correct:take_upstream": 0,
+     "correct:keep_vendor": 52
+    },
+    "after": {
+     "produced": 70,
+     "correct": 52,
+     "voting": 70,
+     "voting_correct": 52,
+     "correct:merge": 0,
+     "correct:take_upstream": 0,
+     "correct:keep_vendor": 52
+    }
+   },
+   {
+    "operator": "take_upstream",
+    "before": {
+     "produced": 70,
+     "correct": 7,
+     "voting": 70,
+     "voting_correct": 7,
+     "correct:merge": 0,
+     "correct:take_upstream": 7,
+     "correct:keep_vendor": 0
+    },
+    "after": {
+     "produced": 70,
+     "correct": 7,
+     "voting": 70,
+     "voting_correct": 7,
+     "correct:merge": 0,
+     "correct:take_upstream": 7,
+     "correct:keep_vendor": 0
+    }
+   },
+   {
+    "operator": "vendor_then_upstream",
+    "before": {
+     "produced": 70,
+     "correct": 13,
+     "voting": 70,
+     "voting_correct": 13,
+     "correct:merge": 5,
+     "correct:take_upstream": 1,
+     "correct:keep_vendor": 7
+    },
+    "after": {
+     "produced": 70,
+     "correct": 13,
+     "voting": 70,
+     "voting_correct": 13,
+     "correct:merge": 5,
+     "correct:take_upstream": 1,
+     "correct:keep_vendor": 7
+    }
+   },
+   {
+    "operator": "upstream_then_vendor",
+    "before": {
+     "produced": 70,
+     "correct": 8,
+     "voting": 70,
+     "voting_correct": 8,
+     "correct:merge": 0,
+     "correct:take_upstream": 1,
+     "correct:keep_vendor": 7
+    },
+    "after": {
+     "produced": 70,
+     "correct": 8,
+     "voting": 70,
+     "voting_correct": 8,
+     "correct:merge": 0,
+     "correct:take_upstream": 1,
+     "correct:keep_vendor": 7
+    }
+   },
+   {
+    "operator": "vendor_delta_on_upstream",
+    "before": {
+     "produced": 10,
+     "correct": 1,
+     "voting": 10,
+     "voting_correct": 1,
+     "correct:merge": 1,
+     "correct:take_upstream": 0,
+     "correct:keep_vendor": 0
+    },
+    "after": null
+   },
+   {
+    "operator": "empty",
+    "before": {
+     "produced": 70,
+     "correct": 12,
+     "voting": 70,
+     "voting_correct": 12,
+     "correct:merge": 0,
+     "correct:take_upstream": 0,
+     "correct:keep_vendor": 12
+    },
+    "after": {
+     "produced": 70,
+     "correct": 12,
+     "voting": 70,
+     "voting_correct": 12,
+     "correct:merge": 0,
+     "correct:take_upstream": 0,
+     "correct:keep_vendor": 12
+    }
+   },
+   {
+    "operator": "upstream_delta_on_vendor",
+    "before": {
+     "produced": 15,
+     "correct": 1,
+     "voting": 15,
+     "voting_correct": 1,
+     "correct:keep_vendor": 0,
+     "correct:merge": 1
+    },
+    "after": null
+   },
+   {
+    "operator": "upstream_delta_on_vendor_fuzzy",
+    "before": null,
+    "after": {
+     "produced": 5,
+     "correct": 2,
+     "voting": 0,
+     "voting_correct": 0,
+     "correct:merge": 2,
+     "correct:keep_vendor": 0
+    }
+   },
+   {
+    "operator": "vendor_delta_on_upstream_fuzzy",
+    "before": null,
+    "after": {
+     "produced": 4,
+     "correct": 0,
+     "voting": 0,
+     "voting_correct": 0,
+     "correct:merge": 0,
+     "correct:keep_vendor": 0
+    }
+   },
+   {
+    "operator": "tok_vendor",
+    "before": null,
+    "after": {
+     "produced": 25,
+     "correct": 18,
+     "voting": 5,
+     "voting_correct": 4,
+     "correct:merge": 0,
+     "correct:take_upstream": 0,
+     "correct:keep_vendor": 18
+    }
+   },
+   {
+    "operator": "tok_upstream",
+    "before": null,
+    "after": {
+     "produced": 25,
+     "correct": 0,
+     "voting": 5,
+     "voting_correct": 0,
+     "correct:merge": 0,
+     "correct:take_upstream": 0,
+     "correct:keep_vendor": 0
+    }
+   },
+   {
+    "operator": "tok_base",
+    "before": null,
+    "after": {
+     "produced": 25,
+     "correct": 0,
+     "voting": 5,
+     "voting_correct": 0,
+     "correct:merge": 0,
+     "correct:take_upstream": 0,
+     "correct:keep_vendor": 0
+    }
+   },
+   {
+    "operator": "tok_vendor_then_upstream",
+    "before": null,
+    "after": {
+     "produced": 25,
+     "correct": 1,
+     "voting": 5,
+     "voting_correct": 1,
+     "correct:merge": 0,
+     "correct:take_upstream": 0,
+     "correct:keep_vendor": 1
+    }
+   },
+   {
+    "operator": "tok_upstream_then_vendor",
+    "before": null,
+    "after": {
+     "produced": 25,
+     "correct": 1,
+     "voting": 5,
+     "voting_correct": 1,
+     "correct:merge": 0,
+     "correct:take_upstream": 0,
+     "correct:keep_vendor": 1
+    }
+   },
+   {
+    "operator": "tok_interleave",
+    "before": null,
+    "after": {
+     "produced": 6,
+     "correct": 2,
+     "voting": 2,
+     "voting_correct": 1,
+     "correct:take_upstream": 0,
+     "correct:merge": 1,
+     "correct:keep_vendor": 1
+    }
+   }
+  ],
+  "oracle": {
+   "before": {
+    "any": 65,
+    "any_voting": 65,
+    "per_class": {
+     "keep_vendor": 52,
+     "take_upstream": 7,
+     "merge": 6
+    }
+   },
+   "after": {
+    "any": 64,
+    "any_voting": 64,
+    "per_class": {
+     "keep_vendor": 52,
+     "take_upstream": 7,
+     "merge": 5
+    }
+   },
+   "after+fuzzy": {
+    "any": 65,
+    "any_voting": 64,
+    "per_class": {
+     "keep_vendor": 52,
+     "take_upstream": 7,
+     "merge": 6
+    }
+   },
+   "after+fuzzy+token": {
+    "any": 65,
+    "any_voting": 64,
+    "per_class": {
+     "keep_vendor": 52,
+     "take_upstream": 7,
+     "merge": 6
+    }
+   }
+  }
+ },
+ {
+  "split": "validation",
+  "n": 45,
+  "classes": {
+   "keep_vendor": 25,
+   "merge": 15,
+   "take_upstream": 5
+  },
+  "operators": [
+   {
+    "operator": "keep_vendor",
+    "before": {
+     "produced": 45,
+     "correct": 25,
+     "voting": 45,
+     "voting_correct": 25,
+     "correct:keep_vendor": 25,
+     "correct:merge": 0,
+     "correct:take_upstream": 0
+    },
+    "after": {
+     "produced": 45,
+     "correct": 25,
+     "voting": 45,
+     "voting_correct": 25,
+     "correct:keep_vendor": 25,
+     "correct:merge": 0,
+     "correct:take_upstream": 0
+    }
+   },
+   {
+    "operator": "take_upstream",
+    "before": {
+     "produced": 45,
+     "correct": 6,
+     "voting": 45,
+     "voting_correct": 6,
+     "correct:keep_vendor": 1,
+     "correct:merge": 0,
+     "correct:take_upstream": 5
+    },
+    "after": {
+     "produced": 45,
+     "correct": 6,
+     "voting": 45,
+     "voting_correct": 6,
+     "correct:keep_vendor": 1,
+     "correct:merge": 0,
+     "correct:take_upstream": 5
+    }
+   },
+   {
+    "operator": "vendor_then_upstream",
+    "before": {
+     "produced": 45,
+     "correct": 5,
+     "voting": 45,
+     "voting_correct": 5,
+     "correct:keep_vendor": 4,
+     "correct:merge": 1,
+     "correct:take_upstream": 0
+    },
+    "after": {
+     "produced": 45,
+     "correct": 5,
+     "voting": 45,
+     "voting_correct": 5,
+     "correct:keep_vendor": 4,
+     "correct:merge": 1,
+     "correct:take_upstream": 0
+    }
+   },
+   {
+    "operator": "upstream_then_vendor",
+    "before": {
+     "produced": 45,
+     "correct": 4,
+     "voting": 45,
+     "voting_correct": 4,
+     "correct:keep_vendor": 4,
+     "correct:merge": 0,
+     "correct:take_upstream": 0
+    },
+    "after": {
+     "produced": 45,
+     "correct": 4,
+     "voting": 45,
+     "voting_correct": 4,
+     "correct:keep_vendor": 4,
+     "correct:merge": 0,
+     "correct:take_upstream": 0
+    }
+   },
+   {
+    "operator": "empty",
+    "before": {
+     "produced": 45,
+     "correct": 6,
+     "voting": 45,
+     "voting_correct": 6,
+     "correct:keep_vendor": 5,
+     "correct:merge": 1,
+     "correct:take_upstream": 0
+    },
+    "after": {
+     "produced": 45,
+     "correct": 6,
+     "voting": 45,
+     "voting_correct": 6,
+     "correct:keep_vendor": 5,
+     "correct:merge": 1,
+     "correct:take_upstream": 0
+    }
+   },
+   {
+    "operator": "upstream_delta_on_vendor",
+    "before": {
+     "produced": 18,
+     "correct": 2,
+     "voting": 18,
+     "voting_correct": 2,
+     "correct:merge": 2,
+     "correct:keep_vendor": 0,
+     "correct:take_upstream": 0
+    },
+    "after": null
+   },
+   {
+    "operator": "vendor_delta_on_upstream",
+    "before": {
+     "produced": 20,
+     "correct": 2,
+     "voting": 20,
+     "voting_correct": 2,
+     "correct:merge": 2,
+     "correct:keep_vendor": 0,
+     "correct:take_upstream": 0
+    },
+    "after": {
+     "produced": 1,
+     "correct": 1,
+     "voting": 1,
+     "voting_correct": 1,
+     "correct:merge": 1
+    }
+   },
+   {
+    "operator": "vendor_delta_on_upstream_fuzzy",
+    "before": null,
+    "after": {
+     "produced": 3,
+     "correct": 1,
+     "voting": 0,
+     "voting_correct": 0,
+     "correct:keep_vendor": 0,
+     "correct:merge": 1
+    }
+   },
+   {
+    "operator": "upstream_delta_on_vendor_fuzzy",
+    "before": null,
+    "after": {
+     "produced": 6,
+     "correct": 2,
+     "voting": 0,
+     "voting_correct": 0,
+     "correct:merge": 2,
+     "correct:take_upstream": 0
+    }
+   },
+   {
+    "operator": "tok_vendor",
+    "before": null,
+    "after": {
+     "produced": 18,
+     "correct": 12,
+     "voting": 7,
+     "voting_correct": 4,
+     "correct:merge": 1,
+     "correct:keep_vendor": 11,
+     "correct:take_upstream": 0
+    }
+   },
+   {
+    "operator": "tok_upstream",
+    "before": null,
+    "after": {
+     "produced": 18,
+     "correct": 2,
+     "voting": 7,
+     "voting_correct": 1,
+     "correct:merge": 0,
+     "correct:keep_vendor": 1,
+     "correct:take_upstream": 1
+    }
+   },
+   {
+    "operator": "tok_base",
+    "before": null,
+    "after": {
+     "produced": 18,
+     "correct": 0,
+     "voting": 7,
+     "voting_correct": 0,
+     "correct:merge": 0,
+     "correct:keep_vendor": 0,
+     "correct:take_upstream": 0
+    }
+   },
+   {
+    "operator": "tok_vendor_then_upstream",
+    "before": null,
+    "after": {
+     "produced": 18,
+     "correct": 3,
+     "voting": 7,
+     "voting_correct": 1,
+     "correct:merge": 1,
+     "correct:keep_vendor": 1,
+     "correct:take_upstream": 1
+    }
+   },
+   {
+    "operator": "tok_upstream_then_vendor",
+    "before": null,
+    "after": {
+     "produced": 18,
+     "correct": 4,
+     "voting": 7,
+     "voting_correct": 1,
+     "correct:merge": 2,
+     "correct:keep_vendor": 1,
+     "correct:take_upstream": 1
+    }
+   },
+   {
+    "operator": "tok_interleave",
+    "before": null,
+    "after": {
+     "produced": 5,
+     "correct": 3,
+     "voting": 1,
+     "voting_correct": 1,
+     "correct:keep_vendor": 0,
+     "correct:merge": 2,
+     "correct:take_upstream": 1
+    }
+   }
+  ],
+  "oracle": {
+   "before": {
+    "any": 35,
+    "any_voting": 35,
+    "per_class": {
+     "keep_vendor": 25,
+     "take_upstream": 5,
+     "merge": 5
+    }
+   },
+   "after": {
+    "any": 33,
+    "any_voting": 33,
+    "per_class": {
+     "keep_vendor": 25,
+     "take_upstream": 5,
+     "merge": 3
+    }
+   },
+   "after+fuzzy": {
+    "any": 35,
+    "any_voting": 33,
+    "per_class": {
+     "keep_vendor": 25,
+     "take_upstream": 5,
+     "merge": 5
+    }
+   },
+   "after+fuzzy+token": {
+    "any": 37,
+    "any_voting": 34,
+    "per_class": {
+     "keep_vendor": 25,
+     "take_upstream": 5,
+     "merge": 7
+    }
+   }
+  }
+ }
+]

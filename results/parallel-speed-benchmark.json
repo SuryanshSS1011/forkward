@@ -1,0 +1,9 @@
+{
+ "hunks": 8,
+ "agents": 3,
+ "sequential_s_per_hunk": 4.71,
+ "parallel_s_per_hunk": 1.89,
+ "speedup": 2.49,
+ "errors": 0,
+ "calls": 48
+}

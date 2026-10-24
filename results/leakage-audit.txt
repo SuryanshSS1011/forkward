@@ -1,0 +1,9 @@
+check                                                                   result  evidence
+----------------------------------------------------------------------------------------------------------------------------------
+1. split.json hashes match                                              PASS    6 files verified
+2. no key field or reference text in any prompt                         PASS    5089 prompts, 13106 events, 18 reference probes; "gt" in prompts 0, in events 0, references found 0
+3. no test hunk touched before the freeze                               PASS    frozen at 1791745502.065614; early test events 0, test attempts outside the test run 0
+4. no identifiers, paths or hex values in any lesson                    PASS    72 lessons checked
+5. test run used the frozen strategy, same model, one attempt per hunk  PASS    test runs 1, models ['deepseek-ai/DeepSeek-V4.1-Flash'], strategies ['s-7f552865', 's-baseline'], duplicate attempts 0, feedback calls 0
+
+Overall: PASS

@@ -1,0 +1,65 @@
+{
+ "run": "explore-2",
+ "warm_start": "search-2",
+ "rounds": [
+  {
+   "round": 0,
+   "expansions": [],
+   "promotion": null
+  },
+  {
+   "round": 1,
+   "expansions": [
+    {
+     "parent": "s-7f552865",
+     "arm": "reflect",
+     "child": "s-55196896",
+     "parent_train": 0.7857142857142857,
+     "child_train": 0.7571428571428571,
+     "reward": -0.0296
+    }
+   ],
+   "promotion": "accuracy delta -0.111 vs bootstrap std 0.047, 95% CI [-0.200, -0.022]"
+  },
+  {
+   "round": 2,
+   "expansions": [
+    {
+     "parent": "s-7f552865",
+     "arm": "samples",
+     "child": "s-a26e797e",
+     "parent_train": 0.7857142857142857,
+     "child_train": 0.7285714285714285,
+     "reward": -0.0614
+    },
+    {
+     "parent": "s-55196896",
+     "arm": "samples",
+     "child": "s-87162219",
+     "parent_train": 0.7571428571428571,
+     "child_train": 0.7571428571428571,
+     "reward": -0.0013
+    }
+   ],
+   "promotion": "accuracy delta -0.089 vs bootstrap std 0.043, 95% CI [-0.178, -0.022]"
+  }
+ ],
+ "ucb": {
+  "reflect": {
+   "n": 2,
+   "reward": -0.012351207445284052
+  },
+  "retrieval": {
+   "n": 2,
+   "reward": -0.01615517850830689
+  },
+  "samples": {
+   "n": 4,
+   "reward": -0.047068197502980066
+  },
+  "judge": {
+   "n": 2,
+   "reward": -0.01510204081632659
+  }
+ }
+}

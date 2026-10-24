@@ -1,0 +1,268 @@
+{
+ "seed": 0,
+ "halves": {
+  "selection": 20,
+  "calibration": 25
+ },
+ "selector": {
+  "rules": [
+   {
+    "cond": [
+     "upstream_empty"
+    ],
+    "op": "keep_vendor",
+    "n": 7,
+    "k": 7,
+    "confidence": 0.8888888888888888
+   },
+   {
+    "cond": [
+     "vendor_diff_truncated"
+    ],
+    "op": "tok_vendor",
+    "n": 15,
+    "k": 13,
+    "confidence": 0.8235294117647058
+   }
+  ],
+  "default": {
+   "cond": [],
+   "op": "keep_vendor",
+   "n": 48,
+   "k": 32,
+   "confidence": 0.66
+  },
+  "params": {
+   "min_support": 5,
+   "max_rules": 2,
+   "pairs": false
+  }
+ },
+ "train": {
+  "n": 70,
+  "correct": 52,
+  "accuracy": 0.7428571428571429,
+  "wilson": [
+   0.6297386985284518,
+   0.8307072425865615
+  ],
+  "per_class": {
+   "keep_vendor": {
+    "n": 52,
+    "correct": 52
+   },
+   "take_upstream": {
+    "n": 7,
+    "correct": 0
+   },
+   "merge": {
+    "n": 11,
+    "correct": 0
+   }
+  }
+ },
+ "validation": {
+  "n": 45,
+  "correct": 26,
+  "accuracy": 0.5777777777777777,
+  "wilson": [
+   0.4330078870920313,
+   0.710312975327297
+  ],
+  "per_class": {
+   "keep_vendor": {
+    "n": 25,
+    "correct": 25
+   },
+   "take_upstream": {
+    "n": 5,
+    "correct": 0
+   },
+   "merge": {
+    "n": 15,
+    "correct": 1
+   }
+  }
+ },
+ "validation_selection_half": {
+  "n": 20,
+  "correct": 12,
+  "accuracy": 0.6,
+  "wilson": [
+   0.38658150076225317,
+   0.7811934676271829
+  ],
+  "per_class": {
+   "keep_vendor": {
+    "n": 11,
+    "correct": 11
+   },
+   "take_upstream": {
+    "n": 2,
+    "correct": 0
+   },
+   "merge": {
+    "n": 7,
+    "correct": 1
+   }
+  }
+ },
+ "validation_calibration_half": {
+  "n": 25,
+  "correct": 14,
+  "accuracy": 0.56,
+  "wilson": [
+   0.3706733186979878,
+   0.7333436111893266
+  ],
+  "per_class": {
+   "keep_vendor": {
+    "n": 14,
+    "correct": 14
+   },
+   "take_upstream": {
+    "n": 3,
+    "correct": 0
+   },
+   "merge": {
+    "n": 8,
+    "correct": 0
+   }
+  }
+ },
+ "validation_vs_keep_vendor": {
+  "n": 45,
+  "a_correct": 25,
+  "b_correct": 26,
+  "mcnemar": {
+   "n": 45,
+   "a_only": 0,
+   "b_only": 1,
+   "discordant": 1,
+   "p_two_sided": 1.0,
+   "p_b_better": 0.5
+  },
+  "bootstrap": {
+   "delta": 0.022222222222222223,
+   "std": 0.021931035638859217,
+   "lo": 0.0,
+   "hi": 0.06666666666666667,
+   "n": 45
+  },
+  "cluster_bootstrap": {
+   "merge": {
+    "delta": 0.022222222222222223,
+    "lo": 0.0,
+    "hi": 0.0625,
+    "std": 0.018198833644668896,
+    "n": 45,
+    "clusters": 3
+   },
+   "file": {
+    "delta": 0.022222222222222223,
+    "lo": 0.0,
+    "hi": 0.06521739130434782,
+    "std": 0.01990732800722983,
+    "n": 45,
+    "clusters": 26
+   }
+  },
+  "delta": 0.022222222222222223,
+  "lo": 0.0,
+  "hi": 0.06666666666666667,
+  "std": 0.021931035638859217,
+  "a_wilson": [
+   0.41176134493521055,
+   0.6906106996500242
+  ],
+  "b_wilson": [
+   0.4330078870920313,
+   0.710312975327297
+  ]
+ },
+ "abstention": {
+  "target": 0.2,
+  "confidence": 0.95,
+  "min_error_free_accepted_needed": 14,
+  "pooled": {
+   "threshold": 1.01,
+   "target_met": false,
+   "bound": 1.0,
+   "accepted": 0,
+   "errors": 0,
+   "level": 0.9833333333333333,
+   "best_effort": {
+    "threshold": 0.823529,
+    "accepted": 8,
+    "errors": 1,
+    "bound": 0.5558905143779841
+   }
+  },
+  "pooled_on_calibration_half": {
+   "accepted": 0,
+   "errors": 0,
+   "coverage": 0.0
+  },
+  "pooled_on_selection_half": {
+   "accepted": 0,
+   "errors": 0,
+   "coverage": 0.0,
+   "empirical_bound": 1.0
+  },
+  "by_predicted_class": {
+   "keep_vendor": {
+    "threshold": 1.01,
+    "target_met": false,
+    "bound": 1.0,
+    "accepted": 0,
+    "errors": 0,
+    "level": 0.9875,
+    "best_effort": {
+     "threshold": 0.66,
+     "accepted": 18,
+     "errors": 10,
+     "bound": 0.8086679765147389
+    }
+   },
+   "merge": {
+    "threshold": 1.01,
+    "target_met": false,
+    "bound": 1.0,
+    "accepted": 0,
+    "errors": 0,
+    "level": 0.975,
+    "best_effort": {
+     "threshold": 0.823529,
+     "accepted": 7,
+     "errors": 1,
+     "bound": 0.5787231970431952
+    }
+   }
+  },
+  "by_predicted_class_worst_bound": null
+ },
+ "leave_one_vendor_out": {
+  "folds": {
+   "nxp": {
+    "n": 70,
+    "accepted": 0,
+    "errors": 0,
+    "escaped_rate": 0.0,
+    "bound": 1.0,
+    "violates_target": false
+   },
+   "st": {
+    "n": 45,
+    "accepted": 0,
+    "errors": 0,
+    "escaped_rate": 0.0,
+    "bound": 1.0,
+    "violates_target": false
+   }
+  },
+  "worst_vendor": null,
+  "worst_bound": null,
+  "violations": 0,
+  "note": "selector fit on nxp, so nxp scores are in-sample"
+ }
+}

@@ -1,0 +1,310 @@
+{
+ "run": "search-3",
+ "split": "validation",
+ "ladder": [
+  {
+   "rung": "Always keep vendor (no model)",
+   "correct": 25,
+   "n": 45,
+   "accuracy": 0.5555555555555556
+  },
+  {
+   "rung": "Zero-shot single resolver",
+   "correct": 28,
+   "n": 45,
+   "accuracy": 0.6222222222222222,
+   "vs_previous": {
+    "delta": 0.06666666666666667,
+    "std": 0.07308491806762203,
+    "lo": -0.06666666666666667,
+    "hi": 0.2,
+    "n": 45
+   }
+  },
+  {
+   "rung": "Team + operators + vote, no learning",
+   "correct": 31,
+   "n": 45,
+   "accuracy": 0.6888888888888889,
+   "vs_previous": {
+    "delta": 0.06666666666666667,
+    "std": 0.04915526631059895,
+    "lo": -0.022222222222222223,
+    "hi": 0.17777777777777778,
+    "n": 45
+   }
+  },
+  {
+   "rung": "+ learned selection rule",
+   "correct": 31,
+   "n": 45,
+   "accuracy": 0.6888888888888889,
+   "vs_previous": {
+    "delta": 0.0,
+    "std": 0.0,
+    "lo": 0.0,
+    "hi": 0.0,
+    "n": 45
+   }
+  },
+  {
+   "rung": "+ learned playbook (frozen strategy)",
+   "correct": 31,
+   "n": 45,
+   "accuracy": 0.6888888888888889,
+   "vs_previous": {
+    "delta": 0.0,
+    "std": 0.0,
+    "lo": 0.0,
+    "hi": 0.0,
+    "n": 45
+   }
+  }
+ ],
+ "attribution": {
+  "harness_gain": {
+   "delta": 0.06666666666666667,
+   "std": 0.04915526631059895,
+   "lo": -0.022222222222222223,
+   "hi": 0.17777777777777778,
+   "n": 45
+  },
+  "learning_gain": {
+   "delta": 0.0,
+   "std": 0.0,
+   "lo": 0.0,
+   "hi": 0.0,
+   "n": 45
+  },
+  "playbook_alone": {
+   "delta": 0.0,
+   "std": 0.0,
+   "lo": 0.0,
+   "hi": 0.0,
+   "n": 45
+  },
+  "rule_alone": {
+   "delta": 0.0,
+   "std": 0.0,
+   "lo": 0.0,
+   "hi": 0.0,
+   "n": 45
+  }
+ },
+ "lineage": [
+  {
+   "version": "pb-0",
+   "parent": null,
+   "round": 0,
+   "lessons": [],
+   "rejected": 0,
+   "strategies": [
+    "s-baseline",
+    "s-970eab3f",
+    "s-5192a962",
+    "s-5056c7e5"
+   ],
+   "train": 0.5857142857142857,
+   "validation": 0.6222222222222222
+  },
+  {
+   "version": "pb-935204bb",
+   "parent": "pb-0",
+   "round": 1,
+   "lessons": [
+    "When a vendor has deliberately restructured, renamed, or rewritten a region, keep the vendor's version instead of merging upstream's older layout into it.",
+    "When the vendor's tree already contains the upstream fix plus extra vendor additions, keep the vendor side rather than taking the upstream side."
+   ],
+   "rejected": 0,
+   "strategies": [
+    "s-dc4a5cc1",
+    "s-dc4a5cc1"
+   ],
+   "train": 0.8285714285714286,
+   "validation": 0.6444444444444445,
+   "promotion": {
+    "promoted": false,
+    "reason": "accuracy delta -0.044 vs bootstrap std 0.071, 95% CI [-0.178, +0.089]",
+    "objective": "accuracy",
+    "delta": -0.044444444444444446,
+    "std": 0.07072771010502277,
+    "lo": -0.17777777777777778,
+    "hi": 0.08888888888888889,
+    "n": 45
+   }
+  },
+  {
+   "version": "pb-13ecd06f",
+   "parent": "pb-0",
+   "round": 1,
+   "lessons": [
+    "When the vendor has renamed or restructured a file, keep the vendor side of the conflict and do not pull upstream hunks into it, because the upstream changes were written against the old layout.",
+    "When the vendor has deliberately changed a value or property for its own hardware, keep the vendor value even if upstream changed the same line, since upstream is tuning for different hardware.",
+    "When upstream adds new entries to a table or list that the vendor has already reorganized, keep the vendor list intact and do not append upstream entries that reference symbols the vendor removed.",
+    "When the vendor has deleted a helper or data structure that upstream still modifies, keep the vendor deletion and do not reintroduce upstream code that depends on the removed definition."
+   ],
+   "rejected": 0,
+   "strategies": [
+    "s-28b21b8e"
+   ],
+   "train": 0.8
+  },
+  {
+   "version": "pb-e40cbab5",
+   "parent": "pb-935204bb",
+   "round": 2,
+   "lessons": [
+    "When the vendor's tree already contains the upstream fix plus extra vendor additions, keep the vendor side rather than taking the upstream side.",
+    "When a vendor has deliberately restructured, renamed, or rewritten a region, keep the vendor's version instead of merging upstream's older layout into it.",
+    "When both sides add different new blocks at the same spot, keep both blocks in the merged result rather than choosing only one.",
+    "When upstream fixes a bug by moving initialization or reordering calls, preserve the vendor's added logic while still adopting the upstream reordering.",
+    "When the vendor side removes entries or narrows constraints that upstream keeps broad, combine both sets of changes instead of dropping either side.",
+    "When one side of a conflict is empty, keep the other side's content rather than discarding it."
+   ],
+   "rejected": 0,
+   "strategies": [
+    "s-3e0f0b90"
+   ],
+   "train": 0.7428571428571429
+  },
+  {
+   "version": "pb-6dbb53fc",
+   "parent": "pb-13ecd06f",
+   "round": 2,
+   "lessons": [
+    "When the vendor has renamed or restructured a file, keep the vendor side of the conflict and do not pull upstream hunks into it, because the upstream changes were written against the old layout.",
+    "When the vendor has deliberately changed a value or property for its own hardware, keep the vendor value even if upstream changed the same line, since upstream is tuning for different hardware.",
+    "When upstream adds new entries to a table or list that the vendor has already reorganized, keep the vendor list intact and do not append upstream entries that reference symbols the vendor removed.",
+    "When the vendor has deleted a helper or data structure that upstream still modifies, keep the vendor deletion and do not reintroduce upstream code that depends on the removed definition.",
+    "When upstream relocates a fix into a new helper or different location, keep the vendor's surrounding code but also carry the upstream fix into the vendor's equivalent code path.",
+    "When the vendor has already applied the same logical change as upstream but with different formatting or placement, prefer the vendor's version rather than taking upstream wholesale.",
+    "When upstream adds a new call or field that the vendor's code lacks, integrate the upstream addition into the vendor's structure instead of dropping either side.",
+    "When a conflict is purely a formatting or alignment difference, choose the side that matches the surrounding file's existing style."
+   ],
+   "rejected": 0,
+   "strategies": [
+    "s-41473828",
+    "s-41473828"
+   ],
+   "train": 0.8285714285714286,
+   "validation": 0.6444444444444445,
+   "promotion": {
+    "promoted": false,
+    "reason": "accuracy delta -0.044 vs bootstrap std 0.071, 95% CI [-0.178, +0.089]",
+    "objective": "accuracy",
+    "delta": -0.044444444444444446,
+    "std": 0.07090130342862429,
+    "lo": -0.17777777777777778,
+    "hi": 0.08888888888888889,
+    "n": 45
+   }
+  },
+  {
+   "version": "pb-6035f666",
+   "parent": "pb-935204bb",
+   "round": 3,
+   "lessons": [
+    "When the vendor's tree already contains the upstream fix plus extra vendor additions, keep the vendor side rather than taking the upstream side.",
+    "When a vendor has deliberately restructured, renamed, or rewritten a region, keep the vendor's version instead of merging upstream's older layout into it.",
+    "When both sides add new content in the same region, keep both blocks by concatenating the vendor and upstream additions instead of choosing a single side.",
+    "When vendor code adds device specific handling while upstream fixes change ordering or add missing cleanup, combine both changes instead of dropping either.",
+    "When the vendor side only renames or reformats while upstream changes behavior, let the upstream behavioral change win even if the vendor text looks more familiar.",
+    "When one side is empty and the other adds a necessary call or assignment, keep the added logic instead of deleting it."
+   ],
+   "rejected": 0,
+   "strategies": [
+    "s-bd1010ff"
+   ],
+   "train": 0.6857142857142857
+  },
+  {
+   "version": "pb-6b499d03",
+   "parent": "pb-6dbb53fc",
+   "round": 3,
+   "lessons": [
+    "When the vendor has renamed or restructured a file, keep the vendor side of the conflict and do not pull upstream hunks into it, because the upstream changes were written against the old layout.",
+    "When the vendor has deliberately changed a value or property for its own hardware, keep the vendor value even if upstream changed the same line, since upstream is tuning for different hardware.",
+    "When upstream adds new entries to a table or list that the vendor has already reorganized, keep the vendor list intact and do not append upstream entries that reference symbols the vendor removed.",
+    "When the vendor has deleted a helper or data structure that upstream still modifies, keep the vendor deletion and do not reintroduce upstream code that depends on the removed definition.",
+    "When upstream relocates a fix into a new helper or different location, keep the vendor's surrounding code but also carry the upstream fix into the vendor's equivalent code path.",
+    "When the vendor has already applied the same logical change as upstream but with different formatting or placement, prefer the vendor's version rather than taking upstream wholesale.",
+    "When upstream adds a new call or field that the vendor's code lacks, integrate the upstream addition into the vendor's structure instead of dropping either side.",
+    "When a conflict is purely a formatting or alignment difference, choose the side that matches the surrounding file's existing style.",
+    "When upstream renames or restructures a field, rewrite the vendor's added condition in terms of the new field names rather than keeping it verbatim.",
+    "When a vendor-only addition was also added independently upstream, merge so the upstream version is kept and the vendor's extra behavior is preserved only where it does not duplicate.",
+    "When upstream changes a value from a fixed constant to a range or vice versa, keep the vendor's narrower constraint only if the vendor hardware truly requires it, otherwise adopt the upstream generalized form.",
+    "When the vendor's change is a local extension that upstream later implemented differently, combine both by applying the upstream delta on top of the vendor code rather than dropping either side."
+   ],
+   "rejected": 0,
+   "strategies": [
+    "s-fb813b59",
+    "s-fb813b59"
+   ],
+   "train": 0.8142857142857143,
+   "validation": 0.6666666666666666,
+   "promotion": {
+    "promoted": false,
+    "reason": "accuracy delta -0.022 vs bootstrap std 0.059, 95% CI [-0.133, +0.089]",
+    "objective": "accuracy",
+    "delta": -0.022222222222222223,
+    "std": 0.0594713469771084,
+    "lo": -0.13333333333333333,
+    "hi": 0.08888888888888889,
+    "n": 45
+   }
+  },
+  {
+   "version": "pb-d7c5cbbd",
+   "parent": "pb-935204bb",
+   "round": 4,
+   "lessons": [
+    "When the vendor's tree already contains the upstream fix plus extra vendor additions, keep the vendor side rather than taking the upstream side.",
+    "When a vendor has deliberately restructured, renamed, or rewritten a region, keep the vendor's version instead of merging upstream's older layout into it.",
+    "When the upstream stable change only reorders or relocates existing statements, keep the vendor's version of the moved code but adopt the upstream ordering so both sides' intent survives.",
+    "When the vendor has added new functionality that upstream also touched, combine both sides rather than dropping either, since the vendor's additions are usually required for their hardware.",
+    "When upstream adds a new entry or definition that the vendor's side lacks, the upstream addition must be carried in even if the vendor's surrounding code is kept.",
+    "When the vendor's side is a strict subset or superset of the upstream change, prefer the resolution that preserves both the vendor's extra content and the upstream fix."
+   ],
+   "rejected": 0,
+   "strategies": [
+    "s-500f9134"
+   ],
+   "train": 0.7142857142857143
+  },
+  {
+   "version": "pb-aa8f0415",
+   "parent": "pb-6dbb53fc",
+   "round": 4,
+   "lessons": [
+    "When the vendor has renamed or restructured a file, keep the vendor side of the conflict and do not pull upstream hunks into it, because the upstream changes were written against the old layout.",
+    "When the vendor has deliberately changed a value or property for its own hardware, keep the vendor value even if upstream changed the same line, since upstream is tuning for different hardware.",
+    "When upstream adds new entries to a table or list that the vendor has already reorganized, keep the vendor list intact and do not append upstream entries that reference symbols the vendor removed.",
+    "When the vendor has deleted a helper or data structure that upstream still modifies, keep the vendor deletion and do not reintroduce upstream code that depends on the removed definition.",
+    "When upstream relocates a fix into a new helper or different location, keep the vendor's surrounding code but also carry the upstream fix into the vendor's equivalent code path.",
+    "When the vendor has already applied the same logical change as upstream but with different formatting or placement, prefer the vendor's version rather than taking upstream wholesale.",
+    "When upstream adds a new call or field that the vendor's code lacks, integrate the upstream addition into the vendor's structure instead of dropping either side.",
+    "When a conflict is purely a formatting or alignment difference, choose the side that matches the surrounding file's existing style.",
+    "When upstream renames or restructures a field that the vendor also touched, keep the vendor's added behavior but rewrite it using the upstream names and structure.",
+    "When upstream and vendor both add new content at the same spot, merge both sets of additions instead of choosing one side.",
+    "When upstream reorders statements for correctness while the vendor adds platform-specific branches, adopt the upstream ordering and keep the vendor branches."
+   ],
+   "rejected": 0,
+   "strategies": [
+    "s-96bcf87b",
+    "s-96bcf87b"
+   ],
+   "train": 0.8,
+   "validation": 0.6888888888888889,
+   "promotion": {
+    "promoted": false,
+    "reason": "accuracy delta +0.000 vs bootstrap std 0.064, 95% CI [-0.133, +0.111]",
+    "objective": "accuracy",
+    "delta": 0.0,
+    "std": 0.06364200316032718,
+    "lo": -0.13333333333333333,
+    "hi": 0.1111111111111111,
+    "n": 45
+   }
+  }
+ ]
+}

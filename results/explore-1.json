@@ -1,0 +1,109 @@
+{
+ "run": "explore-1",
+ "warm_start": "search-2",
+ "rounds": [
+  {
+   "round": 0,
+   "expansions": [],
+   "promotion": null
+  },
+  {
+   "round": 1,
+   "expansions": [
+    {
+     "parent": "s-7f552865",
+     "arm": "reflect",
+     "child": "s-ba03f48c",
+     "parent_train": 0.7857142857142857,
+     "child_train": 0.8,
+     "reward": 0.0173
+    }
+   ],
+   "promotion": "accuracy delta -0.022 vs bootstrap std 0.049, 95% CI [-0.111, +0.067]"
+  },
+  {
+   "round": 2,
+   "expansions": [
+    {
+     "parent": "s-ba03f48c",
+     "arm": "retrieval",
+     "child": "s-15c6f660",
+     "parent_train": 0.8,
+     "child_train": 0.7857142857142857,
+     "reward": -0.0173
+    },
+    {
+     "parent": "s-7f552865",
+     "arm": "retrieval",
+     "child": "s-c0b72f42",
+     "parent_train": 0.7857142857142857,
+     "child_train": 0.7857142857142857,
+     "reward": 0.0011
+    }
+   ],
+   "promotion": "accuracy delta -0.089 vs bootstrap std 0.043, 95% CI [-0.178, -0.022]"
+  },
+  {
+   "round": 3,
+   "expansions": [
+    {
+     "parent": "s-ba03f48c",
+     "arm": "samples",
+     "child": "s-e1499b38",
+     "parent_train": 0.8,
+     "child_train": 0.8,
+     "reward": -0.0006
+    },
+    {
+     "parent": "s-15c6f660",
+     "arm": "samples",
+     "child": "s-5f91b5e7",
+     "parent_train": 0.7857142857142857,
+     "child_train": 0.8,
+     "reward": 0.0162
+    }
+   ],
+   "promotion": "accuracy delta -0.044 vs bootstrap std 0.044, 95% CI [-0.133, +0.044]"
+  },
+  {
+   "round": 4,
+   "expansions": [
+    {
+     "parent": "s-ba03f48c",
+     "arm": "judge",
+     "child": "s-af8ecedd",
+     "parent_train": 0.8,
+     "child_train": 0.8,
+     "reward": 0.0
+    },
+    {
+     "parent": "s-e1499b38",
+     "arm": "judge",
+     "child": "s-179c8169",
+     "parent_train": 0.8,
+     "child_train": 0.7857142857142857,
+     "reward": -0.0151
+    }
+   ],
+   "promotion": "accuracy delta -0.067 vs bootstrap std 0.049, 95% CI [-0.178, +0.022]"
+  }
+ ],
+ "ucb": {
+  "reflect": {
+   "n": 1,
+   "reward": 0.017261655881865002
+  },
+  "retrieval": {
+   "n": 2,
+   "reward": -0.01615517850830689
+  },
+  "samples": {
+   "n": 2,
+   "reward": 0.015607808340727659
+  },
+  "judge": {
+   "n": 2,
+   "reward": -0.01510204081632659
+  }
+ }
+}

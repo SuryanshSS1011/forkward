@@ -1,0 +1,453 @@
+{
+ "population": {
+  "search-2": {
+   "run": "search-2",
+   "curve": [
+    {
+     "round": 0,
+     "minutes": 11.7,
+     "best_train": 0.5857142857142857,
+     "incumbent_validation": 0.6888888888888889
+    },
+    {
+     "round": 1,
+     "minutes": 24.2,
+     "best_train": 0.8,
+     "incumbent_validation": 0.6888888888888889
+    },
+    {
+     "round": 2,
+     "minutes": 36.6,
+     "best_train": 0.8,
+     "incumbent_validation": 0.6888888888888889
+    },
+    {
+     "round": 3,
+     "minutes": 49.0,
+     "best_train": 0.8,
+     "incumbent_validation": 0.6888888888888889
+    },
+    {
+     "round": 4,
+     "minutes": 61.4,
+     "best_train": 0.8,
+     "incumbent_validation": 0.7555555555555555
+    }
+   ],
+   "best_of_k_train": {
+    "0": {
+     "1": 0.5761904761904763,
+     "2": 0.5857142857142857,
+     "3": 0.5857142857142857
+    },
+    "1": {
+     "1": 0.7857142857142858,
+     "2": 0.8
+    },
+    "2": {
+     "1": 0.7571428571428571,
+     "2": 0.7714285714285715
+    },
+    "3": {
+     "1": 0.7428571428571429,
+     "2": 0.7571428571428571
+    },
+    "4": {
+     "1": 0.7642857142857142,
+     "2": 0.7857142857142857
+    }
+   },
+   "validation_strategies": 4,
+   "oracle_validation": 0.7777777777777778,
+   "best_single_validation": 0.7555555555555555
+  },
+  "search-3": {
+   "run": "search-3",
+   "curve": [
+    {
+     "round": 0,
+     "minutes": 7.3,
+     "best_train": 0.5857142857142857,
+     "incumbent_validation": 0.6888888888888889
+    },
+    {
+     "round": 1,
+     "minutes": 15.0,
+     "best_train": 0.8285714285714286,
+     "incumbent_validation": 0.6888888888888889
+    },
+    {
+     "round": 2,
+     "minutes": 22.7,
+     "best_train": 0.8285714285714286,
+     "incumbent_validation": 0.6888888888888889
+    },
+    {
+     "round": 3,
+     "minutes": 30.4,
+     "best_train": 0.8285714285714286,
+     "incumbent_validation": 0.6888888888888889
+    },
+    {
+     "round": 4,
+     "minutes": 38.1,
+     "best_train": 0.8285714285714286,
+     "incumbent_validation": 0.6888888888888889
+    }
+   ],
+   "best_of_k_train": {
+    "0": {
+     "1": 0.5761904761904763,
+     "2": 0.580952380952381,
+     "3": 0.5857142857142857
+    },
+    "1": {
+     "1": 0.8142857142857143,
+     "2": 0.8285714285714286
+    },
+    "2": {
+     "1": 0.7857142857142858,
+     "2": 0.8285714285714286
+    },
+    "3": {
+     "1": 0.75,
+     "2": 0.8142857142857143
+    },
+    "4": {
+     "1": 0.7571428571428571,
+     "2": 0.8
+    }
+   },
+   "validation_strategies": 4,
+   "oracle_validation": 0.7111111111111111,
+   "best_single_validation": 0.6888888888888889
+  },
+  "control-pop1": {
+   "run": "control-pop1",
+   "curve": [
+    {
+     "round": 0,
+     "minutes": 0.0,
+     "best_train": 0.5857142857142857,
+     "incumbent_validation": 0.6888888888888889
+    },
+    {
+     "round": 1,
+     "minutes": 4.8,
+     "best_train": 0.7714285714285715,
+     "incumbent_validation": 0.6888888888888889
+    },
+    {
+     "round": 2,
+     "minutes": 9.7,
+     "best_train": 0.7857142857142857,
+     "incumbent_validation": 0.6888888888888889
+    },
+    {
+     "round": 3,
+     "minutes": 14.5,
+     "best_train": 0.7857142857142857,
+     "incumbent_validation": 0.6888888888888889
+    },
+    {
+     "round": 4,
+     "minutes": 19.4,
+     "best_train": 0.7857142857142857,
+     "incumbent_validation": 0.6888888888888889
+    }
+   ],
+   "best_of_k_train": {
+    "0": {
+     "1": 0.5857142857142857
+    },
+    "1": {
+     "1": 0.7714285714285715
+    },
+    "2": {
+     "1": 0.7857142857142857
+    },
+    "3": {
+     "1": 0.7428571428571429
+    },
+    "4": {
+     "1": 0.7857142857142857
+    }
+   },
+   "validation_strategies": 4,
+   "oracle_validation": 0.7555555555555555,
+   "best_single_validation": 0.7333333333333333
+  }
+ },
+ "lesson_flips": [
+  {
+   "round": 1,
+   "strategy": "s-f1688f3e",
+   "parent": "s-364b0ec0",
+   "lesson": "A conflict where the vendor side is empty usually means the vendor intentionally dropped that content, so the empty side should win.",
+   "fixed": [
+    "nxp51-4e56ba",
+    "nxp51-49e647",
+    "nxp51-a0dd8f",
+    "nxp51-7cd55a",
+    "nxp51-579426",
+    "nxp22-be9493",
+    "nxp20-f059d1",
+    "nxp20-7cd55a"
+   ],
+   "broke": [
+    "nxp20-7ff0bc"
+   ]
+  },
+  {
+   "round": 2,
+   "strategy": "s-202bda0f",
+   "parent": "s-f1688f3e",
+   "lesson": "When upstream renames or restructures a symbol, the vendor's added code should be adapted to the new naming rather than keeping the old name.",
+   "fixed": [
+    "nxp51-832707",
+    "nxp51-adc846",
+    "nxp34-d47833",
+    "nxp34-403992",
+    "nxp20-1861da"
+   ],
+   "broke": [
+    "nxp34-162727",
+    "nxp23-cfc7d4"
+   ]
+  },
+  {
+   "round": 4,
+   "strategy": "s-7f552865",
+   "parent": "s-f1688f3e",
+   "lesson": "If the vendor's change is a superset or generalization of the upstream change, take the upstream form and layer the vendor's extra logic on top instead of keeping the vendor's older form.",
+   "fixed": [
+    "nxp51-adc846",
+    "nxp34-403992",
+    "nxp23-73a19b"
+   ],
+   "broke": [
+    "nxp20-73a19b"
+   ]
+  },
+  {
+   "round": 2,
+   "strategy": "s-22fea4b6",
+   "parent": "s-e058b259",
+   "lesson": "When the vendor tree already contains an equivalent change, keep the vendor version and do not duplicate the upstream block.",
+   "fixed": [
+    "nxp34-3ab199"
+   ],
+   "broke": []
+  },
+  {
+   "round": 3,
+   "strategy": "s-ee48185f",
+   "parent": "s-e058b259",
+   "lesson": "When upstream reorders statements to fix a bug, carry that reordering into the vendor code while keeping all vendor-specific logic intact.",
+   "fixed": [
+    "nxp34-403992",
+    "nxp20-7ff0bc"
+   ],
+   "broke": [
+    "nxp51-49e647",
+    "nxp20-73a19b"
+   ]
+  },
+  {
+   "round": 4,
+   "strategy": "s-7f552865",
+   "parent": "s-f1688f3e",
+   "lesson": "A small upstream fix that corrects an off-by-one or boundary condition must be carried into the vendor's version even when the vendor's surrounding code differs.",
+   "fixed": [
+    "nxp23-73a19b",
+    "nxp20-dedfd1",
+    "nxp20-e71aed"
+   ],
+   "broke": [
+    "nxp51-38f603",
+    "nxp20-ebd6b5",
+    "nxp20-73a19b"
+   ]
+  },
+  {
+   "round": 3,
+   "strategy": "s-c2a096cd",
+   "parent": "s-f1688f3e",
+   "lesson": "When upstream refactors a block into a new helper or renames a field, carry the vendor's added behavior into the refactored form rather than keeping the old vendor text.",
+   "fixed": [
+    "nxp34-d47833",
+    "nxp34-403992",
+    "nxp20-1861da"
+   ],
+   "broke": [
+    "nxp34-e49d34",
+    "nxp20-84553d",
+    "nxp20-e4bbf3",
+    "nxp20-73a19b"
+   ]
+  },
+  {
+   "round": 4,
+   "strategy": "s-93394edc",
+   "parent": "s-e058b259",
+   "lesson": "When upstream introduces a new conditional or guard that the vendor's code lacks, integrate the upstream addition into the vendor's surrounding logic instead of dropping it.",
+   "fixed": [
+    "nxp34-c13a18",
+    "nxp34-403992",
+    "nxp20-7ff0bc"
+   ],
+   "broke": [
+    "nxp51-49e647",
+    "nxp51-a0dd8f",
+    "nxp51-7cd55a",
+    "nxp23-c51a2e",
+    "nxp20-73a19b"
+   ]
+  },
+  {
+   "round": 3,
+   "strategy": "s-ee48185f",
+   "parent": "s-e058b259",
+   "lesson": "When upstream moves an initialization or cleanup call to a different location in the function, preserve the vendor's own additions and apply the upstream relocation on top of them.",
+   "fixed": [
+    "nxp34-3ab199",
+    "nxp20-7ff0bc"
+   ],
+   "broke": [
+    "nxp51-49e647",
+    "nxp51-be9493",
+    "nxp51-579426",
+    "nxp23-c51a2e",
+    "nxp20-73a19b"
+   ]
+  },
+  {
+   "round": 4,
+   "strategy": "s-93394edc",
+   "parent": "s-e058b259",
+   "lesson": "When both sides add distinct new code in the same location, combine both additions rather than choosing one side exclusively.",
+   "fixed": [
+    "nxp51-adc846",
+    "nxp34-c13a18"
+   ],
+   "broke": [
+    "nxp51-49e647",
+    "nxp51-a0dd8f",
+    "nxp51-be9493",
+    "nxp51-f059d1",
+    "nxp51-7cd55a",
+    "nxp23-c51a2e"
+   ]
+  }
+ ],
+ "families_search2": [
+  {
+   "round": 0,
+   "playbook": "pb-0",
+   "lessons": 0,
+   "families": {
+    "deterministic operator (keep vendor)": 0.7428571428571429,
+    "direct rewrite: vendor first": 0.6428571428571429,
+    "direct rewrite: minimal diff": 0.5,
+    "LLM picks an operator: operator picker": 0.5714285714285714,
+    "team vote": 0.5857142857142857
+   }
+  },
+  {
+   "round": 1,
+   "playbook": "pb-777f0c67",
+   "lessons": 4,
+   "families": {
+    "deterministic operator (keep vendor)": 0.7428571428571429,
+    "direct rewrite: vendor first": 0.7571428571428571,
+    "direct rewrite: upstream fix first": 0.7142857142857143,
+    "direct rewrite: refactor aware": 0.7571428571428571,
+    "team vote": 0.7714285714285715
+   }
+  },
+  {
+   "round": 1,
+   "playbook": "pb-d77f9cbd",
+   "lessons": 4,
+   "families": {
+    "deterministic operator (keep vendor)": 0.7428571428571429,
+    "direct rewrite: vendor first": 0.7714285714285715,
+    "direct rewrite: minimal diff": 0.7142857142857143,
+    "LLM picks an operator: operator picker": 0.6857142857142857,
+    "team vote": 0.8
+   }
+  },
+  {
+   "round": 2,
+   "playbook": "pb-abe288fd",
+   "lessons": 8,
+   "families": {
+    "deterministic operator (keep vendor)": 0.7428571428571429,
+    "direct rewrite: vendor first": 0.6571428571428571,
+    "direct rewrite: minimal diff": 0.6,
+    "LLM picks an operator: operator picker": 0.5714285714285714,
+    "team vote": 0.7428571428571429
+   }
+  },
+  {
+   "round": 2,
+   "playbook": "pb-103b75ca",
+   "lessons": 8,
+   "families": {
+    "deterministic operator (keep vendor)": 0.7428571428571429,
+    "direct rewrite: vendor first": 0.7285714285714285,
+    "direct rewrite: upstream fix first": 0.5857142857142857,
+    "direct rewrite: refactor aware": 0.6428571428571429,
+    "team vote": 0.7714285714285715
+   }
+  },
+  {
+   "round": 3,
+   "playbook": "pb-30de7a14",
+   "lessons": 8,
+   "families": {
+    "deterministic operator (keep vendor)": 0.7428571428571429,
+    "direct rewrite: vendor first": 0.6714285714285714,
+    "direct rewrite: minimal diff": 0.6714285714285714,
+    "LLM picks an operator: operator picker": 0.6142857142857143,
+    "team vote": 0.7571428571428571
+   }
+  },
+  {
+   "round": 3,
+   "playbook": "pb-4650781e",
+   "lessons": 8,
+   "families": {
+    "deterministic operator (keep vendor)": 0.7428571428571429,
+    "direct rewrite: vendor first": 0.7142857142857143,
+    "direct rewrite: upstream fix first": 0.5857142857142857,
+    "direct rewrite: refactor aware": 0.6428571428571429,
+    "team vote": 0.7285714285714285
+   }
+  },
+  {
+   "round": 4,
+   "playbook": "pb-889b3ec0",
+   "lessons": 8,
+   "families": {
+    "deterministic operator (keep vendor)": 0.7428571428571429,
+    "direct rewrite: vendor first": 0.5857142857142857,
+    "direct rewrite: minimal diff": 0.6571428571428571,
+    "LLM picks an operator: operator picker": 0.6142857142857143,
+    "team vote": 0.7428571428571429
+   }
+  },
+  {
+   "round": 4,
+   "playbook": "pb-0a415454",
+   "lessons": 8,
+   "families": {
+    "deterministic operator (keep vendor)": 0.7428571428571429,
+    "direct rewrite: vendor first": 0.7285714285714285,
+    "direct rewrite: upstream fix first": 0.6571428571428571,
+    "direct rewrite: refactor aware": 0.6714285714285714,
+    "team vote": 0.7857142857142857
+   }
+  }
+ ]
+}

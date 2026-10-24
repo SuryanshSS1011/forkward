@@ -1,0 +1,311 @@
+{
+ "run": "search-2",
+ "split": "validation",
+ "ladder": [
+  {
+   "rung": "Always keep vendor (no model)",
+   "correct": 25,
+   "n": 45,
+   "accuracy": 0.5555555555555556
+  },
+  {
+   "rung": "Zero-shot single resolver",
+   "correct": 30,
+   "n": 45,
+   "accuracy": 0.6666666666666666,
+   "vs_previous": {
+    "delta": 0.1111111111111111,
+    "std": 0.07855562184255523,
+    "lo": -0.044444444444444446,
+    "hi": 0.26666666666666666,
+    "n": 45
+   }
+  },
+  {
+   "rung": "Team + operators + vote, no learning",
+   "correct": 31,
+   "n": 45,
+   "accuracy": 0.6888888888888889,
+   "vs_previous": {
+    "delta": 0.022222222222222223,
+    "std": 0.050168143752204485,
+    "lo": -0.06666666666666667,
+    "hi": 0.13333333333333333,
+    "n": 45
+   }
+  },
+  {
+   "rung": "+ learned selection rule",
+   "correct": 32,
+   "n": 45,
+   "accuracy": 0.7111111111111111,
+   "vs_previous": {
+    "delta": 0.022222222222222223,
+    "std": 0.039011541246667746,
+    "lo": -0.044444444444444446,
+    "hi": 0.1111111111111111,
+    "n": 45
+   }
+  },
+  {
+   "rung": "+ learned playbook (frozen strategy)",
+   "correct": 34,
+   "n": 45,
+   "accuracy": 0.7555555555555555,
+   "vs_previous": {
+    "delta": 0.044444444444444446,
+    "std": 0.05398045592961325,
+    "lo": -0.06666666666666667,
+    "hi": 0.15555555555555556,
+    "n": 45
+   }
+  }
+ ],
+ "attribution": {
+  "harness_gain": {
+   "delta": 0.022222222222222223,
+   "std": 0.050168143752204485,
+   "lo": -0.06666666666666667,
+   "hi": 0.13333333333333333,
+   "n": 45
+  },
+  "learning_gain": {
+   "delta": 0.06666666666666667,
+   "std": 0.05813372217636648,
+   "lo": -0.044444444444444446,
+   "hi": 0.17777777777777778,
+   "n": 45
+  },
+  "playbook_alone": {
+   "delta": 0.022222222222222223,
+   "std": 0.058977348582113016,
+   "lo": -0.08888888888888889,
+   "hi": 0.13333333333333333,
+   "n": 45
+  },
+  "rule_alone": {
+   "delta": 0.022222222222222223,
+   "std": 0.039011541246667746,
+   "lo": -0.044444444444444446,
+   "hi": 0.1111111111111111,
+   "n": 45
+  }
+ },
+ "lineage": [
+  {
+   "version": "pb-0",
+   "parent": null,
+   "round": 0,
+   "lessons": [],
+   "rejected": 0,
+   "strategies": [
+    "s-baseline",
+    "s-2276f983",
+    "s-364b0ec0",
+    "s-c27f2445"
+   ],
+   "train": 0.5857142857142857,
+   "validation": 0.6666666666666666
+  },
+  {
+   "version": "pb-777f0c67",
+   "parent": "pb-0",
+   "round": 1,
+   "lessons": [
+    "When a vendor has restructured or renamed a driver into new files, treat the vendor layout as authoritative and do not re-import upstream hunks that assume the old structure.",
+    "If the vendor deliberately removed or replaced a block that upstream still modifies, keep the vendor version rather than reintroducing the upstream code.",
+    "A conflict where the vendor side is empty usually means the vendor intentionally dropped that content, so the empty side should win.",
+    "When upstream and vendor changes touch the same logical area but the vendor has already absorbed the upstream fix in its own form, prefer the vendor's final state over replaying the upstream delta."
+   ],
+   "rejected": 0,
+   "strategies": [
+    "s-f1688f3e"
+   ],
+   "train": 0.7714285714285715
+  },
+  {
+   "version": "pb-d77f9cbd",
+   "parent": "pb-0",
+   "round": 1,
+   "lessons": [
+    "When a vendor fork has renamed or moved a file, prefer the vendor's version of that file over the upstream version, because the upstream changes were written for the old layout.",
+    "If the vendor already added the same feature or fix that upstream later added, keep the vendor's copy and do not duplicate or replace it with the upstream text.",
+    "When the vendor deliberately reordered or renumbered entries to fix a probe ordering problem, keep the vendor's ordering rather than restoring the upstream order.",
+    "For device tree node names and unit addresses, follow the vendor's corrected spelling and numbering instead of the upstream variant when the vendor has fixed an obvious mistake."
+   ],
+   "rejected": 0,
+   "strategies": [
+    "s-e058b259",
+    "s-e058b259"
+   ],
+   "train": 0.8,
+   "validation": 0.6444444444444445,
+   "promotion": {
+    "promoted": false,
+    "reason": "accuracy delta -0.044 vs bootstrap std 0.070, 95% CI [-0.178, +0.089]",
+    "objective": "accuracy",
+    "delta": -0.044444444444444446,
+    "std": 0.07039555701371988,
+    "lo": -0.17777777777777778,
+    "hi": 0.08888888888888889,
+    "n": 45
+   }
+  },
+  {
+   "version": "pb-abe288fd",
+   "parent": "pb-d77f9cbd",
+   "round": 2,
+   "lessons": [
+    "When a vendor fork has renamed or moved a file, prefer the vendor's version of that file over the upstream version, because the upstream changes were written for the old layout.",
+    "If the vendor already added the same feature or fix that upstream later added, keep the vendor's copy and do not duplicate or replace it with the upstream text.",
+    "When the vendor deliberately reordered or renumbered entries to fix a probe ordering problem, keep the vendor's ordering rather than restoring the upstream order.",
+    "For device tree node names and unit addresses, follow the vendor's corrected spelling and numbering instead of the upstream variant when the vendor has fixed an obvious mistake.",
+    "When upstream stable adds a new code block that the vendor tree lacks, carry the upstream block into the vendor code rather than dropping it.",
+    "When the vendor tree already contains an equivalent change, keep the vendor version and do not duplicate the upstream block.",
+    "When upstream changes only a type or constant expression and the vendor tree has no conflicting change there, take the upstream form.",
+    "When both sides modify the same region, combine the vendor's functional additions with the upstream's structural or ordering fixes instead of choosing one side."
+   ],
+   "rejected": 0,
+   "strategies": [
+    "s-22fea4b6"
+   ],
+   "train": 0.7428571428571429
+  },
+  {
+   "version": "pb-103b75ca",
+   "parent": "pb-777f0c67",
+   "round": 2,
+   "lessons": [
+    "A conflict where the vendor side is empty usually means the vendor intentionally dropped that content, so the empty side should win.",
+    "When a vendor has restructured or renamed a driver into new files, treat the vendor layout as authoritative and do not re-import upstream hunks that assume the old structure.",
+    "If the vendor deliberately removed or replaced a block that upstream still modifies, keep the vendor version rather than reintroducing the upstream code.",
+    "When upstream and vendor changes touch the same logical area but the vendor has already absorbed the upstream fix in its own form, prefer the vendor's final state over replaying the upstream delta.",
+    "When an upstream stable release contains a bug fix that touches the same lines as a vendor change, the fix must be carried into the vendor code rather than discarded.",
+    "Vendor-specific logic that is unrelated to the upstream fix should be preserved alongside the upstream change, not replaced by it.",
+    "When upstream renames or restructures a symbol, the vendor's added code should be adapted to the new naming rather than keeping the old name.",
+    "A vendor's own feature additions should be kept only when they do not conflict with the upstream fix; otherwise the upstream fix takes precedence and the vendor feature is reworked on top of it."
+   ],
+   "rejected": 0,
+   "strategies": [
+    "s-202bda0f",
+    "s-202bda0f"
+   ],
+   "train": 0.7714285714285715,
+   "validation": 0.6888888888888889,
+   "promotion": {
+    "promoted": false,
+    "reason": "accuracy delta +0.000 vs bootstrap std 0.044, 95% CI [-0.089, +0.089]",
+    "objective": "accuracy",
+    "delta": 0.0,
+    "std": 0.04447695824854969,
+    "lo": -0.08888888888888889,
+    "hi": 0.08888888888888889,
+    "n": 45
+   }
+  },
+  {
+   "version": "pb-30de7a14",
+   "parent": "pb-d77f9cbd",
+   "round": 3,
+   "lessons": [
+    "When a vendor fork has renamed or moved a file, prefer the vendor's version of that file over the upstream version, because the upstream changes were written for the old layout.",
+    "If the vendor already added the same feature or fix that upstream later added, keep the vendor's copy and do not duplicate or replace it with the upstream text.",
+    "When the vendor deliberately reordered or renumbered entries to fix a probe ordering problem, keep the vendor's ordering rather than restoring the upstream order.",
+    "For device tree node names and unit addresses, follow the vendor's corrected spelling and numbering instead of the upstream variant when the vendor has fixed an obvious mistake.",
+    "When upstream moves an initialization or cleanup call to a different location in the function, preserve the vendor's own additions and apply the upstream relocation on top of them.",
+    "When the vendor has restructured a property or field to a different type or form, keep the vendor's version rather than adopting the upstream change.",
+    "When upstream reorders statements to fix a bug, carry that reordering into the vendor code while keeping all vendor-specific logic intact.",
+    "When a conflict is only about formatting, naming, or a property keyword, prefer the upstream form if the vendor has no functional change there."
+   ],
+   "rejected": 0,
+   "strategies": [
+    "s-ee48185f",
+    "s-ee48185f"
+   ],
+   "train": 0.7571428571428571,
+   "validation": 0.6666666666666666,
+   "promotion": {
+    "promoted": false,
+    "reason": "accuracy delta -0.022 vs bootstrap std 0.059, 95% CI [-0.133, +0.089]",
+    "objective": "accuracy",
+    "delta": -0.022222222222222223,
+    "std": 0.05915534071775382,
+    "lo": -0.13333333333333333,
+    "hi": 0.08888888888888889,
+    "n": 45
+   }
+  },
+  {
+   "version": "pb-4650781e",
+   "parent": "pb-777f0c67",
+   "round": 3,
+   "lessons": [
+    "A conflict where the vendor side is empty usually means the vendor intentionally dropped that content, so the empty side should win.",
+    "When a vendor has restructured or renamed a driver into new files, treat the vendor layout as authoritative and do not re-import upstream hunks that assume the old structure.",
+    "If the vendor deliberately removed or replaced a block that upstream still modifies, keep the vendor version rather than reintroducing the upstream code.",
+    "When upstream and vendor changes touch the same logical area but the vendor has already absorbed the upstream fix in its own form, prefer the vendor's final state over replaying the upstream delta.",
+    "When upstream fixes a bug in a line the vendor also touched, keep the vendor's surrounding structure but apply the upstream fix to the logic inside it.",
+    "When upstream refactors a block into a new helper or renames a field, carry the vendor's added behavior into the refactored form rather than keeping the old vendor text.",
+    "When the vendor only changed formatting or naming of a node while upstream changed its content, prefer the upstream version so the merged result stays consistent with the rest of the file.",
+    "When the vendor's change and the upstream change overlap on the same lines, combine both by applying the upstream correction on top of the vendor's added code instead of choosing one side."
+   ],
+   "rejected": 0,
+   "strategies": [
+    "s-c2a096cd"
+   ],
+   "train": 0.7285714285714285
+  },
+  {
+   "version": "pb-889b3ec0",
+   "parent": "pb-d77f9cbd",
+   "round": 4,
+   "lessons": [
+    "When a vendor fork has renamed or moved a file, prefer the vendor's version of that file over the upstream version, because the upstream changes were written for the old layout.",
+    "If the vendor already added the same feature or fix that upstream later added, keep the vendor's copy and do not duplicate or replace it with the upstream text.",
+    "When the vendor deliberately reordered or renumbered entries to fix a probe ordering problem, keep the vendor's ordering rather than restoring the upstream order.",
+    "For device tree node names and unit addresses, follow the vendor's corrected spelling and numbering instead of the upstream variant when the vendor has fixed an obvious mistake.",
+    "When upstream reorders or relocates existing statements without changing their meaning, adopt the upstream placement rather than preserving the vendor's original ordering.",
+    "When the vendor has refactored a shared structure or renamed its members, keep the vendor's structure layout but carry over any upstream logic changes that operate on those members.",
+    "When upstream introduces a new conditional or guard that the vendor's code lacks, integrate the upstream addition into the vendor's surrounding logic instead of dropping it.",
+    "When both sides add distinct new code in the same location, combine both additions rather than choosing one side exclusively."
+   ],
+   "rejected": 0,
+   "strategies": [
+    "s-93394edc"
+   ],
+   "train": 0.7428571428571429
+  },
+  {
+   "version": "pb-0a415454",
+   "parent": "pb-777f0c67",
+   "round": 4,
+   "lessons": [
+    "A conflict where the vendor side is empty usually means the vendor intentionally dropped that content, so the empty side should win.",
+    "When a vendor has restructured or renamed a driver into new files, treat the vendor layout as authoritative and do not re-import upstream hunks that assume the old structure.",
+    "If the vendor deliberately removed or replaced a block that upstream still modifies, keep the vendor version rather than reintroducing the upstream code.",
+    "When upstream and vendor changes touch the same logical area but the vendor has already absorbed the upstream fix in its own form, prefer the vendor's final state over replaying the upstream delta.",
+    "When upstream restructures a block that the vendor also modified, keep the vendor's added behavior but reapply it inside the upstream's new structure rather than discarding either side.",
+    "A small upstream fix that corrects an off-by-one or boundary condition must be carried into the vendor's version even when the vendor's surrounding code differs.",
+    "When upstream renames, reorders, or splits a definition that the vendor also changed, adopt the upstream naming and placement while preserving the vendor's functional additions.",
+    "If the vendor's change is a superset or generalization of the upstream change, take the upstream form and layer the vendor's extra logic on top instead of keeping the vendor's older form."
+   ],
+   "rejected": 0,
+   "strategies": [
+    "s-7f552865",
+    "s-7f552865"
+   ],
+   "train": 0.7857142857142857,
+   "validation": 0.7555555555555555,
+   "promotion": {
+    "promoted": true,
+    "reason": "accuracy delta +0.067 vs bootstrap std 0.058, 95% CI [-0.044, +0.178]",
+    "objective": "accuracy",
+    "delta": 0.06666666666666667,
+    "std": 0.05793543078551258,
+    "lo": -0.044444444444444446,
+    "hi": 0.17777777777777778,
+    "n": 45
+   }
+  }
+ ]
+}

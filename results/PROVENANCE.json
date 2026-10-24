@@ -1,0 +1,77 @@
+[
+ {
+  "file": "operators.json",
+  "status": "regenerated",
+  "source": "python -m forkward report"
+ },
+ {
+  "file": "selector-h0.json",
+  "status": "regenerated",
+  "source": "python -m forkward report"
+ },
+ {
+  "file": "ladder-search-2-train.json",
+  "status": "skipped",
+  "source": "missing ['runs/search-2/final.json']"
+ },
+ {
+  "file": "ladder-search-2-validation.json",
+  "status": "skipped",
+  "source": "missing ['runs/search-2/final.json']"
+ },
+ {
+  "file": "ladder-search-3-train.json",
+  "status": "skipped",
+  "source": "missing ['runs/search-3/final.json']"
+ },
+ {
+  "file": "ladder-search-3-validation.json",
+  "status": "skipped",
+  "source": "missing ['runs/search-3/final.json']"
+ },
+ {
+  "file": "parallelism-search-2-train.json",
+  "status": "skipped",
+  "source": "missing ['runs/search-2/final.json']"
+ },
+ {
+  "file": "parallelism-search-2-validation.json",
+  "status": "skipped",
+  "source": "missing ['runs/search-2/final.json']"
+ },
+ {
+  "file": "learning-curve.json",
+  "status": "skipped",
+  "source": "missing ['runs/search-2/rounds.jsonl']"
+ },
+ {
+  "file": "population-and-families.json",
+  "status": "skipped",
+  "source": "missing ['runs/search-2/final.json']"
+ },
+ {
+  "file": "explore-1.json",
+  "status": "skipped",
+  "source": "missing ['runs/explore-1/final.json']"
+ },
+ {
+  "file": "explore-2.json",
+  "status": "skipped",
+  "source": "missing ['runs/explore-2/final.json']"
+ },
+ {
+  "file": "leakage-audit.txt",
+  "status": "from another command",
+  "source": "`python -m forkward audit > results/leakage-audit.txt`, captured before the test run as evidence. Report never rewrites it."
+ },
+ {
+  "file": "parallel-speed-benchmark.json",
+  "status": "from another command",
+  "source": "a timing script that is not in this repository. The compute-matched experiment now records wall-clock per arm instead."
+ },
+ {
+  "file": "test-results.json",
+  "status": "from another command",
+  "source": "`python -m forkward test`, copied from runs/test-*/results.json. The test split is evaluated once, so report never rewrites it."
+ }
+]

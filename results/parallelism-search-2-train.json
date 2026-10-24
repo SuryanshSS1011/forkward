@@ -1,0 +1,20 @@
+{
+ "run": "search-2",
+ "split": "train",
+ "n": 70,
+ "solo": {
+  "vendor_first": 0.7285714285714285,
+  "upstream_fix_first": 0.6571428571428571,
+  "refactor_aware": 0.6714285714285714
+ },
+ "best_solo": "vendor_first",
+ "team_vote": 0.7857142857142857,
+ "team_vs_best_solo": {
+  "delta": 0.05714285714285714,
+  "std": 0.027931727033080507,
+  "lo": 0.014285714285714285,
+  "hi": 0.11428571428571428,
+  "n": 70
+ },
+ "any_agent_or_operator": 0.9142857142857143
+}

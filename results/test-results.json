@@ -1,0 +1,127 @@
+{
+ "frozen_strategy_id": "s-7f552865",
+ "model": "deepseek-ai/DeepSeek-V4.1-Flash",
+ "thinking": false,
+ "provider": "luminal",
+ "frozen": {
+  "n": 71,
+  "correct": 54,
+  "accuracy": 0.7605633802816901,
+  "accepted": 18,
+  "coverage": 0.2535211267605634,
+  "escaped": 8,
+  "certified_bound": 0.659401935240713,
+  "per_class": {
+   "keep_vendor": {
+    "n": 51,
+    "correct": 44,
+    "accepted": 7,
+    "escaped": 3
+   },
+   "take_upstream": {
+    "n": 3,
+    "correct": 1,
+    "accepted": 1,
+    "escaped": 1
+   },
+   "merge": {
+    "n": 17,
+    "correct": 9,
+    "accepted": 10,
+    "escaped": 4
+   }
+  }
+ },
+ "baseline": {
+  "n": 71,
+  "correct": 33,
+  "accuracy": 0.4647887323943662,
+  "accepted": 57,
+  "coverage": 0.8028169014084507,
+  "escaped": 30,
+  "certified_bound": 0.6407324487137802,
+  "per_class": {
+   "keep_vendor": {
+    "n": 51,
+    "correct": 23,
+    "accepted": 42,
+    "escaped": 23
+   },
+   "take_upstream": {
+    "n": 3,
+    "correct": 2,
+    "accepted": 3,
+    "escaped": 1
+   },
+   "merge": {
+    "n": 17,
+    "correct": 8,
+    "accepted": 12,
+    "escaped": 6
+   }
+  }
+ },
+ "keep_vendor": {
+  "n": 71,
+  "correct": 51,
+  "accuracy": 0.7183098591549296,
+  "accepted": 0,
+  "coverage": 0.0,
+  "escaped": 0,
+  "certified_bound": 1.0,
+  "per_class": {
+   "keep_vendor": {
+    "n": 51,
+    "correct": 51,
+    "accepted": 0,
+    "escaped": 0
+   },
+   "take_upstream": {
+    "n": 3,
+    "correct": 0,
+    "accepted": 0,
+    "escaped": 0
+   },
+   "merge": {
+    "n": 17,
+    "correct": 0,
+    "accepted": 0,
+    "escaped": 0
+   }
+  }
+ },
+ "accuracy_delta": {
+  "delta": 0.29577464788732394,
+  "std": 0.06740397474503994,
+  "lo": 0.16901408450704225,
+  "hi": 0.4225352112676056,
+  "n": 71
+ },
+ "safe_coverage_delta": {
+  "delta": -0.23943661971830985,
+  "std": 0.06744514318030662,
+  "lo": -0.36619718309859156,
+  "hi": -0.09859154929577464,
+  "n": 71
+ },
+ "thresholds": {
+  "frozen": 0.275867,
+  "baseline": 0.81083
+ },
+ "attempts_per_hunk": 1,
+ "tokens": {
+  "frozen": 1482638,
+  "baseline": 356716,
+  "frozen_per_correct_hunk": 27456,
+  "baseline_per_correct_hunk": 10810
+ },
+ "llm_usage": {
+  "calls": 440,
+  "errors": 1,
+  "prompt_tokens": 1719372,
+  "completion_tokens": 119982,
+  "by_model": {
+   "deepseek-ai/DeepSeek-V4.1-Flash": 439
+  }
+ }
+}
