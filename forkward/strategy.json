@@ -1,0 +1,594 @@
+{
+ "run_id": "search-2",
+ "model": "deepseek-ai/DeepSeek-V4.1-Flash",
+ "thinking": false,
+ "provider": "luminal",
+ "strategy": {
+  "id": "s-7f552865",
+  "personas": [
+   "vendor_first",
+   "upstream_fix_first",
+   "refactor_aware"
+  ],
+  "playbook": "pb-0a415454",
+  "rule": {
+   "w_llm": 1.0,
+   "w_cls": 0.0,
+   "op_prior": {
+    "op:keep_vendor": 1.0
+   }
+  },
+  "use_classifier": true,
+  "parent": "s-f1688f3e",
+  "round": 4,
+  "train": {
+   "n": 70,
+   "correct": 55,
+   "accuracy": 0.7857142857142857,
+   "accepted": 19,
+   "coverage": 0.2714285714285714,
+   "escaped": 4,
+   "certified_bound": 0.4191202289169428,
+   "per_class": {
+    "keep_vendor": {
+     "n": 52,
+     "correct": 44,
+     "accepted": 13,
+     "escaped": 2
+    },
+    "take_upstream": {
+     "n": 7,
+     "correct": 6,
+     "accepted": 1,
+     "escaped": 0
+    },
+    "merge": {
+     "n": 11,
+     "correct": 5,
+     "accepted": 5,
+     "escaped": 2
+    }
+   }
+  },
+  "validation": {
+   "n": 45,
+   "correct": 34,
+   "accuracy": 0.7555555555555555,
+   "accepted": 11,
+   "coverage": 0.24444444444444444,
+   "escaped": 2,
+   "certified_bound": 0.4700867992791763,
+   "per_class": {
+    "keep_vendor": {
+     "n": 25,
+     "correct": 24,
+     "accepted": 5,
+     "escaped": 1
+    },
+    "take_upstream": {
+     "n": 5,
+     "correct": 3,
+     "accepted": 1,
+     "escaped": 0
+    },
+    "merge": {
+     "n": 15,
+     "correct": 7,
+     "accepted": 5,
+     "escaped": 1
+    }
+   },
+   "calibration": {
+    "threshold": 0.275867,
+    "accepted": 11,
+    "errors": 2,
+    "bound": 0.6173827597518545,
+    "target_met": false,
+    "level": 0.9958333333333333,
+    "grid": [
+     {
+      "threshold": 0.275867,
+      "accepted": 11,
+      "errors": 2,
+      "bound": 0.6173827597518545
+     },
+     {
+      "threshold": 0.323602,
+      "accepted": 11,
+      "errors": 2,
+      "bound": 0.6173827597518545
+     },
+     {
+      "threshold": 0.619483,
+      "accepted": 10,
+      "errors": 2,
+      "bound": 0.6571028172495129
+     },
+     {
+      "threshold": 0.639011,
+      "accepted": 9,
+      "errors": 2,
+      "bound": 0.7013966632424995
+     },
+     {
+      "threshold": 0.853405,
+      "accepted": 7,
+      "errors": 1,
+      "bound": 0.6949379021817421
+     },
+     {
+      "threshold": 0.871839,
+      "accepted": 7,
+      "errors": 1,
+      "bound": 0.6949379021817421
+     },
+     {
+      "threshold": 0.894901,
+      "accepted": 7,
+      "errors": 1,
+      "bound": 0.6949379021817421
+     },
+     {
+      "threshold": 0.916943,
+      "accepted": 6,
+      "errors": 1,
+      "bound": 0.755595657951978
+     },
+     {
+      "threshold": 0.926369,
+      "accepted": 6,
+      "errors": 1,
+      "bound": 0.755595657951978
+     },
+     {
+      "threshold": 0.932638,
+      "accepted": 5,
+      "errors": 1,
+      "bound": 0.8235055224527116
+     },
+     {
+      "threshold": 0.959992,
+      "accepted": 3,
+      "errors": 0,
+      "bound": 0.8390851025657287
+     },
+     {
+      "threshold": 0.978785,
+      "accepted": 0,
+      "errors": 0,
+      "bound": 1.0
+     }
+    ]
+   }
+  }
+ },
+ "playbook": {
+  "version": "pb-0a415454",
+  "parent": "pb-777f0c67",
+  "lessons": [
+   {
+    "id": "L4290",
+    "text": "A conflict where the vendor side is empty usually means the vendor intentionally dropped that content, so the empty side should win.",
+    "helpful": 135,
+    "harmful": 36,
+    "round": 1
+   },
+   {
+    "id": "L4dec",
+    "text": "When a vendor has restructured or renamed a driver into new files, treat the vendor layout as authoritative and do not re-import upstream hunks that assume the old structure.",
+    "helpful": 0,
+    "harmful": 0,
+    "round": 1
+   },
+   {
+    "id": "L07c9",
+    "text": "If the vendor deliberately removed or replaced a block that upstream still modifies, keep the vendor version rather than reintroducing the upstream code.",
+    "helpful": 0,
+    "harmful": 0,
+    "round": 1
+   },
+   {
+    "id": "L17e3",
+    "text": "When upstream and vendor changes touch the same logical area but the vendor has already absorbed the upstream fix in its own form, prefer the vendor's final state over replaying the upstream delta.",
+    "helpful": 0,
+    "harmful": 0,
+    "round": 1
+   },
+   {
+    "id": "L1dc8",
+    "text": "When upstream restructures a block that the vendor also modified, keep the vendor's added behavior but reapply it inside the upstream's new structure rather than discarding either side.",
+    "helpful": 0,
+    "harmful": 0,
+    "round": 4
+   },
+   {
+    "id": "L7316",
+    "text": "A small upstream fix that corrects an off-by-one or boundary condition must be carried into the vendor's version even when the vendor's surrounding code differs.",
+    "helpful": 0,
+    "harmful": 0,
+    "round": 4
+   },
+   {
+    "id": "L4ad5",
+    "text": "When upstream renames, reorders, or splits a definition that the vendor also changed, adopt the upstream naming and placement while preserving the vendor's functional additions.",
+    "helpful": 0,
+    "harmful": 0,
+    "round": 4
+   },
+   {
+    "id": "La115",
+    "text": "If the vendor's change is a superset or generalization of the upstream change, take the upstream form and layer the vendor's extra logic on top instead of keeping the vendor's older form.",
+    "helpful": 0,
+    "harmful": 0,
+    "round": 4
+   }
+  ]
+ },
+ "rerere": {
+  "befeb4e560df0772": [
+   "\t\t\t\treg = <0x32fc0000 0x23c>;"
+  ],
+  "0c3776fa0cb3b265": [
+   "\t\t\t\tsnps,clk-csr = <6>;"
+  ],
+  "94dad7b888e1afec": [
+   "\t\t\timx93_uid: soc-uid@c0 {",
+   "\t\t\t\treg = <0xc0 0x10>;",
+   "\t\t\t};",
+   ""
+  ],
+  "856c2802b224784b": [
+   "\t\t\timx93_soc: imx93-soc {",
+   "\t\t\t\tcompatible = \"fsl,imx93-soc\";",
+   "\t\t\t\tnvmem-cells = <&imx93_uid>;",
+   "\t\t\t\tnvmem-cell-names = \"soc_unique_id\";",
+   "\t\t\t};"
+  ],
+  "7eed557e951dfb5e": [],
+  "30c6be1bb7a5f261": [
+   "\tchar\t\t\t\tchan_name[16];",
+   "\tu32\t\t\t\tchn_real_count;"
+  ],
+  "11d689fd99e81b50": [
+   "\t{ .compatible = \"fsl,s32v234-edma\", .data = &s32v234_data},",
+   "\t{ .compatible = \"fsl,imx8qm-edma\", .data = &imx8qm_data},",
+   "\t{ .compatible = \"fsl,imx8ulp-edma\", .data = &imx8ulp_data},",
+   "\t{ .compatible = \"fsl,imx93-edma3\", .data = &imx93_data3},",
+   "\t{ .compatible = \"fsl,imx93-edma4\", .data = &imx93_data4},"
+  ],
+  "eade5b06a25e4b1c": [
+   "\tif (!perclk_rate) {",
+   "\t\tdev_err(fsl_lpspi->dev, \"per-clk rate was not set\\n\");",
+   "\t\treturn -EINVAL;",
+   "\t}",
+   "\tprescale_max = fsl_lpspi->devtype_data->prescale_max;"
+  ],
+  "2aacec2f406b3af8": [
+   "    const: 32"
+  ],
+  "0759d26672423f01": [
+   "#include \"../host/xhci.h\"",
+   "#include \"../host/xhci-plat.h\""
+  ],
+  "bb19573bd5355085": [],
+  "a5386690809cf35b": [],
+  "1eb074d8c670cfd7": [],
+  "0e5e6ce94465b12b": [
+   "\t\t\tsnps,power-down-scale = <2>;",
+   "\t\t\tsnps,parkmode-disable-ss-quirk;",
+   "\t\t\tsnps,dis_rxdet_inp3_quirk;"
+  ],
+  "a807bcc317190536": [
+   "\t\t\t\t\t    dom_info->id, NULL,",
+   "\t\t\t\t\t    dom_info->info.name,"
+  ],
+  "a773de6433f12234": [
+   "\tstruct dev_pm_opp_data data = {};"
+  ],
+  "16897a864b3c6859": [
+   "\t\tstruct vlan_ethhdr *vhdr = skb_vlan_eth_hdr(skb);"
+  ],
+  "98e49ae62ca3efcf": [
+   "#ifdef CONFIG_AHCI_IMX",
+   "extern void *sg_io_buffer_hack;",
+   "#else",
+   "#define sg_io_buffer_hack NULL",
+   "#endif",
+   "",
+   "/* called with shost->host_lock held */",
+   "void scsi_eh_wakeup(struct Scsi_Host *shost, unsigned int busy)"
+  ],
+  "eab6da134e8b2e69": [
+   "#ifdef CONFIG_OF",
+   "struct dwc3_cache_type {",
+   "\tu8 transfer_type_datard;",
+   "\tu8 transfer_type_descrd;",
+   "\tu8 transfer_type_datawr;",
+   "\tu8 transfer_type_descwr;",
+   "};",
+   "",
+   "static const struct dwc3_cache_type ls1088a_dwc3_cache_type = {",
+   "\t.transfer_type_datard = 2,",
+   "\t.transfer_type_descrd = 2,",
+   "\t.transfer_type_datawr = 2,",
+   "\t.transfer_type_descwr = 2,",
+   "};",
+   "",
+   "/**",
+   " * dwc3_set_cache_type - Configure cache type registers",
+   " * @dwc: Pointer to our controller context structure",
+   " */",
+   "static void dwc3_set_cache_type(struct dwc3 *dwc)",
+   "{",
+   "\tu32 tmp, reg;",
+   "\tconst struct dwc3_cache_type *cache_type =",
+   "\t\tdevice_get_match_data(dwc->dev);",
+   "",
+   "\tif (cache_type) {",
+   "\t\treg = dwc3_readl(dwc->regs,  DWC3_GSBUSCFG0);",
+   "\t\ttmp = reg;",
+   "",
+   "\t\treg &= ~DWC3_GSBUSCFG0_DATARD(~0);",
+   "\t\treg |= DWC3_GSBUSCFG0_DATARD(cache_type->transfer_type_datard);",
+   "",
+   "\t\treg &= ~DWC3_GSBUSCFG0_DESCRD(~0);",
+   "\t\treg |= DWC3_GSBUSCFG0_DESCRD(cache_type->transfer_type_descrd);",
+   "",
+   "\t\treg &= ~DWC3_GSBUSCFG0_DATAWR(~0);",
+   "\t\treg |= DWC3_GSBUSCFG0_DATAWR(cache_type->transfer_type_datawr);",
+   "",
+   "\t\treg &= ~DWC3_GSBUSCFG0_DESCWR(~0);",
+   "\t\treg |= DWC3_GSBUSCFG0_DESCWR(cache_type->transfer_type_descwr);",
+   "",
+   "\t\tif (tmp != reg)",
+   "\t\t\tdwc3_writel(dwc->regs, DWC3_GSBUSCFG0, reg);",
+   "\t}",
+   "}",
+   "#endif",
+   "static void dwc3_config_threshold(struct dwc3 *dwc)",
+   "{",
+   "\tu32 reg;",
+   "\tu8 rx_thr_num;",
+   "\tu8 rx_maxburst;",
+   "\tu8 tx_thr_num;",
+   "\tu8 tx_maxburst;",
+   "",
+   "\t/*",
+   "\t * Must config both number of packets and max burst settings to enable",
+   "\t * RX and/or TX threshold.",
+   "\t */",
+   "\tif (!DWC3_IP_IS(DWC3) && dwc->dr_mode == USB_DR_MODE_HOST) {",
+   "\t\trx_thr_num = dwc->rx_thr_num_pkt_prd;",
+   "\t\trx_maxburst = dwc->rx_max_burst_prd;",
+   "\t\ttx_thr_num = dwc->tx_thr_num_pkt_prd;",
+   "\t\ttx_maxburst = dwc->tx_max_burst_prd;",
+   "",
+   "\t\tif (rx_thr_num && rx_maxburst) {",
+   "\t\t\treg = dwc3_readl(dwc->regs, DWC3_GRXTHRCFG);",
+   "\t\t\treg |= DWC31_RXTHRNUMPKTSEL_PRD;",
+   "",
+   "\t\t\treg &= ~DWC31_RXTHRNUMPKT_PRD(~0);",
+   "\t\t\treg |= DWC31_RXTHRNUMPKT_PRD(rx_thr_num);",
+   "",
+   "\t\t\treg &= ~DWC31_MAXRXBURSTSIZE_PRD(~0);",
+   "\t\t\treg |= DWC31_MAXRXBURSTSIZE_PRD(rx_maxburst);",
+   "",
+   "\t\t\tdwc3_writel(dwc->regs, DWC3_GRXTHRCFG, reg);",
+   "\t\t}",
+   "",
+   "\t\tif (tx_thr_num && tx_maxburst) {",
+   "\t\t\treg = dwc3_readl(dwc->regs, DWC3_GTXTHRCFG);",
+   "\t\t\treg |= DWC31_TXTHRNUMPKTSEL_PRD;",
+   "",
+   "\t\t\treg &= ~DWC31_TXTHRNUMPKT_PRD(~0);",
+   "\t\t\treg |= DWC31_TXTHRNUMPKT_PRD(tx_thr_num);",
+   "",
+   "\t\t\treg &= ~DWC31_MAXTXBURSTSIZE_PRD(~0);",
+   "\t\t\treg |= DWC31_MAXTXBURSTSIZE_PRD(tx_maxburst);",
+   "",
+   "\t\t\tdwc3_writel(dwc->regs, DWC3_GTXTHRCFG, reg);",
+   "\t\t}",
+   "\t}",
+   "",
+   "\trx_thr_num = dwc->rx_thr_num_pkt;",
+   "\trx_maxburst = dwc->rx_max_burst;",
+   "\ttx_thr_num = dwc->tx_thr_num_pkt;",
+   "\ttx_maxburst = dwc->tx_max_burst;",
+   "",
+   "\tif (DWC3_IP_IS(DWC3)) {",
+   "\t\tif (rx_thr_num && rx_maxburst) {",
+   "\t\t\treg = dwc3_readl(dwc->regs, DWC3_GRXTHRCFG);",
+   "\t\t\treg |= DWC3_GRXTHRCFG_PKTCNTSEL;",
+   "",
+   "\t\t\treg &= ~DWC3_GRXTHRCFG_RXPKTCNT(~0);",
+   "\t\t\treg |= DWC3_GRXTHRCFG_RXPKTCNT(rx_thr_num);",
+   "",
+   "\t\t\treg &= ~DWC3_GRXTHRCFG_MAXRXBURSTSIZE(~0);",
+   "\t\t\treg |= DWC3_GRXTHRCFG_MAXRXBURSTSIZE(rx_maxburst);",
+   "",
+   "\t\t\tdwc3_writel(dwc->regs, DWC3_GRXTHRCFG, reg);",
+   "\t\t}",
+   "",
+   "\t\tif (tx_thr_num && tx_maxburst) {",
+   "\t\t\treg = dwc3_readl(dwc->regs, DWC3_GTXTHRCFG);",
+   "\t\t\treg |= DWC3_GTXTHRCFG_PKTCNTSEL;",
+   "",
+   "\t\t\treg &= ~DWC3_GTXTHRCFG_TXPKTCNT(~0);",
+   "\t\t\treg |= DWC3_GTXTHRCFG_TXPKTCNT(tx_thr_num);",
+   "",
+   "\t\t\treg &= ~DWC3_GTXTHRCFG_MAXTXBURSTSIZE(~0);",
+   "\t\t\treg |= DWC3_GTXTHRCFG_MAXTXBURSTSIZE(tx_maxburst);",
+   "",
+   "\t\t\tdwc3_writel(dwc->regs, DWC3_GTXTHRCFG, reg);",
+   "\t\t}",
+   "\t} else {",
+   "\t\tif (rx_thr_num && rx_maxburst) {",
+   "\t\t\treg = dwc3_readl(dwc->regs, DWC3_GRXTHRCFG);",
+   "\t\t\treg |= DWC31_GRXTHRCFG_PKTCNTSEL;",
+   "",
+   "\t\t\treg &= ~DWC31_GRXTHRCFG_RXPKTCNT(~0);",
+   "\t\t\treg |= DWC31_GRXTHRCFG_RXPKTCNT(rx_thr_num);",
+   "",
+   "\t\t\treg &= ~DWC31_GRXTHRCFG_MAXRXBURSTSIZE(~0);",
+   "\t\t\treg |= DWC31_GRXTHRCFG_MAXRXBURSTSIZE(rx_maxburst);",
+   "",
+   "\t\t\tdwc3_writel(dwc->regs, DWC3_GRXTHRCFG, reg);",
+   "\t\t}",
+   "",
+   "\t\tif (tx_thr_num && tx_maxburst) {",
+   "\t\t\treg = dwc3_readl(dwc->regs, DWC3_GTXTHRCFG);",
+   "\t\t\treg |= DWC31_GTXTHRCFG_PKTCNTSEL;",
+   "",
+   "\t\t\treg &= ~DWC31_GTXTHRCFG_TXPKTCNT(~0);",
+   "\t\t\treg |= DWC31_GTXTHRCFG_TXPKTCNT(tx_thr_num);",
+   "",
+   "\t\t\treg &= ~DWC31_GTXTHRCFG_MAXTXBURSTSIZE(~0);",
+   "\t\t\treg |= DWC31_GTXTHRCFG_MAXTXBURSTSIZE(tx_maxburst);",
+   "",
+   "\t\t\tdwc3_writel(dwc->regs, DWC3_GTXTHRCFG, reg);",
+   "\t\t}",
+   "\t}",
+   "}"
+  ],
+  "c3e8d903bde8a6ec": [],
+  "6b5880a5a941cd6c": [
+   "\tstruct device *dev = ddev->dev;",
+   "\tstruct ltdc_device *ldev = ddev->dev_private;",
+   "\tstruct stm32_firewall *fwl = (struct stm32_firewall *)ldev->firewall;",
+   "\tint nb_endpoints, i;",
+   "",
+   "\tDRM_DEBUG_DRIVER(\"\\n\");",
+   "",
+   "\tif (pm_runtime_active(ddev->dev))",
+   "\t\tpm_runtime_put_sync_suspend(ddev->dev);",
+   "",
+   "\tstm32_firewall_release_access(fwl);",
+   "",
+   "\tnb_endpoints = of_graph_get_endpoint_count(dev->of_node);",
+   "",
+   "\tfor (i = 0; i < nb_endpoints; i++)",
+   "\t\tdrm_of_panel_bridge_remove(ddev->dev->of_node, 0, i);",
+   ""
+  ],
+  "422100338a4aa45b": [
+   "\ttristate \"Wolfson Microelectronics WM8994 codec\"",
+   "\tdepends on MFD_WM8994"
+  ],
+  "a288aecd1f3bbeb2": [
+   "\t\t      <0x0 0x4ac20000 0x0 0x20000>,",
+   "\t\t      <0x0 0x4ac40000 0x0 0x20000>,",
+   "\t\t      <0x0 0x4ac60000 0x0 0x20000>;",
+   "\t\tinterrupts = <GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(1) | IRQ_TYPE_LEVEL_LOW)>;",
+   "",
+   "\t\t#address-cells = <2>;",
+   "\t\t#size-cells = <2>;",
+   "\t\tranges;",
+   "",
+   "\t\tv2m0: v2m@48090000 {",
+   "\t\t\tcompatible = \"arm,gic-v2m-frame\";",
+   "\t\t\treg = <0x0 0x48090000 0x0 0x1000>;",
+   "\t\t\tmsi-controller;",
+   "\t\t};",
+   "\t};",
+   "",
+   "\td1_pd: power-domain-d1 {",
+   "\t\tcompatible = \"st,stm32mp-pm-domain\";",
+   "\t\t#power-domain-cells = <0>;",
+   "\t\tpower-domains = <&cluster_pd>;"
+  ],
+  "8d3f66e8135c58bf": [
+   "",
+   "\t/* Get external system time state from device tree */",
+   "\tplat->ext_systime = of_property_read_bool(np, \"snps,ext-systime\");",
+   "",
+   "\tif (plat->bus_id < 0) {",
+   "\t\tif (bus_id < 0)",
+   "\t\t\tbus_id = of_alias_get_highest_id(\"ethernet\");",
+   "\t\t/* No ethernet alias found, init at -1 so first bus_id is 0 */",
+   "\t\tif (bus_id < 0)",
+   "\t\t\tbus_id = -1;",
+   "\t\tplat->bus_id = ++bus_id;",
+   "\t}"
+  ],
+  "d39a3a6d35bf100c": [
+   "\tif (priv->features & TA_RTC_FEATURE_ALARM) {",
+   "\t\toptee_rtc_cancel_wait_alarm(dev);",
+   "\t\tkthread_stop(priv->alarm_task);",
+   "\t\tdevice_init_wakeup(dev, false);",
+   "\t\ttee_client_close_session(priv->ctx, priv->session2_id);",
+   "\t}",
+   ""
+  ],
+  "3e5c3c90fe43ead7": [
+   "\tdevice_set_wakeup_capable(&gadget->dev, false);",
+   "\t/* Exit clock gating when driver is stopped. */",
+   "\tif (hsotg->params.power_down == DWC2_POWER_DOWN_PARAM_NONE &&",
+   "\t    hsotg->bus_suspended && !hsotg->params.no_clock_gating) {",
+   "\t\tdwc2_gadget_exit_clock_gating(hsotg, 0);",
+   "\t}"
+  ],
+  "3668d570f9375b57": [
+   "void dwc3_set_prtcap(struct dwc3 *dwc, u32 mode, bool ignore_susphy);",
+   "#define dwc3_set_mode(dwc3, mode) \\",
+   "\tdwc3_set_mode_ext(dwc3, mode, USB_ROLE_NONE)",
+   "void dwc3_set_mode_ext(struct dwc3 *dwc, u32 mode, int submode);"
+  ],
+  "51e23752d9f53c9f": [
+   "stop_poll:",
+   "\tdrm_kms_helper_poll_fini(ddev);",
+   "\ttilcdc_irq_uninstall(ddev);",
+   "unbind_component:",
+   "\tif (priv->is_componentized)",
+   "\t\tcomponent_unbind_all(dev, ddev);",
+   "unregister_cpufreq_notif:",
+   "#ifdef CONFIG_CPU_FREQ",
+   "\tcpufreq_unregister_notifier(&priv->freq_transition,",
+   "\t\t\t\t    CPUFREQ_TRANSITION_NOTIFIER);",
+   "destroy_crtc:",
+   "#endif",
+   "\ttilcdc_crtc_destroy(priv->crtc);",
+   "disable_pm:",
+   "\tpm_runtime_disable(dev);",
+   "\tclk_put(priv->clk);",
+   "free_wq:",
+   "\tdestroy_workqueue(priv->wq);",
+   "put_drm:",
+   "\tplatform_set_drvdata(pdev, NULL);",
+   "\tddev->dev_private = NULL;",
+   "\tdrm_dev_put(ddev);"
+  ],
+  "f9113bf0dfae126b": [
+   "static inline void hantro_vp8_set_bit(struct hantro_vp8_enc_hw_ctx *vp8_enc, char bit, int idx)",
+   "{",
+   "\tif (idx < 0)",
+   "\t\treturn;",
+   "",
+   "\tif (bit != VP8_BIT_LAST && bit != VP8_BIT_GOLDEN && bit != VP8_BIT_ALT)",
+   "\t\treturn;",
+   "",
+   "\tvp8_enc->ref_bitmaps[idx] |= (1 << bit);",
+   "}",
+   "",
+   "static inline void hantro_vp8_clr_bit(struct hantro_vp8_enc_hw_ctx *vp8_enc, char bit, int idx)",
+   "{",
+   "\tif (idx < 0)",
+   "\t\treturn;",
+   "",
+   "\tif (bit != VP8_BIT_LAST && bit != VP8_BIT_GOLDEN && bit != VP8_BIT_ALT)",
+   "\t\treturn;",
+   "",
+   "\tvp8_enc->ref_bitmaps[idx] &= ~(1 << bit);",
+   "}",
+   "size_t hantro_g2_chroma_offset(struct hantro_ctx *ctx);",
+   "size_t hantro_g2_motion_vectors_offset(struct hantro_ctx *ctx);"
+  ],
+  "1250a94b8a9d86b1": [
+   "\t/* Crop only supported on encoder source. */",
+   "\tif (ctx->is_encoder &&",
+   "\t    sel->type != V4L2_BUF_TYPE_VIDEO_OUTPUT)"
+  ]
+ },
+ "created": 1791745476.455969,
+ "frozen_at": 1791745502.065614,
+ "frozen_strategy_id": "s-7f552865"
+}
