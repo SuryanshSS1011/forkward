@@ -1,0 +1,24 @@
+[Unit]
+Description=Report Forkward usage to the Stripe Billing meter
+After=network-online.target
+
+[Service]
+Type=oneshot
+User=__USER__
+WorkingDirectory=__HOME__/forkward
+# STRIPE_SECRET_KEY, STRIPE_METER_EVENT and DATABASE_URL come from .env. Each usage row is sent
+# once, with its id as the Stripe idempotency identifier, so a rerun never bills twice.
+EnvironmentFile=__HOME__/forkward/.env
+ExecStart=__HOME__/forkward/.venv/bin/python -m forkward keys report-usage
+NoNewPrivileges=yes
+ProtectSystem=strict
+ReadWritePaths=__HOME__/forkward __HOME__/.forkward
+PrivateTmp=yes
+PrivateDevices=yes
+ProtectKernelTunables=yes
+ProtectKernelModules=yes
+ProtectControlGroups=yes
+RestrictSUIDSGID=yes
+LockPersonality=yes
+MemoryMax=512M
+TasksMax=256

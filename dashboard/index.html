@@ -1,0 +1,493 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Forkward Board</title>
+<style>
+:root {
+  --bg: #f4f1ea;
+  --panel: #fffdf8;
+  --ink: #1d1b16;
+  --muted: #6b665a;
+  --rule: #d9d3c4;
+  --accent: #b4441c;
+  --ok: #2f6f4f;
+  --warn: #a8670b;
+  --bad: #b3261e;
+  --train: #b4441c;
+  --val: #1f5f8b;
+  --base: #8a8270;
+  --mono: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, monospace;
+  --sans: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #12110e;
+    --panel: #1b1a16;
+    --ink: #ece6d6;
+    --muted: #9c9583;
+    --rule: #34312a;
+    --accent: #e0703f;
+    --ok: #5fb38a;
+    --warn: #e0a94a;
+    --bad: #ef6b5f;
+    --train: #e0703f;
+    --val: #6fb2e0;
+    --base: #8f8875;
+  }
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font: 15px/1.45 var(--sans);
+}
+header {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 24px;
+  align-items: baseline;
+  padding: 20px 24px 14px;
+  border-bottom: 2px solid var(--ink);
+}
+h1 { margin: 0; font-size: 28px; letter-spacing: -0.01em; }
+h1 span { color: var(--accent); }
+.meta { font: 12px var(--mono); color: var(--muted); display: flex; gap: 16px; flex-wrap: wrap; }
+.meta b { color: var(--ink); font-weight: 600; }
+label { font: 12px var(--mono); color: var(--muted); }
+select {
+  font: 12px var(--mono);
+  background: var(--panel);
+  color: var(--ink);
+  border: 1px solid var(--rule);
+  padding: 3px 6px;
+}
+select:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+main {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: 1px;
+  background: var(--rule);
+  border-bottom: 1px solid var(--rule);
+}
+section { background: var(--panel); padding: 16px 20px 20px; min-width: 0; }
+section h2 {
+  font: 600 11px var(--mono);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--muted);
+  margin: 0 0 12px;
+  display: flex;
+  justify-content: space-between;
+}
+.c12 { grid-column: span 12; }
+.c8 { grid-column: span 8; }
+.c7 { grid-column: span 7; }
+.c5 { grid-column: span 5; }
+.c4 { grid-column: span 4; }
+.c3 { grid-column: span 3; }
+@media (max-width: 900px) {
+  main { grid-template-columns: minmax(0, 1fr); }
+  .c12, .c8, .c7, .c5, .c4, .c3 { grid-column: 1 / -1; }
+  section { padding: 14px 16px 18px; }
+  header { padding: 16px; }
+}
+.lanes { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 10px; }
+.lane { border: 1px solid var(--rule); padding: 10px 12px; position: relative; }
+.lane::before {
+  content: "";
+  position: absolute;
+  left: -1px; top: -1px; bottom: -1px;
+  width: 3px;
+  background: var(--rule);
+}
+.lane.working::before { background: var(--accent); animation: pulse 1.2s ease-in-out infinite; }
+.lane.error::before { background: var(--bad); }
+@keyframes pulse { 50% { opacity: 0.35; } }
+@media (prefers-reduced-motion: reduce) { .lane.working::before { animation: none; } }
+.lane .name { font: 600 13px var(--mono); }
+.lane .task { font-size: 13px; color: var(--muted); margin: 2px 0 6px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.kv { font: 11px var(--mono); color: var(--muted); display: flex; flex-wrap: wrap; gap: 4px 12px; }
+.kv b { color: var(--ink); font-weight: 500; }
+.big { font: 600 34px/1 var(--mono); letter-spacing: -0.02em; }
+.stat { display: flex; flex-direction: column; gap: 4px; }
+.stat small { font: 11px var(--mono); color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; }
+.stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 16px; margin-bottom: 14px; }
+svg text { font: 11px var(--mono); fill: var(--muted); }
+.legend { display: flex; gap: 16px; font: 11px var(--mono); color: var(--muted); margin-top: 6px; flex-wrap: wrap; }
+.sw { display: inline-block; width: 14px; height: 3px; vertical-align: middle; margin-right: 5px; }
+.sw.dash { background: repeating-linear-gradient(90deg, var(--base) 0 4px, transparent 4px 7px); }
+ul.feed { list-style: none; margin: 0; padding: 0; max-height: 320px; overflow: auto; }
+ul.feed li { border-top: 1px solid var(--rule); padding: 7px 0; font-size: 13px; display: grid; grid-template-columns: 58px minmax(0, 1fr); gap: 8px; overflow-wrap: anywhere; }
+ul.feed time { font: 11px var(--mono); color: var(--muted); padding-top: 2px; }
+.tag { font: 600 10px var(--mono); text-transform: uppercase; letter-spacing: 0.08em; padding: 1px 5px; border: 1px solid currentColor; margin-right: 6px; }
+.t-promotion { color: var(--ok); }
+.t-warn, .t-needs_review { color: var(--warn); }
+.t-info { color: var(--muted); }
+.chip-status { font: 600 10px var(--mono); text-transform: uppercase; letter-spacing: 0.08em; padding: 2px 6px; border: 1px solid currentColor; }
+.st-finished { color: var(--ok); }
+.st-running { color: var(--accent); }
+.st-stopped { color: var(--warn); }
+.fix { font: 12px var(--mono); border-top: 1px solid var(--rule); padding: 6px 0; overflow-wrap: anywhere; }
+.fix .d { color: var(--bad); }
+.fix .a { color: var(--ok); }
+.tree { font: 12px var(--mono); }
+.tree .node { padding: 6px 0 6px 0; border-top: 1px solid var(--rule); }
+.tree .node .ver { font-weight: 600; }
+.tree .lesson { color: var(--ink); font-family: var(--sans); font-size: 13px; margin: 3px 0 0 14px; }
+.tree .lesson .cnt { font: 11px var(--mono); color: var(--muted); margin-right: 6px; }
+.tree .cnt .h { color: var(--ok); }
+.tree .cnt .x { color: var(--bad); }
+.dis { font: 12px var(--mono); }
+.dis div { border-top: 1px solid var(--rule); padding: 6px 0; }
+.chip { display: inline-block; padding: 0 6px; margin: 2px 4px 0 0; border: 1px solid var(--rule); }
+.chip.keep_vendor { border-color: var(--val); color: var(--val); }
+.chip.take_upstream { border-color: var(--train); color: var(--train); }
+.chip.merge { border-color: var(--warn); color: var(--warn); }
+.scroll { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; min-width: 640px; font: 12px var(--mono); }
+th, td { text-align: right; padding: 5px 8px; border-top: 1px solid var(--rule); }
+th:first-child, td:first-child { text-align: left; }
+th { color: var(--muted); font-weight: 500; }
+.pickers { margin-left: auto; display: flex; gap: 18px; flex-wrap: wrap; align-items: flex-start; }
+.picker { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+.picker select { max-width: 320px; }
+.model-note { font: 11px var(--mono); color: var(--muted); max-width: 320px; }
+.model-note.ok { color: var(--ok); }
+.model-note.warn { color: var(--warn); }
+.empty { color: var(--muted); font-style: italic; font-size: 13px; }
+.note { font-size: 12px; color: var(--muted); margin-top: 8px; }
+.scrollx { overflow-x: auto; }
+.bar-row { display: grid; grid-template-columns: minmax(0, 220px) minmax(0, 1fr) 120px; gap: 10px; align-items: center; font: 12px var(--mono); padding: 5px 0; border-top: 1px solid var(--rule); }
+.bar-row .track { height: 12px; background: var(--rule); position: relative; }
+.bar-row .fill { position: absolute; left: 0; top: 0; bottom: 0; background: var(--val); }
+.bar-row .fill.gain { background: var(--ok); }
+.bar-row .lbl { color: var(--ink); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.bar-row .v { text-align: right; color: var(--muted); }
+</style>
+</head>
+<body>
+<header>
+  <h1>Forkward<span>.</span></h1>
+  <div class="meta" id="meta"></div>
+  <div class="pickers">
+    <div class="picker">
+      <label for="model">resolver model</label>
+      <select id="model" aria-describedby="model-note"><option>loading models</option></select>
+      <small id="model-note" class="model-note"></small>
+    </div>
+    <div class="picker">
+      <label for="run">run</label>
+      <select id="run"></select>
+    </div>
+  </div>
+</header>
+<main>
+  <section class="c12" aria-labelledby="h-health" id="health-sec">
+    <h2 id="h-health">Run health <span id="health-kind"></span></h2>
+    <div class="stats" id="health"></div>
+    <div id="errkinds"></div>
+    <div id="repairs"></div>
+  </section>
+  <section class="c12" aria-labelledby="h-lanes">
+    <h2 id="h-lanes">Agent lanes <span id="lanes-sum"></span></h2>
+    <div class="lanes" id="lanes"></div>
+  </section>
+  <section class="c7" aria-labelledby="h-imp">
+    <h2 id="h-imp">Improvement by round</h2>
+    <div id="chart"></div>
+    <div class="legend">
+      <span><i class="sw" style="background:var(--train)"></i>best strategy on train</span>
+      <span><i class="sw" style="background:var(--val)"></i>incumbent on validation</span>
+      <span><i class="sw dash"></i>always keep vendor (validation)</span>
+    </div>
+  </section>
+  <section class="c12" aria-labelledby="h-tree">
+    <h2 id="h-tree">Search tree <span id="tree-sum"></span></h2>
+    <div id="stree" class="scrollx"></div>
+    <div class="legend" id="arm-legend"></div>
+  </section>
+  <section class="c7" aria-labelledby="h-ladder">
+    <h2 id="h-ladder">Where the gain comes from (validation, same hunks)</h2>
+    <div id="ladder"></div>
+  </section>
+  <section class="c5" aria-labelledby="h-ucb">
+    <h2 id="h-ucb">Expansion arms (UCB1)</h2>
+    <div id="ucb"></div>
+    <p class="note">Each round the controller applies the arm with the best upper confidence bound on train gain. Reward is the child's train accuracy minus its parent's.</p>
+  </section>
+  <section class="c5" aria-labelledby="h-safe">
+    <h2 id="h-safe">Safety gate <span id="safe-split"></span></h2>
+    <div class="stats" id="safety"></div>
+    <div id="nines"></div>
+    <p class="note" id="safe-note"></p>
+  </section>
+  <section class="c12" aria-labelledby="h-test" id="test-sec" hidden>
+    <h2 id="h-test">Held-out test: unseen vendor, one attempt per hunk</h2>
+    <div id="test"></div>
+  </section>
+  <section class="c5" aria-labelledby="h-pb">
+    <h2 id="h-pb">Playbook lineage</h2>
+    <div class="tree" id="tree"></div>
+  </section>
+  <section class="c4" aria-labelledby="h-dis">
+    <h2 id="h-dis">Disagreements <span id="dis-sum"></span></h2>
+    <div class="dis" id="dis"></div>
+  </section>
+  <section class="c3" aria-labelledby="h-al">
+    <h2 id="h-al">Alerts</h2>
+    <ul class="feed" id="alerts"></ul>
+  </section>
+</main>
+<script>
+const $ = (id) => document.getElementById(id);
+const esc = (s) => String(s ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
+const pct = (x) => (x == null ? "n/a" : (100 * x).toFixed(1) + "%");
+const hhmm = (t) => (t ? new Date(t * 1000).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", second: "2-digit", hourCycle: "h23" }) : "");
+let current = new URLSearchParams(location.search).get("run");
+
+function lanes(s) {
+  const L = s.lanes || [];
+  $("lanes-sum").textContent = `${s.events || 0} events`;
+  $("lanes").innerHTML = L.length ? L.map((l) => `
+    <div class="lane ${esc(l.status)}">
+      <div class="name">${esc(l.agent)}</div>
+      <div class="task">${esc(l.status === "working" ? "working on" : l.status === "interrupted" ? "interrupted during" : "last")} ${esc(l.task)} ${l.hunk ? "&middot; " + esc(l.hunk) : ""}</div>
+      <div class="kv">
+        <span>calls <b>${l.calls}</b></span>
+        <span>err <b>${l.errors}</b></span>
+        <span>lat <b>${l.latency_s ?? "-"}s</b></span>
+        <span>tok <b>${(l.tokens || 0).toLocaleString()}</b></span>
+      </div>
+      <div class="kv" style="margin-top:4px"><span>decision <b>${esc(l.decision ?? "-")}</b></span></div>
+    </div>`).join("") : `<p class="empty">No agent activity yet.</p>`;
+}
+
+function chart(s) {
+  const R = s.rounds || [];
+  const W = 640, H = 240, P = { l: 40, r: 12, t: 12, b: 26 };
+  if (!R.length) { $("chart").innerHTML = `<p class="empty">Waiting for round 0.</p>`; return; }
+  const xs = R.map((r) => r.round);
+  const train = R.map((r) => r.best_train?.accuracy);
+  const val = R.map((r) => r.incumbent_validation?.accuracy);
+  const kv = R[0].keep_vendor?.validation;
+  const base = R[0].baseline?.validation?.accuracy;
+  const all = [...train, ...val, kv, base].filter((v) => v != null);
+  const lo = Math.max(0, Math.floor((Math.min(...all) - 0.05) * 10) / 10);
+  const hi = Math.min(1, Math.ceil((Math.max(...all) + 0.05) * 10) / 10);
+  const n = Math.max(1, xs.length - 1);
+  const X = (i) => P.l + (i / n) * (W - P.l - P.r);
+  const Y = (v) => P.t + (1 - (v - lo) / (hi - lo)) * (H - P.t - P.b);
+  const line = (arr, c) => {
+    const pts = arr.map((v, i) => (v == null ? null : [X(i), Y(v)])).filter(Boolean);
+    return `<polyline fill="none" stroke="${c}" stroke-width="2.5" points="${pts.map((p) => p.join(",")).join(" ")}"/>` +
+      pts.map((p, i) => `<circle cx="${p[0]}" cy="${p[1]}" r="3.5" fill="${c}"><title>${pct(arr.filter((v) => v != null)[i])}</title></circle>`).join("");
+  };
+  let g = "";
+  for (let v = lo; v <= hi + 1e-9; v += 0.1) g += `<line x1="${P.l}" x2="${W - P.r}" y1="${Y(v)}" y2="${Y(v)}" stroke="var(--rule)"/><text x="${P.l - 6}" y="${Y(v) + 4}" text-anchor="end">${Math.round(v * 100)}%</text>`;
+  xs.forEach((x, i) => (g += `<text x="${X(i)}" y="${H - 8}" text-anchor="middle">${x === 0 ? "base" : "r" + x}</text>`));
+  if (kv != null) g += `<line x1="${P.l}" x2="${W - P.r}" y1="${Y(kv)}" y2="${Y(kv)}" stroke="var(--base)" stroke-dasharray="4 3" stroke-width="1.5"/>`;
+  if (base != null) g += `<text x="${W - P.r}" y="${Y(base) - 5}" text-anchor="end">round-0 baseline val ${pct(base)}</text><line x1="${P.l}" x2="${W - P.r}" y1="${Y(base)}" y2="${Y(base)}" stroke="var(--base)" stroke-width="1"/>`;
+  $("chart").innerHTML = `<svg viewBox="0 0 ${W} ${H}" width="100%" role="img" aria-label="Accuracy by round">${g}${line(train, "var(--train)")}${line(val, "var(--val)")}</svg>`;
+}
+
+function safety(s) {
+  const f = s.safety;
+  if (!f) { $("safety").innerHTML = `<p class="empty">The gate is calibrated at the end of the search.</p>`; $("nines").innerHTML = ""; $("safe-note").textContent = ""; return; }
+  $("safe-split").textContent = f.split;
+  $("safety").innerHTML = [
+    ["coverage", pct(f.coverage)],
+    ["escaped", `${f.escaped ?? 0}/${f.accepted ?? 0}`],
+    ["certified bound", pct(f.bound)],
+    ["nines", f.nines == null ? "0" : f.nines.toFixed(2)],
+  ].map(([k, v]) => `<div class="stat"><small>${k}</small><span class="big">${v}</span></div>`).join("");
+  const G = (f.grid || []).filter((g) => g.accepted > 0);
+  const W = 420, H = 130, P = { l: 30, r: 10, t: 10, b: 22 };
+  if (G.length) {
+    const maxN = 5;
+    const X = (i) => P.l + (i / Math.max(1, G.length - 1)) * (W - P.l - P.r);
+    const Y = (v) => P.t + (1 - Math.min(v, maxN) / maxN) * (H - P.t - P.b);
+    let g = "";
+    for (let k = 0; k <= maxN; k++) g += `<line x1="${P.l}" x2="${W - P.r}" y1="${Y(k)}" y2="${Y(k)}" stroke="var(--rule)"/><text x="${P.l - 6}" y="${Y(k) + 4}" text-anchor="end">${k}</text>`;
+    G.forEach((r, i) => {
+      const v = r.nines || 0;
+      g += `<rect x="${X(i) - 6}" y="${Math.min(Y(v), Y(0) - 2)}" width="12" height="${Math.max(2, Y(0) - Y(v))}" fill="${r.threshold === f.threshold ? "var(--accent)" : "var(--base)"}"><title>threshold ${r.threshold.toFixed(3)}: ${r.errors}/${r.accepted} errors, bound ${pct(r.bound)}</title></rect>`;
+    });
+    g += `<text x="${W - P.r}" y="${Y(maxN) + 12}" text-anchor="end">target 5 nines</text>`;
+    $("nines").innerHTML = `<svg viewBox="0 0 ${W} ${H}" width="100%" role="img" aria-label="Certified nines by gate threshold">${g}</svg>`;
+  }
+  $("safe-note").textContent = `Nines = -log10 of the one-sided 95% Clopper-Pearson bound on escaped errors among accepted hunks. Bars: gate thresholds on validation; the chosen threshold is highlighted.` + (f.target_met === false ? " The target bound is not reachable with this many calibration hunks; the gate uses the tightest bound it can certify." : "");
+}
+
+function tree(s) {
+  const P = s.playbooks || [];
+  if (!P.length) { $("tree").innerHTML = `<p class="empty">No playbook versions yet.</p>`; return; }
+  const kids = {};
+  P.forEach((p) => (kids[p.parent || "root"] ||= []).push(p));
+  const render = (p, depth) => {
+    const ls = (p.lessons || []).slice().sort((a, b) => (b.round || 0) - (a.round || 0)).slice(0, 4);
+    return `<div class="node" style="padding-left:${depth * 16}px">
+      <span class="ver">${esc(p.version)}</span> <span style="color:var(--muted)">round ${p.round ?? 0} &middot; ${(p.lessons || []).length} lessons${p.rejected?.length ? ` &middot; ${p.rejected.length} rejected by leakage filter` : ""}</span>
+      ${ls.map((l) => `<div class="lesson"><span class="cnt">${l.helpful || l.harmful ? `<span class="h" title="cited ${l.cited ?? l.helpful + l.harmful} times on training hunks">+${l.helpful}</span> <span class="x">-${l.harmful}</span>` : "not cited yet"}</span>${esc(l.text)}</div>`).join("")}
+    </div>` + (kids[p.version] || []).map((c) => render(c, depth + 1)).join("");
+  };
+  $("tree").innerHTML = (kids.root || []).map((p) => render(p, 0)).join("");
+}
+
+function disagreements(s) {
+  const D = (s.disagreements || []).slice().reverse();
+  const d = s.decisions || {};
+  $("dis-sum").textContent = `${d.disagreements || 0} of ${d.total || 0} decisions`;
+  $("dis").innerHTML = D.length ? D.slice(0, 12).map((e) => `<div><b>${esc(e.hunk)}</b> <span style="color:var(--muted)">r${e.round} ${esc(e.split)}</span><br>${(e.clusters || []).map((c) => `<span class="chip ${esc(c.label)}" title="${esc(c.personas.join(", "))}">${esc(c.label)} &times;${c.personas.length}</span>`).join("")}</div>`).join("") : `<p class="empty">Proposers agree so far.</p>`;
+}
+
+function alerts(s) {
+  const A = (s.alerts || []).slice().reverse();
+  $("alerts").innerHTML = A.length ? A.map((a) => {
+    const lvl = a.kind === "needs_review" ? "needs_review" : a.level || "info";
+    const msg = a.kind === "needs_review" ? `${a.hunk} needs a person (${a.source})` : a.message;
+    return `<li><time>${hhmm(a.t)}</time><span><span class="tag t-${esc(lvl)}">${esc(lvl.replace("_", " "))}</span>${esc(msg)}</span></li>`;
+  }).join("") : `<li><span></span><span class="empty">Nothing yet.</span></li>`;
+}
+
+function test(s) {
+  const T = s.test;
+  $("test-sec").hidden = !T;
+  if (!T) return;
+  const rows = [["always keep vendor", T.keep_vendor], ["round-0 baseline", T.baseline], ["frozen strategy " + T.frozen_strategy_id, T.frozen]];
+  const pc = (m, c) => { const p = m.per_class?.[c]; return p ? `${p.correct}/${p.n}` : "-"; };
+  const ci = (b) => `${(100 * b.delta).toFixed(1)} pts [${(100 * b.lo).toFixed(1)}, ${(100 * b.hi).toFixed(1)}]`;
+  $("test").innerHTML = `<div class="scroll"><table><thead><tr><th>arm</th><th>accuracy</th><th>keep vendor</th><th>take upstream</th><th>merge</th><th>coverage</th><th>escaped</th><th>certified bound</th></tr></thead><tbody>${rows.map(([n, m]) => `<tr><td>${esc(n)}</td><td>${pct(m.accuracy)}</td><td>${pc(m, "keep_vendor")}</td><td>${pc(m, "take_upstream")}</td><td>${pc(m, "merge")}</td><td>${m === T.keep_vendor ? "-" : pct(m.coverage)}</td><td>${m === T.keep_vendor ? "-" : `${m.escaped}/${m.accepted}`}</td><td>${m === T.keep_vendor ? "-" : pct(m.certified_bound)}</td></tr>`).join("")}</tbody></table></div>
+  <p class="note">Accuracy change vs baseline: ${ci(T.accuracy_delta)}. Safe coverage change: ${ci(T.safe_coverage_delta)}. Paired bootstrap 95% intervals over ${T.accuracy_delta.n} hunks. Model ${esc(T.model)} on ${esc(T.provider)}.${T.tokens ? ` Tokens per correct hunk: baseline ${T.tokens.baseline_per_correct_hunk.toLocaleString()}, frozen strategy ${T.tokens.frozen_per_correct_hunk.toLocaleString()}.` : ""}</p>`;
+}
+
+const ARM_COLOR = { seed: "var(--base)", "warm start": "var(--base)", reflect: "var(--accent)", retrieval: "var(--val)", samples: "var(--warn)", judge: "var(--ok)" };
+function stree(s) {
+  const T = s.tree || [];
+  $("tree-sum").textContent = T.length ? `${T.length} strategies` : "";
+  if (!T.length) { $("stree").innerHTML = `<p class="empty">No strategies yet.</p>`; return; }
+  const byRound = {};
+  T.forEach((n) => (byRound[n.round] ||= []).push(n));
+  const rounds = Object.keys(byRound).map(Number).sort((a, b) => a - b);
+  const colW = 180, rowH = 54, W = 60 + rounds.length * colW, H = 40 + Math.max(...rounds.map((r) => byRound[r].length)) * rowH;
+  const pos = {};
+  rounds.forEach((r, ci) => {
+    const nodes = byRound[r].slice().sort((a, b) => (pos[a.parent]?.[1] ?? -1) - (pos[b.parent]?.[1] ?? -1));
+    nodes.forEach((n, ri) => (pos[n.id] = [30 + ci * colW, 40 + ri * rowH]));
+  });
+  let g = "";
+  T.forEach((n) => { if (n.parent && pos[n.parent]) { const [x1, y1] = pos[n.parent], [x2, y2] = pos[n.id]; g += `<path d="M${x1} ${y1} C ${x1 + 70} ${y1}, ${x2 - 70} ${y2}, ${x2} ${y2}" fill="none" stroke="${ARM_COLOR[n.arm] || "var(--base)"}" stroke-width="1.6" opacity="0.8"/>`; } });
+  T.forEach((n) => {
+    const [x, y] = pos[n.id];
+    const ring = n.promoted ? `<circle cx="${x}" cy="${y}" r="10" fill="none" stroke="var(--ok)" stroke-width="2"/>` : "";
+    g += `${ring}<circle cx="${x}" cy="${y}" r="6" fill="${ARM_COLOR[n.arm] || "var(--base)"}"><title>${esc(n.id)} via ${esc(n.arm)}\ntrain ${n.train != null ? pct(n.train) : "-"}, val ${n.validation != null ? pct(n.validation) : "-"}</title></circle>`;
+    g += `<text x="${x + 12}" y="${y - 2}" style="fill:var(--ink)">${esc(n.arm)}</text><text x="${x + 12}" y="${y + 11}">tr ${n.train != null ? pct(n.train, 0) : "-"}${n.validation != null ? " · val " + pct(n.validation, 0) : ""}</text>`;
+  });
+  rounds.forEach((r, ci) => (g += `<text x="${30 + ci * colW}" y="14">round ${r}</text>`));
+  $("stree").innerHTML = `<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" role="img" aria-label="Strategy search tree">${g}</svg>`;
+  $("arm-legend").innerHTML = Object.entries(ARM_COLOR).filter(([k]) => k !== "warm start").map(([k, c]) => `<span><i class="sw" style="background:${c};height:8px;border-radius:50%;width:8px"></i>${k}</span>`).join("") + `<span><i class="sw" style="border:2px solid var(--ok);height:10px;width:10px;border-radius:50%;background:none"></i>promoted on validation</span>`;
+}
+function ucb(s) {
+  const U = s.ucb;
+  if (!U) { $("ucb").innerHTML = `<p class="empty">Arms appear once exploration runs.</p>`; return; }
+  const rows = Object.entries(U);
+  const max = Math.max(0.02, ...rows.map(([, v]) => Math.abs(v.n ? v.reward / v.n : 0)));
+  $("ucb").innerHTML = rows.map(([a, v]) => {
+    const m = v.n ? v.reward / v.n : 0;
+    return `<div class="bar-row"><span class="lbl">${esc(a)} · tried ${v.n}</span><span class="track"><span class="fill ${m > 0 ? "gain" : ""}" style="width:${Math.min(100, (100 * Math.abs(m)) / max)}%"></span></span><span class="v">${v.n ? (m >= 0 ? "+" : "") + (100 * m).toFixed(1) + " pts" : "untried"}</span></div>`;
+  }).join("");
+}
+function ladderView(s) {
+  const L = s.ladder;
+  if (!L) { $("ladder").innerHTML = `<p class="empty">Run <code>python -m forkward ladder ${esc(s.run || "")}</code> to attribute this run.</p>`; return; }
+  const rows = L.ladder.filter((r) => !r.missing);
+  $("ladder").innerHTML = rows.map((r) => {
+    const d = r.vs_previous;
+    return `<div class="bar-row"><span class="lbl" title="${esc(r.rung)}">${esc(r.rung)}</span><span class="track"><span class="fill" style="width:${100 * r.accuracy}%"></span></span><span class="v">${pct(r.accuracy)}${d ? ` (${d.delta >= 0 ? "+" : ""}${(100 * d.delta).toFixed(1)})` : ""}</span></div>`;
+  }).join("") + `<p class="note">Learning over the same team: ${(100 * L.attribution.learning_gain.delta).toFixed(1)} pts, 95% CI [${(100 * L.attribution.learning_gain.lo).toFixed(1)}, ${(100 * L.attribution.learning_gain.hi).toFixed(1)}].</p>`;
+}
+
+function health(s) {
+  const H = s.summary;
+  if (!H) return;
+  const cls = H.status === "finished" ? "st-finished" : H.status === "running" ? "st-running" : "st-stopped";
+  $("health-kind").innerHTML = `<span class="chip-status ${cls}">${esc(H.status)}</span> ${esc(H.kind)} run`;
+  const dur = H.started && H.last_event ? Math.round((H.last_event - H.started) / 60) + " min" : "-";
+  const errRate = H.calls ? (100 * H.errors / H.calls).toFixed(1) + "%" : "0%";
+  $("health").innerHTML = [
+    ["model calls", H.calls.toLocaleString()], ["failed calls", `${H.errors} (${errRate})`],
+    ["tokens", H.tokens.toLocaleString()], ["rounds logged", H.rounds_completed], ["duration", dur],
+  ].map(([k, v]) => `<div class="stat"><small>${k}</small><span class="big" style="font-size:24px">${esc(v)}</span></div>`).join("");
+  const E = Object.entries(H.error_kinds || {});
+  $("errkinds").innerHTML = E.length ? `<table><thead><tr><th>failure</th><th>count</th><th>by agent</th></tr></thead><tbody>${E.map(([k, v]) =>
+    `<tr><td>${esc(k)}</td><td>${v.count}</td><td style="text-align:left">${Object.entries(v.agents).map(([a, n]) => `${esc(a)} ${n}`).join(", ")}</td></tr>`).join("")}</tbody></table>` +
+    (H.status === "stopped early" ? `<p class="note">This run stopped before writing a final strategy, so it has no validation calibration or held-out result.</p>` : "")
+    : `<p class="note">No failed model calls.</p>`;
+  if (!H.owns_test && H.frozen_run) $("errkinds").insertAdjacentHTML("beforeend", `<p class="note">Held-out results belong to run <b>${esc(H.frozen_run)}</b>, whose strategy was frozen; they are not shown here.</p>`);
+  const R = s.repairs || [];
+  $("repairs").innerHTML = R.map((r) => `<h2 style="margin-top:14px">Build repair: ${r.build_ok ? "build passes" : "still failing"}${r.test ? ` · ${r.test.passed} passed, ${r.test.failed} failed` : ""}</h2>` +
+    r.fixes.map((f) => `<div class="fix">${esc(f.file)}:${f.line} ${esc(f.code)} · ${(f.tokens || 0).toLocaleString()} tokens<br><span class="d">- ${esc(f.old)}</span><br><span class="a">+ ${esc(f.new)}</span><br>${esc(f.evidence)}</div>`).join("")).join("");
+}
+
+async function tick() {
+  try {
+    const r = await fetch("/api/state" + (current ? "?run=" + encodeURIComponent(current) : ""));
+    const s = await r.json();
+    const sel = $("run");
+    const opts = (s.runs || []).filter((x) => !x.startsWith("test-")).reverse();
+    if (sel.options.length !== opts.length) sel.innerHTML = opts.map((x) => `<option>${esc(x)}</option>`).join("");
+    if (s.run) sel.value = s.run;
+    $("meta").innerHTML = s.run ? `<span>run <b>${esc(s.run)}</b></span><span>model <b>${esc(s.final?.model ?? (s.summary?.status === "running" ? "running" : "no final strategy"))}</b></span><span>incumbent <b>${esc(s.final?.strategy ?? (s.rounds?.at(-1)?.incumbent || "-"))}</b></span>` : "<span>no runs yet</span>";
+    health(s); lanes(s); chart(s); stree(s); ucb(s); ladderView(s); safety(s); tree(s); disagreements(s); alerts(s); test(s);
+  } catch (e) {
+    $("meta").innerHTML = `<span>board offline: ${esc(e.message)}</span>`;
+  }
+}
+const GROUPS = { luminal: "Cloud (Luminal)", anthropic: "Cloud (Claude)", local: "Local" };
+let MODELS = [];
+function modelNote(spec) {
+  const m = MODELS.find((x) => x.spec === spec);
+  const n = $("model-note");
+  if (!m) { n.className = "model-note"; n.textContent = "Using the configured default."; return; }
+  n.className = "model-note " + (m.gate_calibrated ? "ok" : "warn");
+  n.textContent = m.gate_calibrated
+    ? "Gate calibrated: safe hunks can auto-apply."
+    : "Gate not calibrated for this model: every hunk goes to review until you run forkward calibrate.";
+}
+async function loadModels() {
+  try {
+    const r = await fetch("/api/models");
+    const d = await r.json();
+    MODELS = d.models || [];
+    const sel = $("model");
+    const groups = {};
+    MODELS.forEach((m) => (groups[m.provider] ||= []).push(m));
+    sel.innerHTML = `<option value="">Default (from .env)</option>` + Object.entries(groups).map(([p, ms]) =>
+      `<optgroup label="${esc(GROUPS[p] || p)}">${ms.map((m) => `<option value="${esc(m.spec)}">${esc(m.model)}${m.gate_calibrated ? "" : " (uncalibrated)"}</option>`).join("")}</optgroup>`).join("");
+    if (!MODELS.some((m) => m.provider === "local")) sel.insertAdjacentHTML("beforeend", `<optgroup label="Local"><option disabled>No local server found on LOCAL_BASE_URL</option></optgroup>`);
+    sel.value = d.default || "";
+    modelNote(sel.value);
+  } catch (e) {
+    $("model-note").textContent = "Could not list models: " + e.message;
+  }
+}
+$("model").addEventListener("change", async (e) => {
+  const spec = e.target.value;
+  modelNote(spec);
+  try {
+    const r = await fetch("/api/model", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ model: spec || null }) });
+    if (!r.ok) throw new Error(`HTTP ${r.status}`);
+  } catch (err) {
+    $("model-note").className = "model-note warn";
+    $("model-note").textContent = "Could not save the default model: " + err.message;
+  }
+});
+loadModels();
+$("run").addEventListener("change", (e) => { current = e.target.value; history.replaceState(null, "", "?run=" + encodeURIComponent(current)); tick(); });
+tick();
+setInterval(tick, 2000);
+</script>
+</body>
+</html>

@@ -1,0 +1,29 @@
+[Unit]
+Description=Forkward durable sync worker (DBOS): queued and scheduled syncs, CI and PR waits
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+User=__USER__
+WorkingDirectory=__HOME__/forkward
+# The hosted box never builds untrusted code. It pushes only forkward/* branches, only through
+# the GitHub App's repository-scoped installation tokens; the customer's CI verifies the build.
+Environment=FORKWARD_HOSTED=1
+ExecStart=__HOME__/forkward/.venv/bin/python -m forkward worker
+Restart=always
+RestartSec=5
+NoNewPrivileges=yes
+ProtectSystem=strict
+ReadWritePaths=__HOME__/forkward __HOME__/.forkward
+PrivateTmp=yes
+PrivateDevices=yes
+ProtectKernelTunables=yes
+ProtectKernelModules=yes
+ProtectControlGroups=yes
+RestrictSUIDSGID=yes
+LockPersonality=yes
+MemoryMax=6G
+TasksMax=512
+
+[Install]
+WantedBy=multi-user.target

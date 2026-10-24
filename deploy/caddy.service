@@ -1,0 +1,12 @@
+[Unit]
+Description=Caddy HTTPS proxy for Forkward
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+ExecStart=/usr/local/bin/caddy run --config /etc/caddy/Caddyfile --adapter caddyfile
+Environment=XDG_DATA_HOME=/var/lib/caddy XDG_CONFIG_HOME=/etc/caddy
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

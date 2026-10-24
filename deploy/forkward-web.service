@@ -1,0 +1,17 @@
+[Unit]
+Description=Forkward web frontend (Next.js, live mode)
+After=network-online.target forkward-board.service
+Wants=network-online.target
+
+[Service]
+User=__USER__
+WorkingDirectory=__HOME__/forkward/frontend
+# DATABASE_URL, BETTER_AUTH_SECRET, BETTER_AUTH_URL, the GitHub App and the Stripe settings
+EnvironmentFile=__HOME__/forkward/.env
+Environment=NODE_ENV=production NEXT_TELEMETRY_DISABLED=1
+ExecStart=/usr/bin/npx next start -p 3000 -H 127.0.0.1
+Restart=always
+RestartSec=3
+
+[Install]
+WantedBy=multi-user.target

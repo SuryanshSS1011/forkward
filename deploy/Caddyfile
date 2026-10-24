@@ -1,0 +1,18 @@
+{$HOSTNAME} {
+	encode gzip
+	# Metered MCP API (streams responses)
+	handle /mcp* {
+		reverse_proxy 127.0.0.1:8000 {
+			flush_interval -1
+		}
+	}
+	# GitHub App webhooks, verified by signature in the MCP server process
+	handle /github/webhook {
+		reverse_proxy 127.0.0.1:8000
+	}
+	# Everything else is the Next.js app: the site, sign-in, OAuth discovery, and the board, which
+	# Next.js proxies to 127.0.0.1:8765 only for signed-in users. The board is never served directly.
+	handle {
+		reverse_proxy 127.0.0.1:3000
+	}
+}

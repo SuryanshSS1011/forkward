@@ -1,0 +1,28 @@
+{
+  "name": "forkward-bot",
+  "url": "https://YOUR_HOST",
+  "description": "Keeps forks in sync with upstream. Opens a pull request per sync, marks every hunk that needs a person, and waits for your CI.",
+  "public": true,
+  "hook_attributes": {
+    "url": "https://YOUR_HOST/github/webhook",
+    "active": true
+  },
+  "callback_urls": [
+    "https://YOUR_HOST/api/auth/callback/github"
+  ],
+  "setup_url": "https://YOUR_HOST/api/github/installed",
+  "setup_on_update": true,
+  "request_oauth_on_install": false,
+  "default_permissions": {
+    "contents": "write",
+    "pull_requests": "write",
+    "checks": "write",
+    "metadata": "read",
+    "email_addresses": "read",
+    "members": "read"
+  },
+  "default_events": [
+    "check_suite",
+    "pull_request"
+  ]
+}

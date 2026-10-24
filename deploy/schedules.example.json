@@ -1,0 +1,15 @@
+[
+  {
+    "repo": "SuryanshSS1011/egglog",
+    "upstream": "egraphs-good/egglog@main",
+    "base": "origin/luminal/subsumed-c2c0f151",
+    "open_pr": false
+  },
+  {
+    "repo": "SuryanshSS1011/luminal",
+    "upstream": "luminal-ai/luminal@77d3060f01dc9d6f649687cf16a651e3f288aa0c",
+    "base": "origin/codex/pr566-ci-extras",
+    "open_pr": false,
+    "demo": true
+  }
+]
