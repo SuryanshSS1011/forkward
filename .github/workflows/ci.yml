@@ -1,0 +1,91 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  python:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: forkward
+          POSTGRES_PASSWORD: forkward
+          POSTGRES_DB: forkward_test
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U forkward" --health-interval 5s --health-timeout 5s
+          --health-retries 10
+    env:
+      # The service's superuser creates a separate non-superuser role, because superusers bypass
+      # row-level security and the tests check that it holds.
+      PGPASSWORD: forkward
+      TEST_DATABASE_URL: postgresql://forkward_app:forkward_app@localhost:5432/forkward_test
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+      - uses: astral-sh/setup-uv@d0cc045d04ccac9d8b7881df0226f9e82c39688e # v6
+        with:
+          enable-cache: true
+      - run: uv sync --frozen
+      - name: Create a non-superuser test role
+        run: |
+          psql -h localhost -U forkward -d forkward_test -v ON_ERROR_STOP=1 \
+            -c "CREATE ROLE forkward_app LOGIN PASSWORD 'forkward_app'" \
+            -c "ALTER DATABASE forkward_test OWNER TO forkward_app" \
+            -c "ALTER SCHEMA public OWNER TO forkward_app"
+      - run: uv run ruff check .
+      - run: uv run ruff format --check .
+      # The frozen benchmark data is not public, so tests that read it skip here.
+      - run: uv run pytest -q -rs
+
+  frontend:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: forkward
+          POSTGRES_PASSWORD: forkward
+          POSTGRES_DB: forkward_test
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U forkward" --health-interval 5s --health-timeout 5s
+          --health-retries 10
+    defaults:
+      run:
+        working-directory: frontend
+    env:
+      NEXT_TELEMETRY_DISABLED: 1
+      # The withTenant isolation test applies migrations/*.sql to this database. Like the Python
+      # job, it uses a non-superuser role, because superusers bypass row-level security.
+      PGPASSWORD: forkward
+      TEST_DATABASE_URL: postgresql://forkward_app:forkward_app@localhost:5432/forkward_test
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+      - uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - name: Create a non-superuser test role
+        run: |
+          psql -h localhost -U forkward -d forkward_test -v ON_ERROR_STOP=1 \
+            -c "CREATE ROLE forkward_app LOGIN PASSWORD 'forkward_app'" \
+            -c "ALTER DATABASE forkward_test OWNER TO forkward_app" \
+            -c "ALTER SCHEMA public OWNER TO forkward_app"
+      # Every dependency comes from the public npm registry. Install scripts never run, here or on
+      # the server.
+      - run: npm ci --no-audit --no-fund --ignore-scripts
+      - run: npm run typecheck
+      - run: npm test
+      - run: npm run build

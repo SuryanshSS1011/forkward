@@ -1,0 +1,61 @@
+name: Deploy
+
+# Ship main to the deploy host after CI passes on it, then check the live endpoints. Nothing runs
+# until the repository variables DEPLOY_HOST (user@host) and DEPLOY_URL (https://your-domain) exist.
+on:
+  workflow_run:
+    workflows: [CI]
+    types: [completed]
+    branches: [main]
+  # A manual run redeploys main only, and only a commit CI already passed (checked below).
+  workflow_dispatch:
+
+concurrency:
+  group: deploy
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  deploy:
+    if: vars.DEPLOY_HOST != '' && vars.DEPLOY_URL != '' && ((github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main') || (github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event == 'push'))
+    runs-on: ubuntu-latest
+    env:
+      DEPLOY_HOST: ${{ vars.DEPLOY_HOST }}
+      DEPLOY_URL: ${{ vars.DEPLOY_URL }}
+    environment:
+      name: production
+      url: ${{ vars.DEPLOY_URL }}
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+        with:
+          ref: ${{ github.event.workflow_run.head_sha || github.sha }}
+      - name: Require a green CI run for this commit
+        if: github.event_name == 'workflow_dispatch'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          SHA: ${{ github.sha }}
+        run: |
+          n=$(gh run list --repo "$GITHUB_REPOSITORY" --workflow CI --branch main --commit "$SHA" \
+                --status success --json databaseId --jq length)
+          test "${n:-0}" -gt 0 || { echo "::error::CI has not passed on $SHA; refusing to deploy"; exit 1; }
+      - name: Install SSH key and the pinned host key
+        env:
+          DEPLOY_SSH_KEY: ${{ secrets.DEPLOY_SSH_KEY }}
+          DEPLOY_KNOWN_HOSTS: ${{ secrets.DEPLOY_KNOWN_HOSTS }}
+        run: |
+          test -n "$DEPLOY_SSH_KEY" || { echo "::error::Set the DEPLOY_SSH_KEY repository secret"; exit 1; }
+          # The host key is pinned in a secret, never learned from whatever answers on the network.
+          test -n "$DEPLOY_KNOWN_HOSTS" || { echo "::error::Set the DEPLOY_KNOWN_HOSTS repository secret"; exit 1; }
+          install -d -m 700 ~/.ssh
+          printf '%s\n' "$DEPLOY_SSH_KEY" > ~/.ssh/deploy.pem
+          chmod 600 ~/.ssh/deploy.pem
+          printf '%s\n' "$DEPLOY_KNOWN_HOSTS" > ~/.ssh/known_hosts
+          chmod 600 ~/.ssh/known_hosts
+      - run: deploy/deploy.sh "$DEPLOY_HOST" "$DEPLOY_URL"
+      - name: Smoke test
+        run: |
+          for i in 1 2 3 4 5 6; do deploy/smoke.sh "$DEPLOY_URL" && exit 0; sleep 10; done
+          exit 1
