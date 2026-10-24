@@ -1,0 +1,36 @@
+[project]
+name = "forkward"
+version = "0.1.0"
+description = "Self-improving agent team that resolves upstream merge conflicts in long-lived forks"
+requires-python = ">=3.11"
+dependencies = [
+    "anthropic>=1,<2",
+    "dbos>=2",
+    "fastmcp>=4.1,<5",
+    "httpx>=0.27",
+    "opentelemetry-exporter-otlp-proto-http>=1.30",
+    "opentelemetry-sdk>=1.30",
+    "psycopg-pool>=3.2",
+    "psycopg[binary]>=3.2",
+    "pyjwt[crypto]>=2.9",
+]
+
+[dependency-groups]
+dev = ["pytest>=8", "ruff>=0.6"]
+
+[tool.ruff]
+line-length = 100
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+
+[project.scripts]
+forkward-mcp = "forkward.mcp_server:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["forkward"]

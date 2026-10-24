@@ -1,0 +1,12 @@
+.DS_Store
+.env
+__pycache__/
+.venv/
+runs/
+*.tar.gz
+ROADMAP.md
+.claude/
+*.env
+!.env.example
+training/
+frontend/AGENTS.md
