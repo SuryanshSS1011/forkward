@@ -149,6 +149,9 @@ def main() -> int:
     sub.add_parser("keys", help="create, list or revoke hosted API keys", add_help=False)
     sub.add_parser("db", help="apply database migrations or show their status", add_help=False)
     sub.add_parser("worker", help="run the durable sync worker (DBOS) for the hosted service")
+    sub.add_parser(
+        "solana", help="anchor sync decisions on Solana devnet and verify them", add_help=False
+    )
     if len(sys.argv) > 1 and sys.argv[1] == "repair":
         return repair.main(sys.argv[2:])
     if len(sys.argv) > 1 and sys.argv[1] == "sync":
@@ -199,6 +202,10 @@ def main() -> int:
         return 0
     if len(sys.argv) > 1 and sys.argv[1] == "keys":
         return billing.main(sys.argv[2:])
+    if len(sys.argv) > 1 and sys.argv[1] == "solana":
+        from forkward import solana
+
+        return solana.main(sys.argv[2:])
     if len(sys.argv) > 1 and sys.argv[1] == "worker":
         from forkward import workflows
 

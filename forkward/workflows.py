@@ -409,6 +409,29 @@ def record_result(job: dict, res: dict, preview: bool = False) -> None:
     log_event(job, "done" if status == "succeeded" else "ci", "done" if preview else "info", msg)
 
 
+@DBOS.step()
+def anchor_decisions(job: dict, head_sha: str | None) -> dict | None:
+    """Write the job's decision digest to Solana when SOLANA_KEYPAIR is set. A chain outage only
+    costs the anchor, never the sync."""
+    from forkward import solana
+
+    if not solana.enabled():
+        return None
+    try:
+        a = solana.anchor_job(job, head_sha)
+    except Exception as e:  # noqa: BLE001 - tamper evidence is extra; the pull request is open
+        log_event(job, None, "warning", f"Could not anchor the decisions on Solana: {e}"[:300])
+        return None
+    log_event(
+        job,
+        None,
+        "info",
+        f"Anchored the decisions on Solana {a['cluster']}",
+        explorer=a["explorer"],
+    )
+    return a
+
+
 def _source(h: dict) -> str:
     chosen = next((c for c in (h.get("detail") or {}).get("candidates", []) if c["chosen"]), None)
     return "+".join(chosen["sources"])[:300] if chosen else ""
@@ -476,6 +499,7 @@ def sync_job(job_id: str) -> dict:
     record_result(job, res)
     if not res.get("pr_url"):
         return {"status": "succeeded"}
+    anchor_decisions(job, res.get("head_sha"))
     # The waits for CI and for the merge can last days, so they run in their own workflow outside
     # the queue. A queued workflow holds a concurrency slot until it returns, and a few open pull
     # requests would otherwise stop every new sync and review from starting.
