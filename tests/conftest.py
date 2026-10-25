@@ -12,6 +12,10 @@ import pytest
 
 from forkward import db
 
+# A developer's .env may hold the production DATABASE_URL, and llm.load_env() fills in any variable
+# that is unset. An empty value keeps every test off it; only the pg fixture sets a database.
+os.environ["DATABASE_URL"] = ""
+
 
 @pytest.fixture
 def pg(monkeypatch):

@@ -86,3 +86,13 @@ def test_run_log_is_a_hypertable_on_timescaledb(pg):
         cur.execute("SELECT events FROM run_log_hourly WHERE run_id = 'r1'")
         # Real-time aggregation answers from raw rows before the policy has materialized them.
         assert [r["events"] for r in cur.fetchall()] == [2]
+
+
+def test_the_suite_never_reads_a_database_from_dotenv(tmp_path):
+    """Run logs from tests once landed in the production run_log through a .env DATABASE_URL."""
+    from forkward import llm
+
+    env = tmp_path / ".env"
+    env.write_text("DATABASE_URL=postgresql://prod.example/db\n")
+    llm.load_env(env)
+    assert not db.configured()
