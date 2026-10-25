@@ -19,7 +19,6 @@ export function JobView({
   onReview,
   onApply,
   applyLabel,
-  stage,
   extraActions,
   note,
   hideStages,
@@ -29,8 +28,6 @@ export function JobView({
   onReview?: ReviewFn;
   onApply?: () => Promise<void>;
   applyLabel?: string;
-  /** Overrides the stage shown, for the sample replay. */
-  stage?: Stage | null;
   extraActions?: React.ReactNode;
   note?: React.ReactNode;
   /** Stages this run never had, such as the pull request and CI in a recording without one. */
@@ -120,7 +117,7 @@ export function JobView({
       </header>
 
       <div className="mt-8">
-        <StageTrack job={job} stage={stage} hide={hideStages} />
+        <StageTrack job={job} hide={hideStages} />
       </div>
 
       {hunks.length > 0 ? (

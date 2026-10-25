@@ -3,9 +3,9 @@ import { PREVIEW_STAGES, STAGES } from "./words";
 
 /** The run's stages in order, with the current one marked. These are a real sequence, so they are
  * numbered by position rather than decorated. */
-export function StageTrack({ job, stage, hide = [] }: { job: JobSummary; stage?: Stage | null; hide?: Stage[] }) {
+export function StageTrack({ job, hide = [] }: { job: JobSummary; hide?: Stage[] }) {
   const steps = (job.kind === "preview" ? PREVIEW_STAGES : STAGES).filter((s) => !hide.includes(s.key));
-  const current = stage ?? job.stage ?? (job.status === "queued" ? null : "fetch");
+  const current = job.stage ?? (job.status === "queued" ? null : "fetch");
   const at = current ? steps.findIndex((s) => s.key === current) : -1;
   const finished = job.status === "succeeded" || job.status === "cancelled";
   const failed = job.status === "failed";

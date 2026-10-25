@@ -67,6 +67,7 @@ export default async function Demo() {
       </section>
       <JobView
         job={SAMPLE_JOB}
+        sample
         hideStages={["open_pr", "ci"]}
         note={
           <span className="flex items-baseline gap-2">
