@@ -174,8 +174,7 @@ export default async function How() {
               vendor, calibrated on a second and tested once on a third.
             </p>
             <p className="mt-5 text-[16px] text-[var(--pa-ink)]">
-              <span className="font-display text-[28px] font-extrabold">76%</span> of Rockchip test conflicts matched (54 of 71), with DeepSeek V4.1 Flash,
-              measured before this event. Always keeping your fork&rsquo;s side scores 71.8%, so the gain is real but small.
+              <span className="font-display text-[28px] font-extrabold">76%</span> of Rockchip test conflicts matched (54 of 71), with DeepSeek V4.1 Flash. Always keeping your fork&rsquo;s side scores 71.8%, so the gain is real but small.
             </p>
           </div>
           <table className={`${sheet} self-start text-left text-[15px]`} style={edge}>
@@ -216,7 +215,7 @@ export default async function How() {
         <section className="mt-14" aria-labelledby="stack">
           <span className={eyebrow}>What it runs on</span>
           <h2 id="stack" className={h2}>
-            Built this weekend on
+            The stack
           </h2>
           <dl className="mt-6 grid gap-x-8 gap-y-4 md:grid-cols-2">
             {STACK.map(([t, d]) => (

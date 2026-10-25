@@ -64,7 +64,7 @@ const proof: { to: number; decimals?: number; suffix?: string; label: string; so
     to: 76,
     suffix: "%",
     label: "of real kernel conflicts resolved exactly as the vendor's engineers did (54 of 71).",
-    source: "Rockchip test set, DeepSeek V4.1 Flash, measured before this event. Always keeping the fork's side scores 71.8%.",
+    source: "Rockchip test set, DeepSeek V4.1 Flash. Always keeping the fork's side scores 71.8%.",
     valueColor: "text-[var(--pa-ink)]",
     radius: "11px 5px 14px 6px",
   },
