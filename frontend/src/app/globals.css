@@ -3,12 +3,14 @@
 @tailwind utilities;
 
 :root {
-  --surface: #EEF3F1; --surface-raised: #FFFFFF; --surface-sunken: #E0E9E6;
-  --line: #D3DFDB; --ink: #0F2A2E; --ink-muted: #48636A; --ink-faint: #6F878A;
-  --honey: #FF7A3D; --honey-hover: #F26A2B; --on-honey: #1A0D06;
-  --sunshine: #FFD166; --butter: #FFE9C7; --coral: #FF9E73; --rust: #0B6B73;
-  --surface-inverse: #0F2A2E; --on-inverse: #EAF3F1;
-  --success: #2F6B3F; --danger: #B3261E; --focus: #0B6B73;
+  /* The whole app shares the parchment palette (the landing's .parchment skin uses its own --pa-*
+     tokens; these drive every other page through the shared components). No teal or green remains. */
+  --surface: #FFF8F0; --surface-raised: #FFFFFF; --surface-sunken: #F4EDE4;
+  --line: #DDC0BC; --ink: #1E1B16; --ink-muted: #57423F; --ink-faint: #8A716E;
+  --honey: #C0592F; --honey-hover: #A2420F; --on-honey: #FFFFFF;
+  --sunshine: #E0A33A; --butter: #F3E2A3; --coral: #D98A5C; --rust: #7E2319;
+  --surface-inverse: #33302A; --on-inverse: #F7F0E7;
+  --success: #2F7A3E; --danger: #BA1A1A; --focus: #7E2319;
   --spring: cubic-bezier(.34, 1.56, .64, 1);
   color-scheme: light;
 }
@@ -81,7 +83,7 @@ body > main { flex: 1 0 auto; }
   .btn-outline-teal:hover:not(:disabled) { background: var(--surface-sunken); border-color: var(--rust); }
   /* Accent: the single action color for every page except the landing page. */
   .btn-accent { background: var(--rust); color: #fff; }
-  .btn-accent:hover:not(:disabled) { background: #095A61; box-shadow: 0 6px 18px rgba(11,107,115,.32); }
+  .btn-accent:hover:not(:disabled) { background: #5E1A12; box-shadow: 0 6px 18px rgba(126,35,25,.32); }
   :root[data-theme="dark"] .btn-accent { color: #071113; }
   .btn:disabled { opacity: .55; cursor: not-allowed; }
   .btn-sm { min-height: 36px; padding: 0 14px; font-size: 14px; }
@@ -112,7 +114,7 @@ body > main { flex: 1 0 auto; }
 
 /* The Forkward automaton (components/AgentMark.tsx). Every state reads without motion; the motion
    only says that something is happening. */
-.am { overflow: visible; --steel: #24484E; --steel-hi: #3A6A71; --glass: #0F2A2E; --glow: #5CC7D0; --mk-ink: #0F2A2E; }
+.am { overflow: visible; --steel: #6B4F3F; --steel-hi: #8A6C57; --glass: #2B211C; --glow: #E0A33A; --mk-ink: #2B211C; }
 .am * { transform-box: fill-box; transform-origin: center; }
 .am-body { fill: var(--steel); }
 .am-joint { fill: var(--mk-ink); }
@@ -130,7 +132,7 @@ body > main { flex: 1 0 auto; }
 .am-chin { fill: var(--steel-hi); }
 .am-eye-happy, .am-brow-up, .am-brow-worry, .am-mouth-open, .am-mouth-worry { display: none; }
 .am-lid { fill: var(--mk-ink); }
-.am-base { fill: #48636A; }
+.am-base { fill: #8A716E; }
 .am-rail { fill: none; stroke-width: 2.6; stroke-linecap: round; transition: opacity .3s; }
 .am-rail-fork { stroke: var(--glow); }
 .am-rail-up { stroke: var(--honey); }
@@ -355,3 +357,63 @@ html[data-hero-docked] .hero-title { opacity: 0; }
 .chip-out-busy { background: color-mix(in srgb, var(--rust) 12%, transparent); color: var(--rust); }
 
 .step-num { display: inline-grid; place-items: center; width: 24px; height: 24px; border-radius: 50%; background: var(--rust); color: #fff; font-size: 13px; font-weight: 600; }
+
+/* ============================================================================
+   Landing/marketing skin. A warm "scrap paper" Material 3 set, scoped to
+   .parchment so it never leaks into components that use the tokens above.
+   ============================================================================ */
+.parchment {
+  --pa-bg: #fff8f0; --pa-surface: #ffffff; --pa-surface-low: #faf3e9;
+  --pa-surface-container: #f4ede4; --pa-surface-high: #eee7de; --pa-surface-highest: #e8e2d9;
+  --pa-ink: #1e1b16; --pa-ink-muted: #57423f; --pa-outline: #8a716e; --pa-outline-variant: #ddc0bc;
+  --pa-primary: #7e2319; --pa-primary-container: #9e3a2e; --pa-on-primary: #ffffff;
+  --pa-primary-fixed: #ffdad5;
+  --pa-secondary: #48607e; --pa-secondary-fixed: #d2e4ff; --pa-on-secondary-fixed: #001c37;
+  --pa-tertiary: #6a5e2c; --pa-tertiary-fixed: #f3e2a3;
+  --pa-charcoal: #33302a; --pa-inverse: #33302a; --pa-on-inverse: #f7f0e7; --pa-on-inverse-muted: #ddc0bc;
+  --pa-green: #2f7a3e;
+  background: var(--pa-bg);
+  color: var(--pa-ink);
+  font-family: var(--font-body-alt), var(--font-sans), system-ui, sans-serif;
+  font-size: 16px;
+  line-height: 24px;
+}
+.parchment .font-display { font-family: var(--font-display), var(--font-sans), sans-serif; }
+.parchment .font-label { font-family: var(--font-mono), ui-monospace, monospace; }
+/* Headings are display type; keep their own tight leading so wrapped lines never collapse onto
+   each other under the 24px body line-height the .parchment container sets. */
+.parchment h1, .parchment h2, .parchment h3 { font-family: var(--font-display), var(--font-sans), sans-serif; line-height: 1.1; }
+/* Material Symbols, used for the small glyphs across the marketing pages. */
+.material-symbols-outlined {
+  font-family: "Material Symbols Outlined";
+  font-weight: normal;
+  font-style: normal;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  font-feature-settings: "liga";
+  -webkit-font-feature-settings: "liga";
+  -webkit-font-smoothing: antialiased;
+  font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24;
+}
+.parchment .animate-ping-slow { animation: pa-ping 1.6s cubic-bezier(0, 0, 0.2, 1) infinite; }
+@keyframes pa-ping { 75%, 100% { transform: scale(2); opacity: 0; } }
+.parchment details > summary { list-style: none; }
+.parchment details > summary::-webkit-details-marker { display: none; }
+.parchment details[open] .pa-chevron { transform: rotate(90deg); }
+/* Jitter-style motion: cards lift off their drop shadow on hover, and content eases up on load. */
+.parchment .pa-lift { transition: transform .25s var(--spring), box-shadow .25s ease; }
+@media (hover: hover) { .parchment .pa-lift:hover { transform: translateY(-5px) rotate(0deg); } }
+.parchment .pa-fade { opacity: 0; animation: pa-fade-up .6s var(--spring) forwards; }
+.parchment .pa-fade-1 { animation-delay: .05s; }
+.parchment .pa-fade-2 { animation-delay: .15s; }
+.parchment .pa-fade-3 { animation-delay: .25s; }
+@keyframes pa-fade-up { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
+@media (prefers-reduced-motion: reduce) {
+  .parchment .pa-fade { opacity: 1; animation: none; }
+  .parchment .pa-lift:hover { transform: none; }
+}

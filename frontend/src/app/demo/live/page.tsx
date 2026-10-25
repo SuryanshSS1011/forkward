@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useMemo, useRef, useState } from "react";
+import { MarketingShell } from "@/components/MarketingShell";
 import { JobView } from "@/components/job/JobView";
 import { SAMPLE_JOB } from "@/lib/demo/sample";
 import type { HunkRow, JobDetail, Stage } from "@/lib/jobs";
@@ -58,32 +59,34 @@ export default function SampleRun() {
   }, [hunks, committed, replay]);
 
   return (
-    <JobView
-      job={job}
-      stage={replay?.stage}
-      hideStages={["open_pr", "ci"]}
-      applyLabel={(() => {
-        const n = hunks.filter((h) => h.review === "accepted" && !h.review_commit).length;
-        return `Commit ${n} accepted ${n === 1 ? "hunk" : "hunks"} (sample, nothing is pushed)`;
-      })()}
-      onReview={async (h, decision, resolution) => {
-        setHunks((all) => all.map((x) => (x.id === h.id ? { ...x, review: decision, final_resolution: decision === "accepted" ? (resolution ?? null) : null } : x)));
-      }}
-      onApply={async () => {
-        setHunks((all) => all.map((x) => (x.review === "accepted" && !x.review_commit ? { ...x, review_commit: "sample", applied: true } : x)));
-        setCommitted((n) => n + 1);
-      }}
-      extraActions={
-        <button className="btn btn-secondary" onClick={play} disabled={!!replay}>
-          {replay ? "Replaying…" : "Replay the run"}
-        </button>
-      }
-      note={
-        <span className="flex items-baseline gap-2">
-          <span className="kind-pill">Recorded run</span>
-          <span>Real conflicts and votes, decided under an earlier gate that could auto-apply. Live syncs send every hunk to you until the gate certifies its error bound. Nothing here is pushed.</span>
-        </span>
-      }
-    />
+    <MarketingShell active="demo">
+      <JobView
+        job={job}
+        stage={replay?.stage}
+        hideStages={["open_pr", "ci"]}
+        applyLabel={(() => {
+          const n = hunks.filter((h) => h.review === "accepted" && !h.review_commit).length;
+          return `Commit ${n} accepted ${n === 1 ? "hunk" : "hunks"} (sample, nothing is pushed)`;
+        })()}
+        onReview={async (h, decision, resolution) => {
+          setHunks((all) => all.map((x) => (x.id === h.id ? { ...x, review: decision, final_resolution: decision === "accepted" ? (resolution ?? null) : null } : x)));
+        }}
+        onApply={async () => {
+          setHunks((all) => all.map((x) => (x.review === "accepted" && !x.review_commit ? { ...x, review_commit: "sample", applied: true } : x)));
+          setCommitted((n) => n + 1);
+        }}
+        extraActions={
+          <button className="btn btn-secondary" onClick={play} disabled={!!replay}>
+            {replay ? "Replaying…" : "Replay the run"}
+          </button>
+        }
+        note={
+          <span className="flex items-baseline gap-2">
+            <span className="kind-pill">Recorded run</span>
+            <span>Real conflicts and votes, decided under an earlier gate that could auto-apply. Live syncs send every hunk to you until the gate certifies its error bound. Nothing here is pushed.</span>
+          </span>
+        }
+      />
+    </MarketingShell>
   );
 }

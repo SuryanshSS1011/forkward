@@ -1,11 +1,15 @@
 import type { Metadata } from "next";
-import { Instrument_Sans, JetBrains_Mono } from "next/font/google";
+import { Epilogue, Instrument_Sans, JetBrains_Mono, Karla } from "next/font/google";
 import { Footer } from "@/components/Footer";
 import { Nav } from "@/components/Nav";
+import { SiteChrome } from "@/components/SiteChrome";
 import "./globals.css";
 
 const sans = Instrument_Sans({ subsets: ["latin"], variable: "--font-sans", display: "swap" });
 const mono = JetBrains_Mono({ subsets: ["latin"], variable: "--font-mono", display: "swap" });
+// The marketing pages (scoped under .parchment) are set in these two faces.
+const display = Epilogue({ subsets: ["latin"], variable: "--font-display", display: "swap" });
+const bodyAlt = Karla({ subsets: ["latin"], variable: "--font-body-alt", display: "swap" });
 
 export const metadata: Metadata = {
   title: "Forkward",
@@ -14,12 +18,21 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${sans.variable} ${mono.variable}`}>
+    <html lang="en" className={`${sans.variable} ${mono.variable} ${display.variable} ${bodyAlt.variable}`}>
+      <head>
+        {/* Material Symbols power the small glyphs on the marketing pages. */}
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link
+          rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap"
+        />
+      </head>
       <body>
         <a href="#main" className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded-btn focus:bg-raised focus:px-3 focus:py-2">Skip to content</a>
-        <Nav />
+        <SiteChrome><Nav /></SiteChrome>
         <main id="main">{children}</main>
-        <Footer />
+        <SiteChrome><Footer /></SiteChrome>
       </body>
     </html>
   );
