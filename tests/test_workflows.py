@@ -257,6 +257,79 @@ def test_mcp_accepts_api_keys_and_audience_bound_eddsa_tokens(tenant_repo, monke
     assert asyncio.run(v.verify_token(token(sub="nobody"))) is None
 
 
+def test_mcp_accepts_auth0_tokens_for_github_users_of_the_web_app(tenant_repo, monkeypatch):
+    import jwt as pyjwt
+    from cryptography.hazmat.primitives import serialization
+    from cryptography.hazmat.primitives.asymmetric import rsa
+    from fastmcp.server.auth.providers.jwt import JWTVerifier
+
+    from forkward import mcp_server
+
+    sk = rsa.generate_private_key(public_exponent=65537, key_size=2048)
+    pub = sk.public_key().public_bytes(
+        serialization.Encoding.PEM, serialization.PublicFormat.SubjectPublicKeyInfo
+    )
+    issuer, aud = "https://forkward.us.auth0.com/", "https://forkward.example/mcp"
+    v = mcp_server.ForkwardVerifier(
+        auth0=JWTVerifier(public_key=pub, issuer=issuer, audience=aud, algorithm="RS256")
+    )
+    with db.system() as cur:
+        cur.execute(
+            'INSERT INTO "user" (id, name, email, "emailVerified") VALUES'
+            " ('user-2', 'Ada', 'ada@example.com', true)"
+        )
+        cur.execute(
+            'INSERT INTO "account" (id, "accountId", "providerId", "userId", "updatedAt")'
+            " VALUES ('acc-2', '4242', 'github', 'user-2', now())"
+        )
+        cur.execute(
+            "INSERT INTO tenant_members (tenant_id, user_id) VALUES (%s, 'user-2')",
+            (tenant_repo,),
+        )
+
+    def token(**over):
+        now = int(time.time())
+        claims = {"iss": issuer, "aud": aud, "sub": "github|4242", "iat": now, "exp": now + 600}
+        return pyjwt.encode({**claims, **over}, sk, algorithm="RS256")
+
+    at = asyncio.run(v.verify_token(token()))
+    assert at is not None and at.claims["tenant_id"] == tenant_repo
+    # A GitHub account that never signed in to the web app, another connection, a spoofed
+    # subject, the wrong audience or issuer, and an expired token are all refused.
+    for bad in (
+        token(sub="github|9999"),
+        token(sub="google-oauth2|4242"),
+        token(sub="github|4242' OR '1'='1"),
+        token(aud="https://evil.example/mcp"),
+        token(iss="https://evil.auth0.com/"),
+        token(exp=int(time.time()) - 10),
+    ):
+        assert asyncio.run(v.verify_token(bad)) is None
+    # Without AUTH0_DOMAIN only Better Auth is trusted, so the same token is refused.
+    assert asyncio.run(mcp_server.ForkwardVerifier().verify_token(token())) is None
+
+
+def test_auth_provider_advertises_auth0_when_configured(monkeypatch):
+    from forkward import mcp_server
+
+    monkeypatch.setenv("BETTER_AUTH_URL", "https://forkward.example")
+    monkeypatch.delenv("FORKWARD_MCP_URL", raising=False)
+    monkeypatch.delenv("AUTH0_DOMAIN", raising=False)
+    p = mcp_server.auth_provider()
+    assert [str(u) for u in p.authorization_servers] == ["https://forkward.example/api/auth"]
+    assert p.token_verifier.auth0 is None
+    monkeypatch.setenv("AUTH0_DOMAIN", "https://forkward.us.auth0.com/")
+    p = mcp_server.auth_provider()
+    assert [str(u) for u in p.authorization_servers] == [
+        "https://forkward.example/api/auth",
+        "https://forkward.us.auth0.com/",
+    ]
+    a0 = p.token_verifier.auth0
+    assert a0.issuer == "https://forkward.us.auth0.com/" and a0.algorithm == "RS256"
+    assert a0.jwks_uri == "https://forkward.us.auth0.com/.well-known/jwks.json"
+    assert a0.audience == "https://forkward.example/mcp"
+
+
 def test_webhook_route_rejects_bad_signatures(pg, monkeypatch):
     import hashlib
     import hmac

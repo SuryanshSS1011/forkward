@@ -117,19 +117,38 @@ def _tenant_for_user(user_id: str) -> dict | None:
         return cur.fetchone()
 
 
+def _user_for_auth0_subject(subject: str) -> str | None:
+    """The Better Auth user behind an Auth0 subject. Auth0 names a GitHub login `github|<id>`, and
+    the web app stores the same GitHub account id when that person signs in there, so Auth0 users
+    must have signed in to the web app once. Other Auth0 connections have no tenant."""
+    provider_name, sep, account_id = subject.partition("|")
+    if not sep or provider_name != "github" or not account_id.isdigit():
+        return None
+    with db.system() as cur:
+        cur.execute(
+            'SELECT "userId" FROM "account" WHERE "providerId" = \'github\' AND "accountId" = %s',
+            (account_id,),
+        )
+        row = cur.fetchone()
+    return row["userId"] if row else None
+
+
 class ForkwardVerifier(TokenVerifier):
     """Accepts either credential the hosted service issues:
 
     1. an API key (`fw_...`), checked against its hash in Postgres, for CI and scripts, or
     2. an OAuth access token from the web app's Better Auth server, an EdDSA JWT whose issuer,
        audience (this server's /mcp URL) and expiry are verified against the published JWKS,
-       for MCP clients that sign in interactively.
+       for MCP clients that sign in interactively, or
+    3. the same from Auth0, an RS256 JWT checked against the tenant's JWKS, when AUTH0_DOMAIN is
+       set. Its GitHub subject is mapped to the web app's user for that GitHub account.
 
-    Both resolve to a tenant, which every tool call is metered and scoped to."""
+    All resolve to a tenant, which every tool call is metered and scoped to."""
 
-    def __init__(self, jwt: JWTVerifier | None = None, **kw):
+    def __init__(self, jwt: JWTVerifier | None = None, auth0: JWTVerifier | None = None, **kw):
         super().__init__(**kw)
         self.jwt = jwt
+        self.auth0 = auth0
 
     async def verify_token(self, token: str) -> AccessToken | None:
         if token.startswith("fw_"):
@@ -143,12 +162,18 @@ class ForkwardVerifier(TokenVerifier):
                 scopes=["mcp"],
                 claims={"tenant_id": c.tenant_id, "plan": c.plan, "name": c.name},
             )
-        if self.jwt is None:
+        user = None
+        # Each verifier checks its own issuer, so a token can only match the server that signed it.
+        at = await self.jwt.verify_token(token) if self.jwt else None
+        if at is not None and at.claims.get("sub"):
+            user = at.claims["sub"]
+        elif self.auth0 is not None:
+            at = await self.auth0.verify_token(token)
+            if at is not None and at.claims.get("sub"):
+                user = await asyncio.to_thread(_user_for_auth0_subject, at.claims["sub"])
+        if at is None or user is None:
             return None
-        at = await self.jwt.verify_token(token)
-        if at is None or not at.claims.get("sub"):
-            return None
-        tenant = await asyncio.to_thread(_tenant_for_user, at.claims["sub"])
+        tenant = await asyncio.to_thread(_tenant_for_user, user)
         if tenant is None:
             return None
         return AccessToken(
@@ -166,8 +191,9 @@ class ForkwardVerifier(TokenVerifier):
 
 
 def auth_provider() -> RemoteAuthProvider | ForkwardVerifier:
-    """API keys always; OAuth through Better Auth when BETTER_AUTH_URL is set, with this server
-    advertising the web app as its authorization server (RFC 9728 metadata)."""
+    """API keys always; OAuth through Better Auth when BETTER_AUTH_URL is set and through Auth0
+    when AUTH0_DOMAIN is set, with this server advertising each as an authorization server
+    (RFC 9728 metadata)."""
     issuer_base = os.environ.get("BETTER_AUTH_URL", "").rstrip("/")
     public = os.environ.get("FORKWARD_MCP_URL", "").rstrip("/") or (
         f"{issuer_base}/mcp" if issuer_base else ""
@@ -176,9 +202,21 @@ def auth_provider() -> RemoteAuthProvider | ForkwardVerifier:
         return ForkwardVerifier()
     issuer = f"{issuer_base}/api/auth"
     jwt = JWTVerifier(jwks_uri=f"{issuer}/jwks", issuer=issuer, audience=public, algorithm="EdDSA")
+    servers = [issuer]
+    auth0 = None
+    domain = os.environ.get("AUTH0_DOMAIN", "").strip().removeprefix("https://").rstrip("/")
+    if domain:
+        auth0_issuer = f"https://{domain}/"
+        auth0 = JWTVerifier(
+            jwks_uri=f"{auth0_issuer}.well-known/jwks.json",
+            issuer=auth0_issuer,
+            audience=os.environ.get("AUTH0_AUDIENCE") or public,
+            algorithm="RS256",
+        )
+        servers.append(auth0_issuer)
     return RemoteAuthProvider(
-        token_verifier=ForkwardVerifier(jwt),
-        authorization_servers=[issuer],
+        token_verifier=ForkwardVerifier(jwt, auth0),
+        authorization_servers=servers,
         base_url=public.removesuffix("/mcp") or issuer_base,
         resource_name="Forkward",
     )
