@@ -10,7 +10,7 @@ from forkward import billing, db, mcp_server, sync
 
 @pytest.fixture
 def tenant(pg):
-    """A trial tenant (50 units) with 10 units already used this month."""
+    """A trial tenant (500 units) with 10 units already used this month."""
     tid = billing.create_tenant("acme", "trial")
     key = billing.create_key("acme ci", tenant_id=tid)
     c = billing.authenticate(key)
@@ -46,7 +46,8 @@ def test_unknown_models_are_charged_at_the_highest_rate(monkeypatch):
 
 
 def test_reservations_are_atomic_and_cap_parallel_calls(tenant):
-    c = tenant  # 50 units, 10 already used
+    c = tenant
+    billing.record(c, "seed", 450)  # 500 units, 460 used, 40 left
     ok, refused = [], []
 
     def go():
@@ -61,17 +62,17 @@ def test_reservations_are_atomic_and_cap_parallel_calls(tenant):
     for t in threads:
         t.join()
     assert len(ok) == 8 and len(refused) == 12
-    assert quota_used(c) == 50
+    assert quota_used(c) == 500
     assert "needs 5 units" in refused[0]
     # Settling below the reservation gives the rest back and records what was charged.
     billing.settle(ok[0], "resolve_conflicts", 2, status="ok")
-    assert quota_used(c) == 47
+    assert quota_used(c) == 497
     rows = usage_rows(c)
     assert rows[-1]["units"] == 2 and rows[-1]["reserved"] == 5
     # A settle can never charge more than was reserved.
     billing.settle(ok[1], "resolve_conflicts", 999, status="ok")
     rows = usage_rows(c)
-    assert rows[-1]["units"] == 5 and quota_used(c) == 47
+    assert rows[-1]["units"] == 5 and quota_used(c) == 497
 
 
 def test_hosted_call_reserves_from_the_hunk_count_and_records_failures(tenant, monkeypatch):

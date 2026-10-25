@@ -25,7 +25,12 @@ from forkward import db, llm
 # stop at `monthly_units`. Stripe bills the fee and the overage from the meter; these numbers
 # must match the Stripe prices, and the plan a tenant is on is written by the Stripe webhook.
 PLANS: dict[str, dict] = {
-    "trial": {"monthly_units": 50, "included_units": 50, "fee_usd": 0.0, "price_per_unit_usd": 0.0},
+    "trial": {
+        "monthly_units": 500,
+        "included_units": 500,
+        "fee_usd": 0.0,
+        "price_per_unit_usd": 0.0,
+    },
     "team": {
         "monthly_units": 5000,
         "included_units": 2000,

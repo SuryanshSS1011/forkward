@@ -5,7 +5,7 @@
  * these numbers drift from Python, and the Stripe prices must match them too.
  */
 export const PLANS = {
-  trial: { monthly_units: 50, included_units: 50, fee_usd: 0, price_per_unit_usd: 0 },
+  trial: { monthly_units: 500, included_units: 500, fee_usd: 0, price_per_unit_usd: 0 },
   team: { monthly_units: 5000, included_units: 2000, fee_usd: 99, price_per_unit_usd: 0.05 },
   enterprise: { monthly_units: 100000, included_units: 50000, fee_usd: 1499, price_per_unit_usd: 0.03 },
 } as const;

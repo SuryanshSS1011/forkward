@@ -17,7 +17,7 @@ describe("plans", () => {
   });
 
   it("compute the amount due like billing.amount_due", () => {
-    expect(amountDue("trial", 50)).toBe(0);
+    expect(amountDue("trial", 500)).toBe(0);
     expect(amountDue("team", 1999)).toBe(99);
     expect(amountDue("team", 2100)).toBe(104);
     expect(amountDue("enterprise", 50001)).toBe(1499.03);
@@ -26,6 +26,6 @@ describe("plans", () => {
   it("describe each plan from the shared numbers", () => {
     expect(planDisplay("team").overage).toBe("Extra units $5 per 100, up to 5,000 a month");
     expect(planDisplay("enterprise").price).toBe("$1,499");
-    expect(planDisplay("trial").units).toBe("50 units a month");
+    expect(planDisplay("trial").units).toBe("500 units a month");
   });
 });
