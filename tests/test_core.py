@@ -693,6 +693,39 @@ def test_gemini_disables_thinking_and_drops_it_when_rejected(monkeypatch):
     assert bodies[0]["reasoning_effort"] == "none" and "reasoning_effort" not in bodies[1]
 
 
+def test_vultr_serves_deepseek_with_thinking_off(monkeypatch):
+    import httpx
+
+    monkeypatch.setattr(llm, "load_env", lambda path=None: None)
+    monkeypatch.setenv("VULTR_INFERENCE_API_KEY", "v-test")
+    monkeypatch.delenv("VULTR_MODEL", raising=False)
+    monkeypatch.delenv("LLM_THINKING", raising=False)
+    with llm.use_model("vultr:deepseek-v4.1-flash"):
+        assert llm.provider() == ("vultr", "https://api.vultrinference.com/v1", "v-test")
+        assert not llm.reportable()
+    bodies = []
+
+    def handler(request):
+        bodies.append(json.loads(request.content))
+        lp = {"content": [{"token": "ok", "logprob": -0.1}]}
+        return httpx.Response(
+            200, json={"choices": [{"message": {"content": "ok"}, "logprobs": lp}]}
+        )
+
+    async def run():
+        client = httpx.AsyncClient(transport=httpx.MockTransport(handler))
+        monkeypatch.setattr(llm, "_client", lambda: client)
+        monkeypatch.setenv("LLM_PROVIDER", "vultr")
+        return await llm.complete([{"role": "user", "content": "hi"}], want_logprobs=True)
+
+    c = asyncio.run(run())
+    assert c.text == "ok" and c.mean_logprob == -0.1 and c.model == llm.VULTR_DEFAULT
+    assert bodies[0]["chat_template_kwargs"] == {"thinking": False} and bodies[0]["logprobs"]
+    monkeypatch.delenv("VULTR_INFERENCE_API_KEY")
+    with pytest.raises(RuntimeError, match="VULTR_INFERENCE_API_KEY"), llm.use_model("vultr:x"):
+        llm.provider()
+
+
 def test_v2_splits_parse_and_the_holdout_pool_is_refused(tmp_path, monkeypatch):
     import json
 

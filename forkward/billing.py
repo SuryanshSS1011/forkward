@@ -45,6 +45,7 @@ PLANS: dict[str, dict] = {
 MODEL_UNITS = {
     "deepseek:deepseek-chat": 1,
     "gemini:gemini-2.5-flash": 1,
+    "vultr:deepseek-v4.1-flash": 1,
     "anthropic:claude-haiku-4-5": 2,
     "anthropic:claude-sonnet-5": 4,
     "anthropic:claude-opus-5": 8,

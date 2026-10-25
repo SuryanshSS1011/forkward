@@ -3,7 +3,7 @@ through the Anthropic SDK. Never raises on provider failure.
 
 A model is picked with a spec `provider:model` (LLM_MODEL, `--model`, or the MCP `model`
 argument), for example `luminal:deepseek-ai/DeepSeek-V4.1-Flash`, `local:qwen2.5-coder:7b`,
-`gemini:gemini-2.5-flash` or `anthropic:claude-sonnet-5`.
+`gemini:gemini-2.5-flash`, `vultr:deepseek-v4.1-flash` or `anthropic:claude-sonnet-5`.
 """
 
 from __future__ import annotations
@@ -26,8 +26,9 @@ import httpx
 from forkward import home, telemetry
 
 ROLES = {"generator": "GENERATOR_MODEL", "reflector": "REFLECTOR_MODEL", "curator": "CURATOR_MODEL"}
-PROVIDERS = ("luminal", "deepseek", "gemini", "local", "anthropic")
+PROVIDERS = ("luminal", "deepseek", "gemini", "vultr", "local", "anthropic")
 GEMINI_DEFAULT = "gemini-2.5-flash"
+VULTR_DEFAULT = "deepseek-v4.1-flash"
 CLAUDE_MODELS = ("claude-sonnet-5", "claude-opus-5", "claude-haiku-4-5")
 _SELECTED: contextvars.ContextVar[str | None] = contextvars.ContextVar("model_spec", default=None)
 SETTINGS = home() / "settings.json"
@@ -194,6 +195,12 @@ def provider() -> tuple[str, str, str]:
             or "https://generativelanguage.googleapis.com/v1beta/openai"
         )
         return "gemini", base.rstrip("/"), os.environ["GEMINI_API_KEY"]
+    if choice == "vultr":
+        # Vultr Serverless Inference: open models behind an OpenAI-compatible API with logprobs.
+        if not os.environ.get("VULTR_INFERENCE_API_KEY"):
+            raise RuntimeError("Vultr models need VULTR_INFERENCE_API_KEY in the environment")
+        base = os.environ.get("VULTR_INFERENCE_BASE_URL") or "https://api.vultrinference.com/v1"
+        return "vultr", base.rstrip("/"), os.environ["VULTR_INFERENCE_API_KEY"]
     if choice == "local" or (not choice and not os.environ.get("LUMINAL_API_KEY")):
         base = os.environ.get("LOCAL_BASE_URL") or "http://localhost:11434/v1"
         if choice != "local" and not os.environ.get("LOCAL_MODEL") and not sel:
@@ -217,6 +224,8 @@ def model_for(role: str) -> str:
         return os.environ.get("DEEPSEEK_MODEL") or "deepseek-chat"
     if name == "gemini":
         return os.environ.get("GEMINI_MODEL") or GEMINI_DEFAULT
+    if name == "vultr":
+        return os.environ.get("VULTR_MODEL") or VULTR_DEFAULT
     if name == "local":
         model = os.environ.get("LOCAL_MODEL")
         if not model:
@@ -357,6 +366,9 @@ async def _complete(
     if name == "gemini" and not thinking() and _EFFORT_SUPPORTED.get(model, True):
         # Gemini Flash thinks by default, which spends max_tokens before any answer is written.
         body["reasoning_effort"] = "none"
+    if name == "vultr" and not thinking():
+        # Vultr's DeepSeek ignores Luminal's `thinking` field; its chat template takes the switch.
+        body["chat_template_kwargs"] = {"thinking": False}
     if seed is not None and _SEED_SUPPORTED.get(model, True):
         body["seed"] = seed
     last_err = "unknown"
@@ -535,6 +547,9 @@ async def available_models() -> list[dict]:
     if os.environ.get("GEMINI_API_KEY"):
         model = os.environ.get("GEMINI_MODEL") or GEMINI_DEFAULT
         out.append({"spec": f"gemini:{model}", "provider": "gemini", "model": model})
+    if os.environ.get("VULTR_INFERENCE_API_KEY"):
+        model = os.environ.get("VULTR_MODEL") or VULTR_DEFAULT
+        out.append({"spec": f"vultr:{model}", "provider": "vultr", "model": model})
     base = (os.environ.get("LOCAL_BASE_URL") or "http://localhost:11434/v1").rstrip("/")
     try:
         r = await _client().get(f"{base}/models", timeout=3.0)
