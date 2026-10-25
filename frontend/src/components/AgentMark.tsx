@@ -138,13 +138,3 @@ export function AgentGlyph({ size = 24, title }: { size?: number; title?: string
     </svg>
   );
 }
-
-/** A deterministic rule: a hex nut, because it is a tool and makes no model call. */
-export function RuleGlyph({ size = 18 }: { size?: number }) {
-  return (
-    <svg viewBox="0 0 20 20" width={size} height={size} aria-hidden className="rg shrink-0">
-      <path d="M10 2.2 L16.8 6.1 V13.9 L10 17.8 L3.2 13.9 V6.1 Z" className="rg-hex" />
-      <circle cx="10" cy="10" r="2.6" className="rg-hole" />
-    </svg>
-  );
-}

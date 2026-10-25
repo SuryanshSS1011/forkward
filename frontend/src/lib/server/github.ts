@@ -1,22 +1,12 @@
-import { createHash } from "node:crypto";
 import { serverEnv } from "./env";
 
 const API = "https://api.github.com";
-
-/** Only same-site paths, so a `next` parameter cannot be used as an open redirect. */
-export function safeNext(next: string | null, fallback = "/demo/live"): string {
-  return next && next.startsWith("/") && !next.startsWith("//") && !next.startsWith("/\\") ? next : fallback;
-}
 
 /** Where a signed-in user installs the forkward-bot GitHub App. GitHub then sends them to the App's
  * Setup URL, /api/github/installed. */
 export function installUrl(): string | null {
   const slug = serverEnv("GITHUB_APP_SLUG");
   return slug && /^[A-Za-z0-9-]{1,100}$/.test(slug) ? `https://github.com/apps/${slug}/installations/new` : null;
-}
-
-export function githubConfigured(): boolean {
-  return Boolean(serverEnv("GITHUB_APP_CLIENT_ID") && serverEnv("GITHUB_APP_CLIENT_SECRET"));
 }
 
 async function gh<T>(path: string, token: string): Promise<T> {
@@ -85,10 +75,4 @@ export async function installationRepositories(token: string, installationId: nu
 export async function forkUpstream(token: string, fullName: string): Promise<string | null> {
   const r = await gh<{ parent?: { full_name: string; default_branch: string } }>(`/repos/${fullName}`, token);
   return r.parent ? `${r.parent.full_name}@${r.parent.default_branch}` : null;
-}
-
-/** Shared with the board (dashboard/server.py preview_secret), which loads the same .env. */
-export function previewSecret(): string {
-  const seed = serverEnv("PREVIEW_SECRET") ?? serverEnv("DATABASE_URL") ?? "";
-  return seed ? createHash("sha256").update(`forkward-preview:${seed}`).digest("hex") : "";
 }
