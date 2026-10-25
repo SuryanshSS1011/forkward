@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { Epilogue, Instrument_Sans, JetBrains_Mono, Karla } from "next/font/google";
-import { Footer } from "@/components/Footer";
 import { Nav } from "@/components/Nav";
 import { SiteChrome } from "@/components/SiteChrome";
 import "./globals.css";
@@ -20,19 +19,19 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" className={`${sans.variable} ${mono.variable} ${display.variable} ${bodyAlt.variable}`}>
       <head>
-        {/* Material Symbols power the small glyphs on the marketing pages. */}
+        {/* Material Symbols power the small glyphs on the marketing pages. display=block keeps the
+            ligature names ("history", "bolt") invisible until the font arrives. */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link
           rel="stylesheet"
-          href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap"
+          href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=block"
         />
       </head>
       <body>
         <a href="#main" className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded-btn focus:bg-raised focus:px-3 focus:py-2">Skip to content</a>
         <SiteChrome><Nav /></SiteChrome>
         <main id="main">{children}</main>
-        <SiteChrome><Footer /></SiteChrome>
       </body>
     </html>
   );

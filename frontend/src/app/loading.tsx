@@ -1,12 +1,14 @@
-import { Sym } from "@/components/Sym";
+import { AgentGlyph } from "@/components/AgentMark";
 
+/** Shown while any route streams in, so it stays neutral: the app's own tokens, not the parchment
+ * skin of the marketing pages. */
 export default function Loading() {
   return (
-    <div className="parchment flex min-h-screen flex-col items-center justify-center gap-4" role="status" aria-live="polite">
-      <span className="flex h-16 w-16 animate-pulse items-center justify-center rounded-full border-2 border-[var(--pa-outline)] bg-[var(--pa-primary-fixed)] shadow-[3px_3px_0px_#8a716e]">
-        <Sym name="restaurant" className="text-[30px] text-[var(--pa-primary)]" />
+    <div className="flex min-h-[50vh] flex-col items-center justify-center gap-3 text-muted" role="status" aria-live="polite">
+      <span className="animate-pulse motion-reduce:animate-none">
+        <AgentGlyph size={40} />
       </span>
-      <p className="font-label text-[13px] uppercase tracking-widest text-[var(--pa-ink-muted)]">Loading Forkward…</p>
+      <p className="text-[14px]">Loading…</p>
     </div>
   );
 }
