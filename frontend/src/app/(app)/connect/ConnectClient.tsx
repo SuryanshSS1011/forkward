@@ -107,7 +107,7 @@ export default function ConnectClient({ installUrl }: { installUrl: string | nul
         {installUrl ? (
           me ? (
             <a href={installUrl} className="btn btn-accent btn-sm mt-4 inline-flex">
-              {repos?.length ? "Add or remove repositories" : "Install the GitHub App"}
+              {repos === null ? "Choose forks on GitHub" : repos.length ? "Add or remove forks" : "Install the GitHub App"}
             </a>
           ) : (
             <Link href="/signin?next=/connect" className="btn btn-accent btn-sm mt-4 inline-flex">

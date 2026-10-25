@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { Counter } from "@/components/Counter";
+import { HeroConflict } from "@/components/HeroConflict";
 import { GitHubMark } from "@/components/MarketingAuth";
 import { MarketingShell } from "@/components/MarketingShell";
 import { Sym } from "@/components/Sym";
@@ -12,9 +13,6 @@ const FREE_UNITS = PLANS.trial.monthly_units.toLocaleString("en-US");
 
 // The hero shows one real hunk from the recorded run on /demo: the one where both sides were kept.
 const HERO = SAMPLE_JOB.hunks.find((h) => h.file === "src/devices.c") ?? SAMPLE_JOB.hunks[0];
-const HERO_CHOSEN = HERO.detail?.candidates?.find((c) => c.chosen);
-const HERO_RULES = (HERO_CHOSEN?.sources ?? []).filter((s) => !s.startsWith("model:")).map((s) => s.replaceAll("_", " "));
-const HERO_MODELS = (HERO_CHOSEN?.sources ?? []).filter((s) => s.startsWith("model:")).length;
 const RUN_SECONDS = (Date.parse(SAMPLE_JOB.updated_at) - Date.parse(SAMPLE_JOB.created_at)) / 1000;
 
 const features: { icon: string; iconWrap: string; h: string; p: string; radius: string }[] = [
@@ -133,49 +131,7 @@ export default async function Landing() {
           {/* One real hunk from the recorded run */}
           <div className="pa-fade pa-fade-2 relative mt-2 flex justify-center lg:col-span-5 lg:mt-0">
             <div className="absolute -top-3 z-20 h-6 w-32 -rotate-2 bg-[var(--pa-tertiary-fixed)]/70 shadow-sm" style={{ borderRadius: "2px 5px 3px 4px" }} />
-            <figure className="pa-lift relative z-10 w-full max-w-md border-2 border-[var(--pa-outline)] bg-[var(--pa-surface)] p-5 shadow-[5px_5px_0px_#8a716e]" style={{ borderRadius: "12px 5px 16px 8px / 6px 15px 7px 14px" }}>
-              <div className="flex items-center justify-between gap-3 border-b border-dashed border-[var(--pa-outline-variant)] pb-3">
-                <div className="flex min-w-0 items-center gap-2">
-                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-[var(--pa-outline)] bg-[var(--pa-primary-fixed)]">
-                    <Sym name="merge" className="text-[22px] text-[var(--pa-primary)]" />
-                  </div>
-                  <div className="min-w-0">
-                    <p className="font-label text-[11px] uppercase tracking-wider text-[var(--pa-ink-muted)]">Forkward proposal</p>
-                    <p className="truncate font-label text-[13px] font-bold text-[var(--pa-ink)]">{HERO.file}</p>
-                  </div>
-                </div>
-                <span className="shrink-0 rounded border border-[var(--pa-outline-variant)] bg-[var(--pa-surface-high)] px-2 py-0.5 font-label text-[11px] font-bold text-[var(--pa-ink)]" style={{ borderRadius: "4px 7px 3px 6px" }}>
-                  {HERO.decision === "auto" ? "Applied" : "Waiting for you"}
-                </span>
-              </div>
-              <div className="my-3 grid grid-cols-2 gap-2 font-label text-[11px]">
-                <div className="min-w-0 rounded-sm border-l-2 border-[var(--pa-secondary)] bg-[var(--pa-surface-low)] p-2">
-                  <span className="mb-1 block font-bold text-[var(--pa-secondary)]">Your fork</span>
-                  <pre className="overflow-x-auto text-[10px] leading-tight text-[var(--pa-ink)]"><code>{(HERO.detail?.vendor ?? []).join("\n")}</code></pre>
-                </div>
-                <div className="min-w-0 rounded-sm border-l-2 border-[var(--pa-primary)] bg-[var(--pa-surface-low)] p-2">
-                  <span className="mb-1 block font-bold text-[var(--pa-primary)]">Upstream</span>
-                  <pre className="overflow-x-auto text-[10px] leading-tight text-[var(--pa-ink)]"><code>{(HERO.detail?.upstream ?? []).join("\n")}</code></pre>
-                </div>
-              </div>
-              <div className="rounded-sm border-l-2 border-[var(--pa-tertiary)] bg-[var(--pa-surface-low)] p-2 font-label text-[11px]">
-                <span className="mb-1 block font-bold text-[var(--pa-tertiary)]">Proposed: keep both</span>
-                <pre className="overflow-x-auto text-[10px] leading-tight text-[var(--pa-ink)]"><code>{HERO.resolution}</code></pre>
-              </div>
-              <figcaption className="mt-3 flex items-start gap-2 rounded-md border-2 border-[var(--pa-outline-variant)] bg-[var(--pa-surface-high)] p-3 shadow-[2px_2px_0px_#ddc0bc]">
-                <Sym name="how_to_vote" className="text-[18px] text-[var(--pa-primary)]" />
-                <p className="text-[14px] leading-snug text-[var(--pa-ink)]">
-                  <span className="font-bold">
-                    {HERO_MODELS} AI proposers{HERO_RULES.length ? ` and the "${HERO_RULES[0]}" rule` : ""} agreed.
-                  </span>{" "}
-                  Confidence {Math.round((HERO.confidence ?? 0) * 100)}%. It waits for you because the gate is not yet certified for this model.
-                </p>
-              </figcaption>
-              <div className="mt-3 flex items-center justify-between font-label text-[11px] text-[var(--pa-ink-muted)]">
-                <span>1 of {SAMPLE_JOB.hunks.length} conflicts in a recorded run</span>
-                <Link href="/demo" className="font-bold text-[var(--pa-primary)] underline hover:text-[var(--pa-ink)]">See the full run</Link>
-              </div>
-            </figure>
+            <HeroConflict hunk={HERO} total={SAMPLE_JOB.hunks.length} />
           </div>
         </div>
       </section>

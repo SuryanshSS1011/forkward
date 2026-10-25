@@ -294,7 +294,8 @@ body > main { flex: 1 0 auto; }
   line-height: 24px;
 }
 .parchment .font-display { font-family: var(--font-display), var(--font-sans), sans-serif; }
-.parchment .font-label { font-family: var(--font-mono), ui-monospace, monospace; }
+/* Labels, buttons and notes read as text; monospace is kept for code, refs and file names. */
+.parchment .font-label { font-family: var(--font-sans), system-ui, sans-serif; font-weight: 600; letter-spacing: .005em; }
 /* Headings are display type; keep their own tight leading so wrapped lines never collapse onto
    each other under the 24px body line-height the .parchment container sets. */
 .parchment h1, .parchment h2, .parchment h3 { font-family: var(--font-display), var(--font-sans), sans-serif; line-height: 1.1; }
@@ -354,3 +355,15 @@ body > main { flex: 1 0 auto; }
 .rail-auto { fill: var(--success); }
 .rail-review { fill: var(--sunshine); }
 .rail-error { fill: var(--danger); }
+
+/* The landing hero replays one recorded conflict: votes land, the rule lights, the fix writes in. */
+.hc-badge { border-color: var(--pa-outline-variant); background: var(--pa-surface-high); color: var(--pa-ink-muted); transition: background-color .3s, color .3s, transform .3s var(--spring); }
+.hc-badge-done { background: var(--pa-tertiary-fixed); border-color: var(--pa-tertiary); color: var(--pa-ink); transform: rotate(-2deg); }
+.hc-vote { width: 10px; height: 10px; border-radius: 50%; border: 1.5px solid var(--pa-outline); background: transparent; transition: background-color .25s, transform .3s var(--spring); }
+.hc-vote-on { background: var(--pa-primary); border-color: var(--pa-primary); transform: scale(1.15); }
+.hc-rule { opacity: .35; transition: opacity .3s, color .3s; }
+.hc-rule-on { opacity: 1; color: var(--pa-tertiary); }
+.hc-line { opacity: 0; transition: opacity .25s; }
+.hc-line-on { opacity: 1; }
+.hc-verdict { opacity: 0; transform: translateY(4px); transition: opacity .35s, transform .35s; }
+.hc-verdict-on { opacity: 1; transform: none; }
