@@ -17,6 +17,7 @@ from forkward.store import RUNS
 def check(include_test: bool = False) -> int:
     """Checkpoint 1: hashes, class counts and the always-keep-vendor baseline. The spent test
     split is read only with --test; the v2 holdout pool is never read here."""
+    llm.load_env()
     verify_hashes()
     print("split.json hashes: OK")
     splits = ["train", "validation"] + (["test"] if include_test else [])
