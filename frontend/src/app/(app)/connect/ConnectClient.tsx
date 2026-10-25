@@ -89,7 +89,7 @@ export default function ConnectClient({ installUrl }: { installUrl: string | nul
       <h1 className="t-h1">Connect Forkward to your tools</h1>
       <p className="mt-2 max-w-[62ch] text-muted">Install the GitHub App, then add Forkward to your assistant and ask it to sync a fork.</p>
 
-      <section aria-labelledby="github-app" className="mt-8 max-w-2xl rounded-btn border border-line bg-raised p-4">
+      <section aria-labelledby="github-app" className="sheet mt-8 max-w-2xl p-5">
         <h2 id="github-app" className="flex items-center gap-2 font-semibold">
           <span className="step-num">1</span>Give Forkward your repositories
         </h2>
@@ -132,7 +132,7 @@ export default function ConnectClient({ installUrl }: { installUrl: string | nul
       <h2 className="mt-10 flex items-center gap-2 font-semibold">
         <span className="step-num">2</span>Add Forkward to your assistant
       </h2>
-      <div className="mt-3 max-w-2xl rounded-btn border border-line bg-raised p-4">
+      <div className="sheet mt-3 max-w-2xl p-5">
         <label htmlFor="apikey" className="t-label">
           Your API key
         </label>

@@ -80,7 +80,7 @@ export default function Keys() {
       <p className="mt-2 text-muted">A key lets an editor or script call the hosted MCP server as your workspace. Usage from every key counts against your plan.</p>
 
       {created && (
-        <div className="mt-8 rounded-btn border border-line bg-raised p-4">
+        <div className="sheet mt-8 p-5">
           <p className="font-semibold">Copy your new key now. It is shown once, and only its hash is stored.</p>
           <div className="mt-3 flex flex-wrap items-center gap-3">
             <code className="break-all font-mono text-[14px]" aria-label="Your new API key">{created.apiKey}</code>
@@ -102,25 +102,30 @@ export default function Keys() {
       </form>
       {error && <p role="alert" className="t-label mt-4 border-l-2 border-[var(--danger)] pl-3 text-[var(--danger)]">{error}</p>}
 
-      <ul className="mt-8 divide-y divide-line border-y border-line">
-        {keys?.length === 0 && <li className="py-4 text-muted">No keys yet.</li>}
-        {keys?.map((k) => (
-          <li key={k.id} className="flex flex-wrap items-center justify-between gap-3 py-4">
-            <div>
-              <p className="font-semibold">{k.name}</p>
-              <p className="t-label text-muted">
-                <span className="font-mono">{k.key_id}</span> · created {date(k.created_at)} · last used {date(k.last_used_at)}
-                {!k.active && <> · revoked {date(k.revoked_at)}</>}
-              </p>
-            </div>
-            {k.active ? (
-              <button className="btn btn-secondary btn-sm" onClick={() => revoke(k)}>Revoke</button>
-            ) : (
-              <span className="chip">revoked</span>
-            )}
-          </li>
-        ))}
-      </ul>
+      {keys === null && !error && <p className="mt-6 text-muted">Loading your keys…</p>}
+      {keys?.length === 0 && (
+        <p className="mt-6 text-muted">No keys yet. Name one above to call Forkward from CI, a script or an editor that cannot sign in.</p>
+      )}
+      {keys && keys.length > 0 && (
+        <ul className="sheet mt-6 divide-y divide-line px-5">
+          {keys.map((k) => (
+            <li key={k.id} className="flex flex-wrap items-center justify-between gap-3 py-4">
+              <div>
+                <p className="font-semibold">{k.name}</p>
+                <p className="t-label text-muted">
+                  <span className="font-mono">{k.key_id}</span> · created {date(k.created_at)} · last used {date(k.last_used_at)}
+                  {!k.active && <> · revoked {date(k.revoked_at)}</>}
+                </p>
+              </div>
+              {k.active ? (
+                <button className="btn btn-secondary btn-sm" onClick={() => revoke(k)}>Revoke</button>
+              ) : (
+                <span className="chip">revoked</span>
+              )}
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 }

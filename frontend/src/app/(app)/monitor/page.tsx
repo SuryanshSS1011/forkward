@@ -91,7 +91,7 @@ export default function Activity() {
           ).map(([day, list]) => (
             <section key={day} aria-label={day}>
               <h2 className="t-label text-muted">{day}</h2>
-              <ul className="mt-2 divide-y divide-line overflow-hidden rounded-tile border border-line bg-raised">
+              <ul className="sheet mt-2 divide-y divide-line overflow-hidden">
                 {list.map((j) => (
                   <li key={j.id}>
                     <Link href={`/jobs/${j.id}`} title={headline(j)} className="activity-row grid grid-cols-[14px_1fr_auto] items-center gap-x-3 gap-y-1 px-4 py-3 sm:grid-cols-[14px_minmax(0,1fr)_auto_64px]">
