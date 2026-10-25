@@ -78,7 +78,7 @@ function Repo({ repo, reload }: { repo: RepoRow; reload: () => void }) {
   const router = useRouter();
   const [editing, setEditing] = useState(!repo.upstream);
   const [busy, setBusy] = useState<JobKind | null>(null);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<{ message: string; status?: number } | null>(null);
   const running = repo.latest && isActive(repo.latest.status);
 
   const start = async (kind: JobKind) => {
@@ -88,7 +88,8 @@ function Repo({ repo, reload }: { repo: RepoRow; reload: () => void }) {
       const id = await startJob(repo.id, kind);
       router.push(`/jobs/${id}`);
     } catch (e) {
-      setError((e as Error).message);
+      const err = e as Error & { status?: number };
+      setError({ message: err.message, status: err.status });
       setBusy(null);
     }
   };
@@ -145,7 +146,12 @@ function Repo({ repo, reload }: { repo: RepoRow; reload: () => void }) {
       )}
       {error && (
         <p role="alert" className="mt-2 t-label text-danger">
-          {error}
+          {error.message}{" "}
+          {error.status === 402 && (
+            <Link href="/billing" className="link">
+              See usage
+            </Link>
+          )}
         </p>
       )}
       {repo.latest && (
