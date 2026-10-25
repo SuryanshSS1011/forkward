@@ -321,8 +321,8 @@ def test_auth_provider_advertises_auth0_when_configured(monkeypatch):
     monkeypatch.setenv("AUTH0_DOMAIN", "https://forkward.us.auth0.com/")
     p = mcp_server.auth_provider()
     assert [str(u) for u in p.authorization_servers] == [
-        "https://forkward.example/api/auth",
         "https://forkward.us.auth0.com/",
+        "https://forkward.example/api/auth",
     ]
     a0 = p.token_verifier.auth0
     assert a0.issuer == "https://forkward.us.auth0.com/" and a0.algorithm == "RS256"

@@ -193,7 +193,7 @@ class ForkwardVerifier(TokenVerifier):
 def auth_provider() -> RemoteAuthProvider | ForkwardVerifier:
     """API keys always; OAuth through Better Auth when BETTER_AUTH_URL is set and through Auth0
     when AUTH0_DOMAIN is set, with this server advertising each as an authorization server
-    (RFC 9728 metadata)."""
+    (RFC 9728 metadata). Auth0 is listed first, because MCP clients sign in with the first one."""
     issuer_base = os.environ.get("BETTER_AUTH_URL", "").rstrip("/")
     public = os.environ.get("FORKWARD_MCP_URL", "").rstrip("/") or (
         f"{issuer_base}/mcp" if issuer_base else ""
@@ -213,7 +213,7 @@ def auth_provider() -> RemoteAuthProvider | ForkwardVerifier:
             audience=os.environ.get("AUTH0_AUDIENCE") or public,
             algorithm="RS256",
         )
-        servers.append(auth0_issuer)
+        servers.insert(0, auth0_issuer)
     return RemoteAuthProvider(
         token_verifier=ForkwardVerifier(jwt, auth0),
         authorization_servers=servers,

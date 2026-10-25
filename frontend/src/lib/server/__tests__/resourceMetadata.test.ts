@@ -14,14 +14,14 @@ describe("protected resource metadata", () => {
     expect(auth0Issuer()).toBe("https://tenant.us.auth0.com/");
   });
 
-  it("lists Auth0 after Better Auth, once", async () => {
+  it("lists Auth0 first and once", async () => {
     const issuer = "https://tenant.us.auth0.com/";
     const res = await withAuth0(meta(["https://mergesthat.work/api/auth"]), issuer);
     const body = await res.json();
-    expect(body.authorization_servers).toEqual(["https://mergesthat.work/api/auth", issuer]);
+    expect(body.authorization_servers).toEqual([issuer, "https://mergesthat.work/api/auth"]);
     expect(body.resource).toBe("https://mergesthat.work/mcp");
     const again = await withAuth0(meta(["https://mergesthat.work/api/auth", issuer]), issuer);
-    expect((await again.json()).authorization_servers).toHaveLength(2);
+    expect((await again.json()).authorization_servers).toEqual([issuer, "https://mergesthat.work/api/auth"]);
   });
 
   it("passes the response through without Auth0 or on errors", async () => {
