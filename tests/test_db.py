@@ -55,3 +55,34 @@ def test_runs_are_mirrored_without_prompts(pg, tmp_path, monkeypatch):
     assert set(rows) == {"attempts", "events"}
     assert "prompt" not in rows["attempts"] and rows["attempts"]["ok"] is True
     assert "secret prompt" in (tmp_path / "r-test" / "attempts.jsonl").read_text()
+
+
+def test_run_log_is_a_hypertable_on_timescaledb(pg):
+    """004 converts run_log only where TimescaleDB exists; plain Postgres keeps the original table."""
+    with db.system() as cur:
+        cur.execute("SELECT 1 FROM pg_extension WHERE extname = 'timescaledb'")
+        timescale = cur.fetchone() is not None
+        cur.execute(
+            "SELECT a.attname FROM pg_index i JOIN pg_attribute a"
+            " ON a.attrelid = i.indrelid AND a.attnum = ANY(i.indkey)"
+            " WHERE i.indrelid = 'run_log'::regclass AND i.indisprimary"
+        )
+        pkey = {r["attname"] for r in cur.fetchall()}
+        cur.execute("SELECT to_regclass('run_log_hourly') AS v")
+        hourly = cur.fetchone()["v"]
+    if not timescale:
+        assert pkey == {"id"} and hourly is None
+        return
+    assert pkey == {"id", "ts"} and hourly is not None
+    with db.system() as cur:
+        cur.execute(
+            "SELECT 1 FROM timescaledb_information.hypertables WHERE hypertable_name = 'run_log'"
+        )
+        assert cur.fetchone()
+        cur.execute(
+            "INSERT INTO run_log (run_id, collection, ts, doc) VALUES"
+            " ('r1', 'events', now(), '{}'), ('r1', 'events', now(), '{}')"
+        )
+        cur.execute("SELECT events FROM run_log_hourly WHERE run_id = 'r1'")
+        # Real-time aggregation answers from raw rows before the policy has materialized them.
+        assert [r["events"] for r in cur.fetchall()] == [2]

@@ -7,6 +7,7 @@ service container for them.
 
 import os
 
+import psycopg
 import pytest
 
 from forkward import db
@@ -20,9 +21,17 @@ def pg(monkeypatch):
     db.close()
     monkeypatch.setenv("DATABASE_URL", url)
     with db.pool().connection() as conn:
-        conn.execute("DROP SCHEMA public CASCADE")
-        conn.execute("CREATE SCHEMA public")
-        conn.commit()
+        # On TimescaleDB a background refresh can hold run_log while the schema is dropped.
+        for attempt in range(5):
+            try:
+                conn.execute("DROP SCHEMA public CASCADE")
+                conn.execute("CREATE SCHEMA public")
+                conn.commit()
+                break
+            except psycopg.errors.DeadlockDetected:
+                conn.rollback()
+                if attempt == 4:
+                    raise
     db.migrate(verbose=False)
     yield db
     db.close()
