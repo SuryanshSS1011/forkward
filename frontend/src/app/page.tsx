@@ -11,8 +11,6 @@ import { currentViewer } from "@/lib/server/session";
 
 const FREE_UNITS = PLANS.trial.monthly_units.toLocaleString("en-US");
 
-// The hero shows one real hunk from the recorded run on /demo: the one where both sides were kept.
-const HERO = SAMPLE_JOB.hunks.find((h) => h.file === "src/devices.c") ?? SAMPLE_JOB.hunks[0];
 const RUN_SECONDS = (Date.parse(SAMPLE_JOB.updated_at) - Date.parse(SAMPLE_JOB.created_at)) / 1000;
 
 const features: { icon: string; iconWrap: string; h: string; p: string; radius: string }[] = [
@@ -131,7 +129,7 @@ export default async function Landing() {
           {/* One real hunk from the recorded run */}
           <div className="pa-fade pa-fade-2 relative mt-2 flex justify-center lg:col-span-5 lg:mt-0">
             <div className="absolute -top-3 z-20 h-6 w-32 -rotate-2 bg-[var(--pa-tertiary-fixed)]/70 shadow-sm" style={{ borderRadius: "2px 5px 3px 4px" }} />
-            <HeroConflict hunk={HERO} total={SAMPLE_JOB.hunks.length} />
+            <HeroConflict hunks={SAMPLE_JOB.hunks} />
           </div>
         </div>
       </section>

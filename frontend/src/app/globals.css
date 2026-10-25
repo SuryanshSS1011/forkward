@@ -357,6 +357,9 @@ body > main { flex: 1 0 auto; }
 .rail-error { fill: var(--danger); }
 
 /* The landing hero replays one recorded conflict: votes land, the rule lights, the fix writes in. */
+.hc-tab { border: 1.5px solid transparent; border-radius: 6px 9px 5px 8px; color: var(--pa-ink-muted); transition: background-color .2s, border-color .2s, color .2s; }
+.hc-tab:hover { background: var(--pa-surface-high); color: var(--pa-ink); }
+.hc-tab-on { background: var(--pa-surface-high); border-color: var(--pa-outline-variant); color: var(--pa-ink); font-weight: 700; }
 .hc-badge { border-color: var(--pa-outline-variant); background: var(--pa-surface-high); color: var(--pa-ink-muted); transition: background-color .3s, color .3s, transform .3s var(--spring); }
 .hc-badge-done { background: var(--pa-tertiary-fixed); border-color: var(--pa-tertiary); color: var(--pa-ink); transform: rotate(-2deg); }
 .hc-vote { width: 10px; height: 10px; border-radius: 50%; border: 1.5px solid var(--pa-outline); background: transparent; transition: background-color .25s, transform .3s var(--spring); }
@@ -367,3 +370,6 @@ body > main { flex: 1 0 auto; }
 .hc-line-on { opacity: 1; }
 .hc-verdict { opacity: 0; transform: translateY(4px); transition: opacity .35s, transform .35s; }
 .hc-verdict-on { opacity: 1; transform: none; }
+
+/* Code shows exactly what is in the file: no ligatures turning -> or != into symbols. */
+pre, code, .font-mono { font-variant-ligatures: none; font-feature-settings: "liga" 0, "calt" 0; }
