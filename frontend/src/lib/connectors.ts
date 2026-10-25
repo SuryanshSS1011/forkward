@@ -11,6 +11,8 @@ export type Client = {
   oneClick?: (url: string, key: string) => { label: string; href: string };
   /** Takes only a URL and signs in with OAuth (GitHub through Forkward), so no key is involved. */
   urlOnly?: boolean;
+  /** A key-free setup for clients that can also sign in with OAuth, offered before the key. */
+  signIn?: { snippet: (url: string) => string; where: string };
 };
 
 const LOCAL_CMD = ["--from", "git+https://github.com/SuryanshSS1011/forkward", "forkward-mcp"];
@@ -24,6 +26,10 @@ export const clients: Client[] = [
     name: "Claude Code",
     where: "Run in your terminal",
     lang: "bash",
+    signIn: {
+      snippet: (url) => `claude mcp add --transport http forkward ${url}`,
+      where: "Run in your terminal, then run /mcp in Claude Code, pick forkward and choose Authenticate",
+    },
     hosted: (url, key) => `claude mcp add --transport http forkward ${url} \\\n  --header "Authorization: Bearer ${key}"`,
     local: `claude mcp add forkward \\\n  -e LUMINAL_API_KEY=<your Luminal key> \\\n  -e GENERATOR_MODEL=deepseek-ai/DeepSeek-V4.1-Flash \\\n  -- uvx ${LOCAL_CMD.join(" ")}`,
   },

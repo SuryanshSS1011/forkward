@@ -2,7 +2,7 @@
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { useMe } from "@/components/useMe";
-import { clients } from "@/lib/connectors";
+import { type Client, clients } from "@/lib/connectors";
 import { githubStatus } from "@/lib/githubStatus";
 
 const PLACEHOLDER = "fw_your_api_key";
@@ -13,11 +13,16 @@ type Repo = {
   account_login: string;
 };
 
+type Mode = "signin" | "hosted" | "local";
+const MODE_LABEL: Record<Mode, string> = { signin: "Sign in (no key)", hosted: "Hosted (API key)", local: "On my machine" };
+/** The ways a client can connect, the key-free one first when it has one. */
+const modesFor = (c: Client): Mode[] => [...(c.signIn ? (["signin"] as const) : []), "hosted", ...(c.local ? (["local"] as const) : [])];
+
 export default function ConnectClient({ installUrl }: { installUrl: string | null }) {
   const [origin, setOrigin] = useState("");
   const [key, setKey] = useState("");
   const [active, setActive] = useState(clients[0].id);
-  const [mode, setMode] = useState<"hosted" | "local">("hosted");
+  const [mode, setMode] = useState<Mode>(modesFor(clients[0])[0]);
   const [copied, setCopied] = useState(false);
   const [me] = useMe();
   const [repos, setRepos] = useState<Repo[] | null>(null);
@@ -33,7 +38,7 @@ export default function ConnectClient({ installUrl }: { installUrl: string | nul
       const c = clients.find((x) => x.id === id);
       if (c) {
         setActive(c.id);
-        if (!c.local) setMode("hosted");
+        setMode(modesFor(c)[0]);
       }
     };
     fromHash();
@@ -59,10 +64,15 @@ export default function ConnectClient({ installUrl }: { installUrl: string | nul
   const client = clients.find((c) => c.id === active) ?? clients[0];
   const url = `${origin || "https://your-forkward-host"}/mcp`;
   const k = key.trim() || PLACEHOLDER;
+  const modes = modesFor(client);
   const showLocal = mode === "local" && !!client.local;
-  const snippet = useMemo(() => (showLocal ? client.local! : client.hosted(url, k)), [showLocal, client, url, k]);
-  const needsKey = !showLocal && !client.urlOnly && !key.trim();
-  const oneClick = !showLocal && client.oneClick && key.trim() ? client.oneClick(url, key.trim()) : null;
+  const showSignIn = mode === "signin" && !!client.signIn;
+  const snippet = useMemo(
+    () => (showLocal ? client.local! : showSignIn ? client.signIn!.snippet(url) : client.hosted(url, k)),
+    [showLocal, showSignIn, client, url, k],
+  );
+  const needsKey = mode === "hosted" && !client.urlOnly && !key.trim();
+  const oneClick = mode === "hosted" && client.oneClick && key.trim() ? client.oneClick(url, key.trim()) : null;
 
   const copy = async () => {
     try {
@@ -164,7 +174,7 @@ export default function ConnectClient({ installUrl }: { installUrl: string | nul
               key={c.id}
               onClick={() => {
                 setActive(c.id);
-                if (!c.local) setMode("hosted");
+                setMode(modesFor(c)[0]);
               }}
               aria-pressed={c.id === active}
               className={`rounded-btn px-3 py-2 text-left text-[15px] ${c.id === active ? "bg-sunken font-semibold text-ink" : "text-muted hover:bg-sunken hover:text-ink"}`}
@@ -178,21 +188,21 @@ export default function ConnectClient({ installUrl }: { installUrl: string | nul
           <div className="flex flex-wrap items-center gap-3">
             <h2 className="t-h2">{client.name}</h2>
           </div>
-          {client.local && (
-            <div role="group" aria-label="Where Forkward runs" className="mt-4 inline-flex rounded-full border border-line p-1">
-              {(["hosted", "local"] as const).map((m) => (
+          {modes.length > 1 && (
+            <div role="group" aria-label="How to connect" className="mt-4 inline-flex flex-wrap rounded-full border border-line p-1">
+              {modes.map((m) => (
                 <button
                   key={m}
                   onClick={() => setMode(m)}
                   aria-pressed={mode === m}
                   className={`rounded-full px-4 py-1.5 text-[14px] ${mode === m ? "bg-ink text-surface" : "text-muted"}`}
                 >
-                  {m === "hosted" ? "Hosted (API key)" : "On my machine"}
+                  {MODE_LABEL[m]}
                 </button>
               ))}
             </div>
           )}
-          <p className="t-label mt-4 text-muted">{showLocal ? "Runs Forkward locally with your own model key; nothing is metered." : client.where}</p>
+          <p className="t-label mt-4 text-muted">{showLocal ? "Runs Forkward locally with your own model key; nothing is metered." : showSignIn ? client.signIn!.where : client.where}</p>
 
           <div className="mt-3 overflow-hidden rounded-btn border border-line bg-sunken">
             <div className="flex items-center justify-between border-b border-line px-3 py-1.5">
@@ -211,16 +221,16 @@ export default function ConnectClient({ installUrl }: { installUrl: string | nul
               {oneClick.label}
             </a>
           )}
-          {!showLocal && client.oneClick && !key.trim() && <p className="t-label mt-3 text-muted">Paste your key above to enable one-click install.</p>}
+          {mode === "hosted" && client.oneClick && !key.trim() && <p className="t-label mt-3 text-muted">Paste your key above to enable one-click install.</p>}
           {needsKey && <p className="t-label mt-3 text-muted">Paste your API key above to copy this setup.</p>}
-          {!showLocal && client.urlOnly && (
-            <p className="t-label mt-3 text-muted">No key needed. The app signs you in with GitHub the first time it connects.</p>
+          {(showSignIn || (mode === "hosted" && client.urlOnly)) && (
+            <p className="t-label mt-3 text-muted">No key needed. It signs you in with GitHub the first time it connects.</p>
           )}
 
           <div className="mt-8 border-t border-line pt-5">
             <h3 className="font-semibold">Try it</h3>
             <ul className="mt-2 list-disc space-y-1 pl-5 text-muted">
-              <li>“Preview merging egraphs-good/egglog@main into my fork.”</li>
+              <li>“Preview syncing my fork with its upstream.”</li>
               <li>“What changed in my forks since yesterday?”</li>
               <li>“How many Forkward units have I used this month?”</li>
             </ul>

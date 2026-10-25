@@ -40,7 +40,7 @@ export function MarketingShell({
           className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-3 border-2 border-[var(--pa-outline-variant)] bg-[var(--pa-surface)] px-4 shadow-[2px_3px_0px_rgba(56,53,47,0.12)] sm:h-20 sm:px-6"
           style={{ borderRadius: "255px 15px 225px 15px/15px 225px 15px 255px" }}
         >
-          <Link href="/" className="flex items-center gap-2 text-[var(--pa-ink)]">
+          <Link href="/" aria-label="Forkward home" className="flex items-center gap-2 text-[var(--pa-ink)]">
             <AgentGlyph size={30} />
             <span className="font-display text-[22px] font-bold tracking-tight sm:text-[24px]">Forkward</span>
           </Link>

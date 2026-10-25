@@ -560,8 +560,8 @@ async def resolve(
                 else f"The classifier expected {LABEL_WORDS.get(d.classifier or '', 'something else')}, "
                 "which is not what the resolvers chose"
                 if s.use_classifier and not d.classifier_agrees
-                else "The safety gate is not calibrated for this model yet, so every hunk goes to a "
-                "person (run `python -m forkward calibrate`)"
+                else "The safety gate is not certified for this model yet, so every hunk goes to a "
+                "person"
                 if threshold >= UNCALIBRATED
                 else f"Confidence {d.confidence:.2f} is under the calibrated bar of {threshold:.2f}"
             )

@@ -118,7 +118,7 @@ function Repo({ repo, reload }: { repo: RepoRow; reload: () => void }) {
             )}{" "}
             {!editing && (
               <button className="link text-[14px]" onClick={() => setEditing(true)}>
-                Change
+                {repo.upstream ? "Change" : "Set upstream"}
               </button>
             )}
           </p>
