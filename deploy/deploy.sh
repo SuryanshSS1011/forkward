@@ -24,13 +24,20 @@ fi
 # Keepalives make a dropped connection fail within a minute instead of hanging the deploy.
 ssh_() { ssh -i "$key" -o ConnectTimeout=10 -o ServerAliveInterval=15 -o ServerAliveCountMax=4 \
   -o StrictHostKeyChecking=yes "$host" "$@"; }
-# Upload the archive as a file: a long stream piped through ssh stalled on unreliable networks.
-tarball=$(mktemp -t forkward.XXXXXX)
-trap 'rm -f "$tarball"' EXIT
-git archive HEAD -o "$tarball"
-scp -q -i "$key" -o ConnectTimeout=10 -o ServerAliveInterval=15 -o ServerAliveCountMax=4 \
-  -o StrictHostKeyChecking=yes "$tarball" "$host:forkward.tar"
-ssh_ 'rm -rf ~/forkward.new && mkdir -p ~/forkward.new && tar -x -C ~/forkward.new -f ~/forkward.tar && rm ~/forkward.tar'
+# Ship the committed tree. A commit already on GitHub is downloaded by the host itself, so nothing
+# large crosses the deploying machine's network; anything else is uploaded as a file.
+sha=$(git rev-parse HEAD)
+slug=$(git remote get-url origin 2>/dev/null | sed -nE 's#^(https://github.com/|git@github.com:)([^/]+/[^/]+)$#\2#p' | sed 's/\.git$//')
+if [ -n "$slug" ] && [ -n "$(git branch -r --contains "$sha" 2>/dev/null)" ]; then
+  ssh_ "rm -rf ~/forkward.new && mkdir -p ~/forkward.new && curl -fsSL https://codeload.github.com/$slug/tar.gz/$sha | tar -xz --strip-components=1 -C ~/forkward.new"
+else
+  tarball=$(mktemp -t forkward.XXXXXX)
+  trap 'rm -f "$tarball"' EXIT
+  git archive HEAD -o "$tarball"
+  scp -q -i "$key" -o ConnectTimeout=10 -o ServerAliveInterval=15 -o ServerAliveCountMax=4 \
+    -o StrictHostKeyChecking=yes "$tarball" "$host:forkward.tar"
+  ssh_ 'rm -rf ~/forkward.new && mkdir -p ~/forkward.new && tar -x -C ~/forkward.new -f ~/forkward.tar && rm ~/forkward.tar'
+fi
 ssh_ 'set -e
   [ -f ~/forkward/.env ] && cp ~/forkward/.env ~/forkward.new/.env
   [ -d ~/forkward/runs ] && mv ~/forkward/runs ~/forkward.new/runs || mkdir -p ~/forkward.new/runs
