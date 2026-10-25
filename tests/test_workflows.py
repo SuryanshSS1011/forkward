@@ -119,7 +119,11 @@ def test_a_sync_job_opens_a_pr_waits_for_ci_and_learns_on_merge(tenant_repo, wor
     ]
     # The webhook only wakes the wait; the verdict comes from the Checks API.
     ci["status"] = "success"
-    assert workflows.notify_ci("ACME/fork", "c0ffee", "failure") == 1
+    # The status can flip just before the watch workflow exists; that wake is dropped, not an error.
+    deadline = time.time() + 10
+    while workflows.notify_ci("ACME/fork", "c0ffee", "failure") != 1:
+        assert time.time() < deadline, "the watch workflow never started"
+        time.sleep(0.2)
     wait_status(tenant_repo, job_id, {"waiting_approval"})
     assert workflows.notify_pr("https://github.com/acme/fork/pull/5", merged=True) == 1
     row = wait_status(tenant_repo, job_id, {"succeeded"})
@@ -328,6 +332,27 @@ def test_auth_provider_advertises_auth0_when_configured(monkeypatch):
     assert a0.issuer == "https://forkward.us.auth0.com/" and a0.algorithm == "RS256"
     assert a0.jwks_uri == "https://forkward.us.auth0.com/.well-known/jwks.json"
     assert a0.audience == "https://forkward.example/mcp"
+
+
+def test_a_webhook_before_the_watch_starts_is_dropped_not_raised(pg, monkeypatch):
+    job_id = workflows.create_job(billing.create_tenant("acme", "team"), "acme/fork", "up/r@main")
+    with db.system() as cur:
+        cur.execute(
+            "UPDATE jobs SET status = 'waiting_ci', summary = '{\"head_sha\": \"c0ffee\"}', "
+            "pr_url = 'https://github.com/acme/fork/pull/9' WHERE id = %s",
+            (job_id,),
+        )
+
+    class NoWorkflow:
+        def send(self, *a):
+            from dbos._error import DBOSNonExistentWorkflowError
+
+            raise DBOSNonExistentWorkflowError("send", a[0])
+
+    monkeypatch.setattr(workflows, "_DBOS", None)
+    monkeypatch.setattr(workflows, "_client", lambda: NoWorkflow())
+    assert workflows.notify_ci("acme/fork", "c0ffee", "success") == 0
+    assert workflows.notify_pr("https://github.com/acme/fork/pull/9", merged=True) == 0
 
 
 def test_webhook_route_rejects_bad_signatures(pg, monkeypatch):

@@ -499,14 +499,15 @@ def sync_job(job_id: str) -> dict:
     record_result(job, res)
     if not res.get("pr_url"):
         return {"status": "succeeded"}
-    anchor_decisions(job, res.get("head_sha"))
     # The waits for CI and for the merge can last days, so they run in their own workflow outside
     # the queue. A queued workflow holds a concurrency slot until it returns, and a few open pull
-    # requests would otherwise stop every new sync and review from starting.
+    # requests would otherwise stop every new sync and review from starting. It starts before the
+    # anchor, so a webhook for the new status finds a workflow to wake.
     from dbos import SetWorkflowID
 
     with SetWorkflowID(watch_id(job_id)):
         DBOS.start_workflow(watch_job, job, res["pr_url"], res.get("head_sha"))
+    anchor_decisions(job, res.get("head_sha"))
     return {"status": "opened", "pr_url": res["pr_url"]}
 
 
@@ -822,11 +823,20 @@ def _client():
     return _CLIENT
 
 
-def _send(workflow_id: str, message: dict, topic: str) -> None:
-    if _DBOS is not None:
-        DBOS.send(workflow_id, message, topic)
-    else:
-        _client().send(workflow_id, message, topic)
+def _send(workflow_id: str, message: dict, topic: str) -> bool:
+    """Wake a waiting workflow. A webhook can arrive between the job's status changing and its
+    watch workflow starting; the wake is then dropped, which is safe because the watch checks CI
+    as soon as it starts and polls after that."""
+    from dbos._error import DBOSNonExistentWorkflowError
+
+    try:
+        if _DBOS is not None:
+            DBOS.send(workflow_id, message, topic)
+        else:
+            _client().send(workflow_id, message, topic)
+    except DBOSNonExistentWorkflowError:
+        return False
+    return True
 
 
 def notify_ci(repo: str, sha: str, conclusion: str | None) -> int:
@@ -839,9 +849,7 @@ def notify_ci(repo: str, sha: str, conclusion: str | None) -> int:
             (repo, sha),
         )
         ids = [watch_id(r["id"]) for r in cur.fetchall()]
-    for wid in ids:
-        _send(wid, {"status": status, "conclusion": conclusion}, "ci")
-    return len(ids)
+    return sum(_send(wid, {"status": status, "conclusion": conclusion}, "ci") for wid in ids)
 
 
 def notify_pr(pr_url: str, merged: bool) -> int:
@@ -853,9 +861,7 @@ def notify_pr(pr_url: str, merged: bool) -> int:
             (pr_url,),
         )
         ids = [watch_id(r["id"]) for r in cur.fetchall()]
-    for wid in ids:
-        _send(wid, {"merged": merged}, "pr")
-    return len(ids)
+    return sum(_send(wid, {"merged": merged}, "pr") for wid in ids)
 
 
 def job(tenant_id: str, job_id: str, after: int = 0, detail: bool = False) -> dict | None:
