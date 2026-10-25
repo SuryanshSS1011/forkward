@@ -125,4 +125,8 @@ def test_sync_opens_a_draft_pr_and_commits_an_accepted_review(stack):
     assert "<<<<<<<" not in after and "edited_by_reviewer(dev);" in after
     assert all(h["review_commit"] for h in row["hunks"] if h["decision"] == "review")
     assert gh.pulls[0]["draft"] is False  # every hunk is resolved, so the PR is ready
+    # The gate check follows the branch head, so the pull request still shows it.
+    head = row["summary"]["head_sha"]
+    assert gh.check_runs[-1]["head_sha"] == head
+    assert gh.check_runs[-1]["conclusion"] == "success"
     assert "ready to merge" in row["events"][-1]["message"]

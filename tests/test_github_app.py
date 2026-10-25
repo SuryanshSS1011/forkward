@@ -93,6 +93,15 @@ def test_check_run_requires_action_while_any_hunk_needs_review():
     assert github_app.check_run_payload("abc", hunks[:1], "s")["conclusion"] == "success"
 
 
+def test_review_check_succeeds_only_when_no_hunk_is_left():
+    out = github_app.review_check_payload("def", 3, 2, 1)
+    assert out["head_sha"] == "def" and out["name"] == github_app.CHECK_NAME
+    assert out["conclusion"] == "action_required"
+    assert out["output"]["title"] == "1 of 3 hunks still need review"
+    done = github_app.review_check_payload("def", 3, 3, 0)
+    assert done["conclusion"] == "success" and done["output"]["title"] == "All 3 hunks resolved"
+
+
 def test_ci_status_ignores_forkwards_own_check(monkeypatch):
     runs = []
     monkeypatch.setattr(github_app, "request", lambda *a, **k: {"check_runs": runs})

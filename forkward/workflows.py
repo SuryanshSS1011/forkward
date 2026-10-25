@@ -631,6 +631,12 @@ def commit_reviews(job_id: str, request: int) -> dict:
         token,
     )
     left = len(open_hunks) - len(accepted)
+    if token:
+        total = j["summary"].get("hunks") or len(open_hunks)
+        try:
+            github_app.post_review_check(token, j["repo"], sha, total, len(accepted), left)
+        except Exception as e:  # noqa: BLE001 - the commit landed; the check is a status mirror
+            print(f"[workflows] could not post the gate check: {e}", file=sys.stderr)
     if left == 0 and j["pr_url"] and token:
         try:
             github_app.mark_ready(token, j["repo"], int(j["pr_url"].rstrip("/").rsplit("/", 1)[1]))

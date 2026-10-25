@@ -238,6 +238,38 @@ def post_check_run(token: str, repo: str, sha: str, hunks: list, summary: str) -
     return data.get("html_url", "")
 
 
+def review_check_payload(sha: str, total: int, reviewed: int, left: int) -> dict:
+    """The gate check again on the commit a review pushed, so the pull request's head carries it.
+    It succeeds once a person has decided every hunk the gate held back."""
+    return {
+        "name": CHECK_NAME,
+        "head_sha": sha,
+        "status": "completed",
+        "conclusion": "action_required" if left else "success",
+        "output": {
+            "title": (
+                f"{left} of {total} hunks still need review"
+                if left
+                else f"All {total} hunks resolved"
+            ),
+            "summary": (
+                f"A reviewer committed {reviewed} resolution(s) on this commit; "
+                + (f"{left} still keep conflict markers." if left else "none are left open.")
+            ),
+        },
+    }
+
+
+def post_review_check(token: str, repo: str, sha: str, total: int, reviewed: int, left: int) -> str:
+    data = request(
+        token,
+        "POST",
+        f"/repos/{repo}/check-runs",
+        json=review_check_payload(sha, total, reviewed, left),
+    )
+    return data.get("html_url", "")
+
+
 def ci_status(token: str, repo: str, sha: str) -> str:
     """The customer's CI verdict on `sha`, ignoring Forkward's own check: 'pending' while any run
     is unfinished, 'failure' if any finished run failed, 'success' when all passed, and 'none'

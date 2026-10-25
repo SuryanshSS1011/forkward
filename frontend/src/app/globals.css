@@ -374,4 +374,4 @@ body > main { flex: 1 0 auto; }
 .hc-verdict-on { opacity: 1; transform: none; }
 
 /* Code shows exactly what is in the file: no ligatures turning -> or != into symbols. */
-pre, code, .font-mono { font-variant-ligatures: none; font-feature-settings: "liga" 0, "calt" 0; }
+pre, code, textarea, .font-mono { font-variant-ligatures: none; font-feature-settings: "liga" 0, "calt" 0; }
