@@ -57,6 +57,17 @@ def test_private_runs_are_never_listed_or_readable_without_a_secret(board):
         assert board("GET", f"/api/events?run={bad}")[0] == 404
 
 
+def test_spoken_digests_follow_the_run_privacy_check(board, tmp_path):
+    public = "preview-20261012T000000-abcdef"
+    assert board("GET", f"/api/audio?run={public}")[0] == 404
+    (tmp_path / public / "digest.mp3").write_bytes(b"ID3fake")
+    (tmp_path / PRIVATE / "digest.mp3").write_bytes(b"ID3secret")
+    assert board("GET", f"/api/audio?run={public}") == (200, b"ID3fake")
+    assert board("GET", f"/api/audio?run={PRIVATE}")[0] == 404
+    assert board("GET", "/api/audio")[0] == 404
+    assert board("GET", "/api/audio?run=../../etc")[0] == 404
+
+
 def test_writes_and_spend_need_the_operator_token(board, monkeypatch):
     approve = json.dumps({"decision": "approve"})
     assert board("POST", "/api/approval", approve, {"Content-Type": "application/json"})[0] == 403

@@ -3,7 +3,8 @@
 Config: FORKWARD_SCHEDULES (default ~/.forkward/schedules.json), a list of
   {"repo": "owner/name", "upstream": "owner/name@ref", "base": "branch", "build": "cmd", "open_pr": true}
 With GitHub credentials and open_pr, a pull request is opened into the base branch; otherwise the
-run is a preview. Hunks the gate is unsure about are always flagged for a person.
+run is a preview. Hunks the gate is unsure about are always flagged for a person. With
+ELEVENLABS_API_KEY set, each result is also spoken to runs/<run_id>/digest.mp3 for the board.
 """
 
 from __future__ import annotations
@@ -15,7 +16,7 @@ import time
 import traceback
 from pathlib import Path
 
-from forkward import home, sync
+from forkward import home, sync, voice
 from forkward.store import Store
 
 CONFIG = Path(os.environ.get("FORKWARD_SCHEDULES") or home() / "schedules.json")
@@ -83,12 +84,17 @@ async def run_all() -> list[dict]:
                 + f", {res.auto_applied} auto-applied, {review} need a person"
                 + (f", PR {res.pr_url}" if res.pr_url else "")
             )
+            said = voice.digest_text(
+                e["repo"], len(res.hunks), res.auto_applied, review, res.pr_url
+            )
+            spoken = await voice.speak(said, store.dir / voice.DIGEST)
             store.event(
                 "scheduler",
                 "alert",
                 level="needs_review" if review else "scheduled_sync",
                 message=msg,
                 url=res.pr_url,
+                **({"audio": store.run_id, "spoken": said} if spoken else {}),
             )
             out.append({"repo": e["repo"], "ok": True, "message": msg})
         except Exception as err:  # noqa: BLE001 - one failing repo must not stop the others

@@ -537,6 +537,14 @@ class Handler(BaseHTTPRequestHandler):
             body = json.dumps(models()).encode()
         elif url.path == "/api/state":
             body = json.dumps(state(run or self.default_run), default=str).encode()
+        elif url.path == "/api/audio":
+            # The spoken digest of a scheduled sync, behind the same run check as its events.
+            mp3 = RUNS / run / "digest.mp3" if run and run != "latest-sync" else None
+            if mp3 is None or not mp3.is_file():
+                self.send_error(404, "no spoken digest for this run")
+                return
+            self._send(mp3.read_bytes(), "audio/mpeg")
+            return
         elif url.path in ("/", "/index.html"):
             self._send((ROOT / "index.html").read_bytes(), "text/html; charset=utf-8")
             return

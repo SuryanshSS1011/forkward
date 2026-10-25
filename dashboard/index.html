@@ -6,6 +6,7 @@
 <title>Forkward Board</title>
 <style>
 :root {
+  color-scheme: light;
   --bg: #f4f1ea;
   --panel: #fffdf8;
   --ink: #1d1b16;
@@ -23,6 +24,7 @@
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
+    color-scheme: dark;
     --bg: #12110e;
     --panel: #1b1a16;
     --ink: #ece6d6;
@@ -122,6 +124,7 @@ svg text { font: 11px var(--mono); fill: var(--muted); }
 ul.feed { list-style: none; margin: 0; padding: 0; max-height: 320px; overflow: auto; }
 ul.feed li { border-top: 1px solid var(--rule); padding: 7px 0; font-size: 13px; display: grid; grid-template-columns: 58px minmax(0, 1fr); gap: 8px; overflow-wrap: anywhere; }
 ul.feed time { font: 11px var(--mono); color: var(--muted); padding-top: 2px; }
+ul.feed audio { display: block; width: 100%; max-width: 320px; height: 32px; margin-top: 6px; }
 .tag { font: 600 10px var(--mono); text-transform: uppercase; letter-spacing: 0.08em; padding: 1px 5px; border: 1px solid currentColor; margin-right: 6px; }
 .t-promotion { color: var(--ok); }
 .t-warn, .t-needs_review { color: var(--warn); }
@@ -348,7 +351,8 @@ function alerts(s) {
   $("alerts").innerHTML = A.length ? A.map((a) => {
     const lvl = a.kind === "needs_review" ? "needs_review" : a.level || "info";
     const msg = a.kind === "needs_review" ? `${a.hunk} needs a person (${a.source})` : a.message;
-    return `<li><time>${hhmm(a.t)}</time><span><span class="tag t-${esc(lvl)}">${esc(lvl.replace("_", " "))}</span>${esc(msg)}</span></li>`;
+    const audio = a.audio ? `<audio controls preload="none" src="/api/audio?run=${encodeURIComponent(a.audio)}" aria-label="Spoken digest: ${esc(a.spoken || msg)}"></audio>` : "";
+    return `<li><time>${hhmm(a.t)}</time><span><span class="tag t-${esc(lvl)}">${esc(lvl.replace("_", " "))}</span>${esc(msg)}${audio}</span></li>`;
   }).join("") : `<li><span></span><span class="empty">Nothing yet.</span></li>`;
 }
 
