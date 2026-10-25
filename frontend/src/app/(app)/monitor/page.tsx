@@ -68,7 +68,7 @@ export default function Activity() {
     return (
       <div className="wrap pb-16 pt-10">
         <h1 className="t-h1">Activity</h1>
-        <p className="mt-2 text-muted">Sign in to see your syncs, or <Link href="/demo/live" className="link">look through a recorded one</Link>.</p>
+        <p className="mt-2 text-muted">Sign in to see your syncs, or <Link href="/demo" className="link">look through a recorded one</Link>.</p>
         <Link href="/signin?next=/monitor" className="btn btn-accent mt-6">Sign in with GitHub</Link>
       </div>
     );

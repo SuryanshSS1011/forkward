@@ -2,15 +2,15 @@
 import Link from "next/link";
 import { authClient } from "@/lib/auth-client";
 
-/** Signed out: Sign in and Get started. Signed in: the avatar and Sign out, which returns to the
- * public site with a full reload so the server renders the signed-out navigation. */
+/** Signed out: one Sign in with GitHub action, since signing in is also how an account starts.
+ * Signed in: the avatar and Sign out, which returns to the public site with a full reload so the
+ * server renders the signed-out navigation. */
 export function AuthButton({ user }: { user: { name: string; image: string | null } | null }) {
   if (!user)
     return (
-      <>
-        <Link href="/signin" className="btn btn-outline-teal btn-sm">Sign in</Link>
-        <Link href="/signin?next=/repos" className="btn btn-outline btn-sm hidden sm:inline-flex">Get started</Link>
-      </>
+      <Link href="/signin?next=/repos" className="btn btn-outline-teal btn-sm">
+        Sign in with GitHub
+      </Link>
     );
   const signOut = async () => {
     // Deletes this session row, so the cookie stops working everywhere at once.
