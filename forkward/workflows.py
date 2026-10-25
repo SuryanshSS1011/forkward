@@ -432,6 +432,30 @@ def anchor_decisions(job: dict, head_sha: str | None) -> dict | None:
     return a
 
 
+@DBOS.step()
+def anchor_outcome(job: dict, merged: bool) -> dict | None:
+    """Write the reviewer's verdict to Solana after the pull request is merged or closed, linked
+    to the decision anchor. Like that anchor, it never fails the job."""
+    from forkward import solana
+
+    if not solana.enabled():
+        return None
+    try:
+        a = solana.anchor_outcome(job, merged)
+    except Exception as e:  # noqa: BLE001 - the pull request is already settled
+        log_event(job, None, "warning", f"Could not anchor the review outcome on Solana: {e}"[:300])
+        return None
+    if a:
+        log_event(
+            job,
+            None,
+            "info",
+            f"Anchored the review outcome on Solana {a['cluster']}",
+            explorer=a["explorer"],
+        )
+    return a
+
+
 def _source(h: dict) -> str:
     chosen = next((c for c in (h.get("detail") or {}).get("candidates", []) if c["chosen"]), None)
     return "+".join(chosen["sources"])[:300] if chosen else ""
@@ -532,6 +556,7 @@ def watch_job(job: dict, pr_url: str, head_sha: str | None) -> dict:
             outcome = learn(pr_url)
         except Exception as e:  # noqa: BLE001 - the merge happened; only the learning failed
             outcome = {"error": f"{type(e).__name__}: {e}"[:500]}
+    anchor_outcome(job, bool(msg.get("merged")))
     note(
         job,
         "done",

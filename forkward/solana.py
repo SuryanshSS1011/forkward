@@ -2,8 +2,11 @@
 
 After a sync opens its pull request, a SHA-256 over the job's hunks (conflict hash, gate decision,
 confidence and chosen resolution) is written to the chain with the Memo program, and the signature
-lands in audit_events. Anyone can later recompute the digest from the database and compare it with
-the memo on chain. Optional: without SOLANA_KEYPAIR nothing is anchored.
+lands in audit_events. When the pull request is merged or closed, a second memo anchors the
+reviewer's verdict on every hunk and links back to the first. So each prediction is on record before
+its outcome exists, and neither can be edited later without the digests no longer matching. Anyone
+can recompute both from the database and compare them with the chain. Optional: without
+SOLANA_KEYPAIR nothing is anchored.
 
 The transaction is a one-instruction legacy message, serialized here so no Solana SDK is needed.
 """
@@ -231,6 +234,31 @@ def memo_for(job_id: str, digest: str) -> str:
     return f"{MEMO_PREFIX}:{job_id}:{digest}"
 
 
+def outcome_memo_for(job_id: str, digest: str) -> str:
+    return f"{MEMO_PREFIX}:outcome:{job_id}:{digest}"
+
+
+def outcome_digest(job_id: str, merged: bool, decision_signature: str, reviews: list[dict]) -> str:
+    """SHA-256 over what the reviewer kept: each hunk's verdict and final text, whether the pull
+    request merged, and the decision anchor this outcome answers."""
+    rows = sorted(
+        (
+            {
+                "file": r["file"],
+                "idx": r["idx"],
+                "review": r["review"],
+                "final": hashlib.sha256((r["final_resolution"] or "").encode()).hexdigest(),
+            }
+            for r in reviews
+        ),
+        key=lambda r: (r["file"], r["idx"]),
+    )
+    doc = {"job": job_id, "merged": merged, "decisions": decision_signature, "hunks": rows}
+    return hashlib.sha256(
+        json.dumps(doc, sort_keys=True, separators=(",", ":")).encode()
+    ).hexdigest()
+
+
 def _job_hunks(cur, job_id: str) -> list[dict]:
     cur.execute(
         "SELECT file, idx, conflict_sha256, decision, confidence, resolution FROM hunks "
@@ -238,6 +266,53 @@ def _job_hunks(cur, job_id: str) -> list[dict]:
         (job_id,),
     )
     return cur.fetchall()
+
+
+def _job_reviews(cur, job_id: str) -> list[dict]:
+    cur.execute(
+        "SELECT file, idx, review, final_resolution FROM hunks WHERE job_id = %s", (job_id,)
+    )
+    return cur.fetchall()
+
+
+def _latest_anchor(cur, action: str, job_id: str) -> dict | None:
+    cur.execute(
+        "SELECT detail FROM audit_events WHERE action = %s AND detail->>'job_id' = %s "
+        "ORDER BY ts DESC LIMIT 1",
+        (action, job_id),
+    )
+    row = cur.fetchone()
+    return row["detail"] if row else None
+
+
+def anchor_outcome(job: dict, merged: bool) -> dict | None:
+    """Anchor the reviewer's verdict once the pull request is merged or closed. Returns None when
+    the job's decisions were never anchored, since there is no prediction to answer."""
+    from forkward import db
+
+    job_id = str(job["id"])
+    with db.tenant(job["tenant_id"]) as cur:
+        decisions = _latest_anchor(cur, "decisions.anchored", job_id)
+        if not decisions:
+            return None
+        digest = outcome_digest(job_id, merged, decisions["signature"], _job_reviews(cur, job_id))
+    sig = send_memo(outcome_memo_for(job_id, digest))
+    detail = {
+        "job_id": job_id,
+        "digest": digest,
+        "merged": merged,
+        "decisions": decisions["signature"],
+        "signature": sig,
+        "cluster": cluster(),
+        "explorer": explorer_url(sig),
+    }
+    with db.tenant(job["tenant_id"]) as cur:
+        cur.execute(
+            "INSERT INTO audit_events (tenant_id, actor, action, subject, detail) "
+            "VALUES (%s, 'forkward-bot', 'outcome.anchored', %s, %s)",
+            (job["tenant_id"], job["repo"], json.dumps(detail)),
+        )
+    return detail
 
 
 def anchor_job(job: dict, head_sha: str | None) -> dict:
@@ -265,7 +340,8 @@ def anchor_job(job: dict, head_sha: str | None) -> dict:
 
 
 def verify_job(tenant_id: str, job_id: str, client: httpx.Client | None = None) -> dict:
-    """Recompute the job's digest from the database and compare it with its latest memo on chain."""
+    """Recompute the job's decision digest, and its outcome digest once there is one, from the
+    database and compare each with its memo on chain."""
     from forkward import db
 
     with db.tenant(tenant_id) as cur:
@@ -273,26 +349,36 @@ def verify_job(tenant_id: str, job_id: str, client: httpx.Client | None = None) 
         job = cur.fetchone()
         if not job:
             return {"ok": False, "reason": "no such job"}
-        cur.execute(
-            "SELECT detail FROM audit_events WHERE action = 'decisions.anchored' "
-            "AND detail->>'job_id' = %s ORDER BY ts DESC LIMIT 1",
-            (job_id,),
-        )
-        anchor = cur.fetchone()
+        anchor = _latest_anchor(cur, "decisions.anchored", job_id)
+        outcome = _latest_anchor(cur, "outcome.anchored", job_id)
         hunks = _job_hunks(cur, job_id)
+        reviews = _job_reviews(cur, job_id) if outcome else []
     if not anchor:
         return {"ok": False, "reason": "this job was never anchored"}
-    a = anchor["detail"]
-    digest = decisions_digest(job_id, job["repo"], a.get("head_sha"), hunks)
-    on_chain = fetch_memo(a["signature"], client)
-    return {
-        "ok": a["digest"] == digest and on_chain == memo_for(job_id, digest),
+    digest = decisions_digest(job_id, job["repo"], anchor.get("head_sha"), hunks)
+    on_chain = fetch_memo(anchor["signature"], client)
+    res = {
+        "ok": anchor["digest"] == digest and on_chain == memo_for(job_id, digest),
         "digest": digest,
-        "recorded": a["digest"],
+        "recorded": anchor["digest"],
         "on_chain": on_chain,
-        "signature": a["signature"],
-        "explorer": explorer_url(a["signature"]),
+        "signature": anchor["signature"],
+        "explorer": explorer_url(anchor["signature"]),
     }
+    if outcome:
+        o_digest = outcome_digest(job_id, outcome["merged"], outcome["decisions"], reviews)
+        o_chain = fetch_memo(outcome["signature"], client)
+        res["outcome"] = {
+            "ok": outcome["digest"] == o_digest
+            and o_chain == outcome_memo_for(job_id, o_digest)
+            and outcome["decisions"] == anchor["signature"],
+            "merged": outcome["merged"],
+            "digest": o_digest,
+            "signature": outcome["signature"],
+            "explorer": explorer_url(outcome["signature"]),
+        }
+        res["ok"] = res["ok"] and res["outcome"]["ok"]
+    return res
 
 
 def main(argv: list[str]) -> int:

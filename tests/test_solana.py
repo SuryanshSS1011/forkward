@@ -200,3 +200,74 @@ def test_a_chain_outage_never_fails_the_sync(pg, monkeypatch):
         assert any(
             r["kind"] == "warning" and "devnet is down" in r["message"] for r in cur.fetchall()
         )
+
+
+def test_outcomes_are_anchored_after_decisions_and_verified_together(pg, monkeypatch):
+    from forkward import billing
+
+    tid = billing.create_tenant("acme", "team")
+    job_id = workflows.create_job(tid, "acme/fork", "up/r@main")
+    job = workflows.load_job(job_id)
+    res = {
+        "pr_url": "https://github.com/acme/fork/pull/5",
+        "head_sha": "c0ffee",
+        "hunks": [
+            {
+                "file": "a.c",
+                "hunk_id": "a.c#1",
+                "resolution": "x",
+                "confidence": 0.95,
+                "gate": "needs_review",
+                "reason": "uncertified",
+                "key": "k1",
+            },
+            {
+                "file": "b.c",
+                "hunk_id": "b.c#1",
+                "resolution": "y",
+                "confidence": 0.4,
+                "gate": "needs_review",
+                "reason": "disagreed",
+                "key": "k2",
+            },
+        ],
+    }
+    workflows.record_result(job, res)
+    chain, n = {}, iter(range(100))
+    monkeypatch.setenv("SOLANA_KEYPAIR", "unused")
+
+    def send(memo):
+        sig = f"SiG{next(n)}"
+        chain[sig] = memo
+        return sig
+
+    monkeypatch.setattr(solana, "send_memo", send)
+    monkeypatch.setattr(solana, "fetch_memo", lambda sig, client=None: chain.get(sig))
+
+    # No prediction on record yet, so there is no outcome to anchor.
+    assert solana.anchor_outcome(job, merged=True) is None
+    decided = workflows.anchor_decisions(job, "c0ffee")
+    with db.tenant(tid) as cur:
+        cur.execute(
+            "UPDATE hunks SET review = 'accepted', final_resolution = resolution WHERE file = 'a.c'"
+        )
+        cur.execute(
+            "UPDATE hunks SET review = 'accepted', final_resolution = 'y2' WHERE file = 'b.c'"
+        )
+    out = workflows.anchor_outcome(job, True)
+    assert out["decisions"] == decided["signature"] and out["merged"] is True
+    assert chain[out["signature"]] == solana.outcome_memo_for(job_id, out["digest"])
+
+    v = solana.verify_job(tid, job_id)
+    assert v["ok"] and v["outcome"]["ok"] and v["outcome"]["merged"] is True
+    with db.tenant(tid) as cur:
+        cur.execute("SELECT message FROM job_events WHERE job_id = %s ORDER BY id", (job_id,))
+        assert "Anchored the review outcome on Solana devnet" in [
+            r["message"] for r in cur.fetchall()
+        ]
+
+    # A reviewed resolution rewritten after the merge no longer matches the outcome on chain.
+    with db.tenant(tid) as cur:
+        cur.execute("UPDATE hunks SET final_resolution = 'evil' WHERE file = 'b.c'")
+    v = solana.verify_job(tid, job_id)
+    assert not v["ok"] and not v["outcome"]["ok"]

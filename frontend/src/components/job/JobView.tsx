@@ -8,6 +8,12 @@ import { HunkList } from "./HunkList";
 import { StageTrack } from "./StageTrack";
 import { agentState, headline, hunkState } from "./words";
 
+/** A Solana Explorer link an event carries, accepted only for the explorer's own origin. */
+const explorerOf = (e: { data: Record<string, unknown> }) => {
+  const x = e.data?.explorer;
+  return typeof x === "string" && x.startsWith("https://explorer.solana.com/tx/") ? x : null;
+};
+
 const when = (ts: string) => new Date(ts).toLocaleString([], { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" });
 
 /**
@@ -79,6 +85,12 @@ export function JobView({
     if (window.matchMedia("(max-width: 1023px)").matches) document.getElementById("hunk-detail")?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
+  const anchors = job.events
+    .map((e) => ({ url: explorerOf(e), outcome: e.message.includes("outcome") }))
+    .filter((a): a is { url: string; outcome: boolean } => !!a.url);
+  const decisionsAnchor = anchors.filter((a) => !a.outcome).at(-1);
+  const outcomeAnchor = anchors.filter((a) => a.outcome).at(-1);
+
   const [owner, name] = job.repo.split("/");
   return (
     <div className="wrap pb-10 pt-8">
@@ -114,6 +126,16 @@ export function JobView({
             {job.pr_url && (
               <a className="btn btn-secondary" href={job.pr_url} target="_blank" rel="noreferrer">
                 Open the pull request
+              </a>
+            )}
+            {decisionsAnchor && (
+              <a className="link text-[14px]" href={decisionsAnchor.url} target="_blank" rel="noreferrer">
+                Decisions on Solana
+              </a>
+            )}
+            {outcomeAnchor && (
+              <a className="link text-[14px]" href={outcomeAnchor.url} target="_blank" rel="noreferrer">
+                Outcome on Solana
               </a>
             )}
             {extraActions}
@@ -169,7 +191,17 @@ export function JobView({
                 <time className="tabular-nums text-faint" dateTime={e.ts} suppressHydrationWarning>
                   {new Date(e.ts).toLocaleTimeString([], { hour: "numeric", minute: "2-digit", second: "2-digit" })}
                 </time>
-                <span>{e.message}</span>
+                <span>
+                  {e.message}
+                  {explorerOf(e) && (
+                    <>
+                      {" "}
+                      <a className="link" href={explorerOf(e)!} target="_blank" rel="noreferrer">
+                        View on Solana Explorer
+                      </a>
+                    </>
+                  )}
+                </span>
               </li>
             ))}
           </ol>
