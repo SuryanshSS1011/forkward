@@ -21,7 +21,9 @@ if [ -n "$domain" ] && ! [[ "$domain" =~ ^[A-Za-z0-9.-]+$ ]]; then
   echo "Not a hostname: $domain" >&2; exit 1
 fi
 # The host key must already be in known_hosts (CI writes it from the DEPLOY_KNOWN_HOSTS secret).
-ssh_() { ssh -i "$key" -o ConnectTimeout=10 -o StrictHostKeyChecking=yes "$host" "$@"; }
+# Keepalives make a dropped connection fail within a minute instead of hanging the deploy.
+ssh_() { ssh -i "$key" -o ConnectTimeout=10 -o ServerAliveInterval=15 -o ServerAliveCountMax=4 \
+  -o StrictHostKeyChecking=yes "$host" "$@"; }
 git archive HEAD | ssh_ 'rm -rf ~/forkward.new && mkdir -p ~/forkward.new && tar -x -C ~/forkward.new'
 ssh_ 'set -e
   [ -f ~/forkward/.env ] && cp ~/forkward/.env ~/forkward.new/.env
