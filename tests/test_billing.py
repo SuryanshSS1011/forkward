@@ -87,11 +87,11 @@ def test_hosted_call_reserves_from_the_hunk_count_and_records_failures(tenant, m
             return None
 
     async def too_big(repo, base, upstream, max_hunks=None, on_hunks=None):
-        await on_hunks(30)  # 30 hunks x 4 units is far over the 40 left
+        await on_hunks(200)  # 200 hunks x 4 units is over the trial's 500 a month
         raise AssertionError("must not get here")
 
     monkeypatch.setattr(sync, "preview", too_big)
-    with pytest.raises(mcp_server.ToolError, match="needs 120 units"):
+    with pytest.raises(mcp_server.ToolError, match="needs 800 units"):
         asyncio.run(
             mcp_server.resolve_conflicts(
                 "o/fork", "main", "up/r@main", Ctx(), model="anthropic:claude-sonnet-5"
