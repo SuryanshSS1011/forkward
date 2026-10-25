@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import { DriftRail } from "@/components/DriftRail";
 import { headline } from "@/components/job/words";
-import { listRepos, saveRepo, startJob } from "@/lib/api/jobs";
+import { listRepos, removeRepo, saveRepo, startJob } from "@/lib/api/jobs";
 import { githubStatus } from "@/lib/githubStatus";
 import { isActive, type JobKind, type RepoRow, UPSTREAM_RE } from "@/lib/jobs";
 
@@ -80,12 +80,27 @@ function Settings({ repo, onSaved, onCancel }: { repo: RepoRow; onSaved: () => v
   );
 }
 
-function Repo({ repo, reload }: { repo: RepoRow; reload: () => void }) {
+function Repo({ repo, reload, installUrl }: { repo: RepoRow; reload: () => void; installUrl: string | null }) {
   const router = useRouter();
   const [editing, setEditing] = useState(false);
   const [busy, setBusy] = useState<JobKind | null>(null);
   const [error, setError] = useState<{ message: string; status?: number } | null>(null);
   const running = repo.latest && isActive(repo.latest.status);
+  const [confirming, setConfirming] = useState(false);
+  const [removing, setRemoving] = useState(false);
+  const remove = async () => {
+    setRemoving(true);
+    setError(null);
+    try {
+      await removeRepo(repo.id);
+      reload();
+    } catch (e) {
+      const err = e as Error & { status?: number };
+      setError({ message: err.message, status: err.status });
+      setRemoving(false);
+      setConfirming(false);
+    }
+  };
 
   const start = async (kind: JobKind) => {
     setBusy(kind);
@@ -115,10 +130,10 @@ function Repo({ repo, reload }: { repo: RepoRow; reload: () => void }) {
         </h2>
         {repo.upstream && (
           <div className="flex gap-2">
-            <button className="btn btn-secondary btn-sm" disabled={!!busy || !!running} onClick={() => start("preview")} title="A dry run that pushes nothing">
+            <button className="btn btn-secondary btn-sm" disabled={!!busy || !!running} onClick={() => start("preview")}>
               {busy === "preview" ? "Starting…" : "Preview"}
             </button>
-            <button className="btn btn-accent btn-sm" disabled={!!busy || !!running} onClick={() => start("sync")} title="Opens a pull request on a new branch">
+            <button className="btn btn-accent btn-sm" disabled={!!busy || !!running} onClick={() => start("sync")}>
               {busy === "sync" ? "Starting…" : "Sync now"}
             </button>
           </div>
@@ -143,13 +158,46 @@ function Repo({ repo, reload }: { repo: RepoRow; reload: () => void }) {
         </Link>
       )}
 
-      {repo.upstream && !editing && (
-        <p className="mt-3 text-[14px] text-muted">
-          {schedule ?? "Syncs only when you ask"}.{" "}
-          <button className="link text-[14px]" onClick={() => setEditing(true)}>
-            Change
+      <div className="mt-3 flex flex-wrap items-baseline justify-between gap-x-4 gap-y-2 text-[14px] text-muted">
+        {repo.upstream && !editing ? (
+          <p>
+            {schedule ?? "Syncs only when you ask"}.{" "}
+            <button className="link text-[14px]" onClick={() => setEditing(true)}>
+              Change
+            </button>
+          </p>
+        ) : (
+          <span />
+        )}
+        {!confirming && (
+          <button className="text-[14px] text-faint underline-offset-4 hover:text-danger hover:underline" onClick={() => setConfirming(true)} disabled={!!running}>
+            Remove
           </button>
-        </p>
+        )}
+      </div>
+      {confirming && (
+        <div role="alertdialog" aria-label={`Remove ${repo.full_name}`} className="fork-form mt-3 flex flex-wrap items-center justify-between gap-3">
+          <p className="max-w-[52ch] text-[14px]">
+            Stop syncing <span className="font-mono">{repo.full_name}</span>? Its pull requests stay on GitHub.
+            {installUrl && (
+              <>
+                {" "}
+                <a href={installUrl} className="link">
+                  Change GitHub access
+                </a>{" "}
+                to stop Forkward seeing it.
+              </>
+            )}
+          </p>
+          <div className="flex gap-2">
+            <button className="btn btn-sm btn-danger" onClick={remove} disabled={removing}>
+              {removing ? "Removing…" : "Remove fork"}
+            </button>
+            <button className="btn btn-secondary btn-sm" onClick={() => setConfirming(false)} disabled={removing}>
+              Keep it
+            </button>
+          </div>
+        </div>
       )}
       {(editing || !repo.upstream) && (
         <Settings
@@ -260,7 +308,7 @@ export default function ReposClient({ installUrl }: { installUrl: string | null 
       {repos && repos.length > 0 && (
         <ul className="mt-8 grid gap-5">
           {repos.map((r) => (
-            <Repo key={r.id} repo={r} reload={load} />
+            <Repo key={r.id} repo={r} reload={load} installUrl={installUrl} />
           ))}
         </ul>
       )}

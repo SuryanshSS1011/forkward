@@ -73,7 +73,7 @@ export async function GET(req: Request) {
           `INSERT INTO repositories (id, installation_id, tenant_id, full_name, default_branch, upstream)
            VALUES ($1, $2, $3, $4, $5, $6)
            ON CONFLICT (id) DO UPDATE SET installation_id = EXCLUDED.installation_id, full_name = EXCLUDED.full_name,
-             default_branch = EXCLUDED.default_branch, upstream = coalesce(repositories.upstream, EXCLUDED.upstream), updated_at = now()`,
+             default_branch = EXCLUDED.default_branch, upstream = coalesce(repositories.upstream, EXCLUDED.upstream), enabled = true, updated_at = now()`,
           [r.id, installationId, v.tenantId, r.full_name, r.default_branch ?? null, r.upstream],
         );
       }

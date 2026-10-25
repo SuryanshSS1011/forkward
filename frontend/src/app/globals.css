@@ -76,6 +76,8 @@ body > main { flex: 1 0 auto; }
   .btn-outline-teal:hover:not(:disabled) { background: var(--surface-sunken); border-color: var(--rust); }
   /* Accent: the single action color for every page except the landing page. */
   .btn-accent { background: var(--rust); color: #fff; }
+  .btn-danger { background: var(--danger); color: #fff; }
+  .btn-danger:hover:not(:disabled) { background: #8f1414; }
   .btn-accent:hover:not(:disabled) { background: #5E1A12; box-shadow: 0 6px 18px rgba(126,35,25,.32); }
   :root[data-theme="dark"] .btn-accent { color: #071113; }
   .btn:disabled { opacity: .55; cursor: not-allowed; }

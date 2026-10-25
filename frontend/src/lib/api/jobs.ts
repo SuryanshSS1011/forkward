@@ -24,6 +24,7 @@ export const startJob = (repoId: string, kind: JobKind) =>
   call<{ job: string }>(`/api/repos/${repoId}/jobs`, { method: "POST", body: JSON.stringify({ kind }) }).then((b) => b.job);
 export const saveRepo = (repoId: string, upstream: string | null, schedule: string | null) =>
   call<{ ok: true }>(`/api/repos/${repoId}`, { method: "PATCH", body: JSON.stringify({ upstream, schedule }) });
+export const removeRepo = (repoId: string) => call<{ ok: true }>(`/api/repos/${repoId}`, { method: "DELETE" });
 export const reviewHunk = (jobId: string, hunkId: string, decision: "accepted" | "rejected" | null, resolution?: string) =>
   call<{ ok: true }>(`/api/jobs/${jobId}/hunks/${hunkId}`, { method: "POST", body: JSON.stringify({ decision, resolution }) });
 export const applyReviews = (jobId: string) => call<{ ok: true }>(`/api/jobs/${jobId}/apply`, { method: "POST" });

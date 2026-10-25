@@ -38,6 +38,18 @@ export async function updateRepo(tenantId: string, id: string, upstream: string 
   });
 }
 
+/** Takes a fork out of Forkward: it stops syncing and leaves the list. Adding it again on GitHub
+ * brings it back, with no upstream until one is set. */
+export async function removeRepo(tenantId: string, id: string): Promise<boolean> {
+  return withTenant(tenantId, async (db) => {
+    const r = await db.query(
+      "UPDATE repositories SET enabled = false, upstream = NULL, schedule = NULL, updated_at = now() WHERE id = $1 AND tenant_id = $2 AND enabled",
+      [id, tenantId],
+    );
+    return r.rowCount === 1;
+  });
+}
+
 export type StartResult = { job: string } | { error: string; status: number };
 
 /** Inserts a queued job. The worker's claim loop gives it a workflow within a couple of seconds.
