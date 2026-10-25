@@ -234,7 +234,9 @@ def test_builds_run_under_resource_limits(local, monkeypatch, tmp_path):
     p = sandbox.run_bounded(
         ["sh", "-c", "ulimit -c; ulimit -v; echo $0 $1", "x", "y"], tmp_path, 10, limits=True
     )
-    assert p.stdout.split() == ["0", str(2048 << 10), "x", "y"]
+    # macOS refuses an address-space cap, which limited() skips rather than failing the build.
+    mem = str(2048 << 10) if sys.platform == "linux" else p.stdout.split()[1]
+    assert p.stdout.split() == ["0", mem, "x", "y"]
 
 
 @pytest.mark.skipif(

@@ -646,6 +646,53 @@ def test_deepseek_is_a_first_party_provider(monkeypatch):
         llm.provider()
 
 
+def test_gemini_is_a_first_party_provider(monkeypatch):
+    from forkward import llm
+
+    monkeypatch.setattr(llm, "load_env", lambda path=None: None)
+    monkeypatch.setenv("GEMINI_API_KEY", "g-test")
+    monkeypatch.delenv("GEMINI_MODEL", raising=False)
+    with llm.use_model("gemini:gemini-2.5-flash"):
+        assert llm.provider() == (
+            "gemini",
+            "https://generativelanguage.googleapis.com/v1beta/openai",
+            "g-test",
+        )
+        assert llm.model_for("generator") == "gemini-2.5-flash"
+        assert not llm.reportable()
+    monkeypatch.setenv("LLM_PROVIDER", "gemini")
+    assert llm.model_for("generator") == llm.GEMINI_DEFAULT
+    monkeypatch.delenv("GEMINI_API_KEY")
+    with pytest.raises(RuntimeError, match="GEMINI_API_KEY"), llm.use_model("gemini:x"):
+        llm.provider()
+
+
+def test_gemini_disables_thinking_and_drops_it_when_rejected(monkeypatch):
+    import httpx
+
+    monkeypatch.setattr(llm, "load_env", lambda path=None: None)
+    monkeypatch.setenv("GEMINI_API_KEY", "g-test")
+    monkeypatch.setattr(llm, "_EFFORT_SUPPORTED", {})
+    bodies = []
+
+    def handler(request):
+        body = json.loads(request.content)
+        bodies.append(body)
+        if "reasoning_effort" in body:
+            return httpx.Response(400, text="reasoning_effort is not supported")
+        return httpx.Response(200, json={"choices": [{"message": {"content": "ok"}}]})
+
+    async def run():
+        client = httpx.AsyncClient(transport=httpx.MockTransport(handler))
+        monkeypatch.setattr(llm, "_client", lambda: client)
+        with llm.use_model("gemini:gemini-2.5-flash"):
+            return await llm.complete([{"role": "user", "content": "hi"}], seed=None)
+
+    c = asyncio.run(run())
+    assert c.text == "ok"
+    assert bodies[0]["reasoning_effort"] == "none" and "reasoning_effort" not in bodies[1]
+
+
 def test_v2_splits_parse_and_the_holdout_pool_is_refused(tmp_path, monkeypatch):
     import json
 

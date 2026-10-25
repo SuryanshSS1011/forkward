@@ -2,8 +2,8 @@
 through the Anthropic SDK. Never raises on provider failure.
 
 A model is picked with a spec `provider:model` (LLM_MODEL, `--model`, or the MCP `model`
-argument), for example `luminal:deepseek-ai/DeepSeek-V4.1-Flash`, `local:qwen2.5-coder:7b` or
-`anthropic:claude-sonnet-5`.
+argument), for example `luminal:deepseek-ai/DeepSeek-V4.1-Flash`, `local:qwen2.5-coder:7b`,
+`gemini:gemini-2.5-flash` or `anthropic:claude-sonnet-5`.
 """
 
 from __future__ import annotations
@@ -26,7 +26,8 @@ import httpx
 from forkward import home, telemetry
 
 ROLES = {"generator": "GENERATOR_MODEL", "reflector": "REFLECTOR_MODEL", "curator": "CURATOR_MODEL"}
-PROVIDERS = ("luminal", "deepseek", "local", "anthropic")
+PROVIDERS = ("luminal", "deepseek", "gemini", "local", "anthropic")
+GEMINI_DEFAULT = "gemini-2.5-flash"
 CLAUDE_MODELS = ("claude-sonnet-5", "claude-opus-5", "claude-haiku-4-5")
 _SELECTED: contextvars.ContextVar[str | None] = contextvars.ContextVar("model_spec", default=None)
 SETTINGS = home() / "settings.json"
@@ -184,6 +185,15 @@ def provider() -> tuple[str, str, str]:
             raise RuntimeError("DeepSeek models need DEEPSEEK_API_KEY in the environment")
         base = os.environ.get("DEEPSEEK_BASE_URL") or "https://api.deepseek.com"
         return "deepseek", base.rstrip("/"), os.environ["DEEPSEEK_API_KEY"]
+    if choice == "gemini":
+        # Gemini's OpenAI-compatible endpoint, so the same chat client and logprob path apply.
+        if not os.environ.get("GEMINI_API_KEY"):
+            raise RuntimeError("Gemini models need GEMINI_API_KEY in the environment")
+        base = (
+            os.environ.get("GEMINI_BASE_URL")
+            or "https://generativelanguage.googleapis.com/v1beta/openai"
+        )
+        return "gemini", base.rstrip("/"), os.environ["GEMINI_API_KEY"]
     if choice == "local" or (not choice and not os.environ.get("LUMINAL_API_KEY")):
         base = os.environ.get("LOCAL_BASE_URL") or "http://localhost:11434/v1"
         if choice != "local" and not os.environ.get("LOCAL_MODEL") and not sel:
@@ -205,6 +215,8 @@ def model_for(role: str) -> str:
     name, _, _ = provider()
     if name == "deepseek":
         return os.environ.get("DEEPSEEK_MODEL") or "deepseek-chat"
+    if name == "gemini":
+        return os.environ.get("GEMINI_MODEL") or GEMINI_DEFAULT
     if name == "local":
         model = os.environ.get("LOCAL_MODEL")
         if not model:
@@ -275,6 +287,7 @@ async def close() -> None:
 
 
 _SEED_SUPPORTED: dict[str, bool] = {}
+_EFFORT_SUPPORTED: dict[str, bool] = {}
 
 
 async def complete(
@@ -341,6 +354,9 @@ async def _complete(
     }
     if name == "luminal" and not thinking():
         body["thinking"] = {"type": "disabled"}
+    if name == "gemini" and not thinking() and _EFFORT_SUPPORTED.get(model, True):
+        # Gemini Flash thinks by default, which spends max_tokens before any answer is written.
+        body["reasoning_effort"] = "none"
     if seed is not None and _SEED_SUPPORTED.get(model, True):
         body["seed"] = seed
     last_err = "unknown"
@@ -374,6 +390,15 @@ async def _complete(
                 if r.status_code == 400 and "seed" in body and "seed" in r.text.lower():
                     _SEED_SUPPORTED[model] = False
                     body.pop("seed")
+                    attempt += 1
+                    continue
+                if (
+                    r.status_code == 400
+                    and "reasoning_effort" in body
+                    and "reasoning" in r.text.lower()
+                ):
+                    _EFFORT_SUPPORTED[model] = False
+                    body.pop("reasoning_effort")
                     attempt += 1
                     continue
                 if r.status_code == 400 and use_lp and "logprob" in r.text.lower():
@@ -507,6 +532,9 @@ async def available_models() -> list[dict]:
     if os.environ.get("DEEPSEEK_API_KEY"):
         model = os.environ.get("DEEPSEEK_MODEL") or "deepseek-chat"
         out.append({"spec": f"deepseek:{model}", "provider": "deepseek", "model": model})
+    if os.environ.get("GEMINI_API_KEY"):
+        model = os.environ.get("GEMINI_MODEL") or GEMINI_DEFAULT
+        out.append({"spec": f"gemini:{model}", "provider": "gemini", "model": model})
     base = (os.environ.get("LOCAL_BASE_URL") or "http://localhost:11434/v1").rstrip("/")
     try:
         r = await _client().get(f"{base}/models", timeout=3.0)

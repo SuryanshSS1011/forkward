@@ -44,6 +44,7 @@ PLANS: dict[str, dict] = {
 # Units charged per resolved hunk, by model: roughly the inference cost relative to Flash.
 MODEL_UNITS = {
     "deepseek:deepseek-chat": 1,
+    "gemini:gemini-2.5-flash": 1,
     "anthropic:claude-haiku-4-5": 2,
     "anthropic:claude-sonnet-5": 4,
     "anthropic:claude-opus-5": 8,
