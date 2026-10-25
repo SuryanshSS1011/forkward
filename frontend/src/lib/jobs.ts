@@ -21,6 +21,12 @@ export type JobSummary = {
     branch?: string;
     ci?: string;
     pr?: string;
+    head_sha?: string;
+    upstream_sha?: string;
+    strategy?: string;
+    /** Model calls by provider:model, on a recorded run. */
+    models?: Record<string, number>;
+    run_id?: string;
   };
   error: string | null;
   created_at: string;
@@ -49,6 +55,10 @@ export type HunkRow = {
     candidates?: Candidate[];
     classifier?: string | null;
     proposers?: number;
+    /** Votes separating the winner from the runner-up. */
+    margin?: number;
+    /** Whether the hunk passed every gate check other than the calibrated confidence bar. */
+    passed_checks?: boolean;
   };
 };
 
