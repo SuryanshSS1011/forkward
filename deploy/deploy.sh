@@ -24,7 +24,13 @@ fi
 # Keepalives make a dropped connection fail within a minute instead of hanging the deploy.
 ssh_() { ssh -i "$key" -o ConnectTimeout=10 -o ServerAliveInterval=15 -o ServerAliveCountMax=4 \
   -o StrictHostKeyChecking=yes "$host" "$@"; }
-git archive HEAD | ssh_ 'rm -rf ~/forkward.new && mkdir -p ~/forkward.new && tar -x -C ~/forkward.new'
+# Upload the archive as a file: a long stream piped through ssh stalled on unreliable networks.
+tarball=$(mktemp -t forkward.XXXXXX)
+trap 'rm -f "$tarball"' EXIT
+git archive HEAD -o "$tarball"
+scp -q -i "$key" -o ConnectTimeout=10 -o ServerAliveInterval=15 -o ServerAliveCountMax=4 \
+  -o StrictHostKeyChecking=yes "$tarball" "$host:forkward.tar"
+ssh_ 'rm -rf ~/forkward.new && mkdir -p ~/forkward.new && tar -x -C ~/forkward.new -f ~/forkward.tar && rm ~/forkward.tar'
 ssh_ 'set -e
   [ -f ~/forkward/.env ] && cp ~/forkward/.env ~/forkward.new/.env
   [ -d ~/forkward/runs ] && mv ~/forkward/runs ~/forkward.new/runs || mkdir -p ~/forkward.new/runs
