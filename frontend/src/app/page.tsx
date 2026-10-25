@@ -24,7 +24,7 @@ const features: { icon: string; iconWrap: string; h: string; p: string; radius: 
   {
     icon: "groups",
     iconWrap: "bg-[var(--pa-primary-fixed)] text-[var(--pa-primary)]",
-    h: "Many proposers, one vote",
+    h: "Fixes that agree",
     p: "Rules and several AI models each propose a fix, and they have to agree.",
     radius: "8px 14px 6px 12px",
   },
@@ -190,8 +190,8 @@ export default async function Landing() {
               <div className={`mb-3 flex h-10 w-10 items-center justify-center rounded-full ${f.iconWrap}`}>
                 <Sym name={f.icon} className="text-[20px]" />
               </div>
-              <h3 className="mb-1 font-display text-[19px] font-bold text-[var(--pa-ink)]">{f.h}</h3>
-              <p className="text-[14px] leading-relaxed text-[var(--pa-ink-muted)]">{f.p}</p>
+              <h3 className="font-display text-[19px] font-bold leading-tight text-[var(--pa-ink)]">{f.h}</h3>
+              <p className="mt-2 text-[15px] leading-[1.5] text-[var(--pa-ink-muted)]">{f.p}</p>
             </div>
           ))}
         </div>
@@ -202,10 +202,10 @@ export default async function Landing() {
         <h2 className="sr-only">Measured results</h2>
         <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
           {proof.map((p) => (
-            <div key={p.label} className="relative border-2 border-[var(--pa-outline)] bg-[var(--pa-surface)] p-6 text-center shadow-[4px_4px_0px_#8a716e]" style={{ borderRadius: p.radius }}>
+            <div key={p.label} className="relative flex flex-col border-2 border-[var(--pa-outline)] bg-[var(--pa-surface)] p-6 shadow-[4px_4px_0px_#8a716e]" style={{ borderRadius: p.radius }}>
               <Counter to={p.to} decimals={p.decimals} suffix={p.suffix} className={`block font-display text-[52px] font-extrabold leading-none tracking-tight ${p.valueColor}`} />
-              <p className="mx-auto mt-3 max-w-[30ch] text-[15px] leading-relaxed text-[var(--pa-ink)]">{p.label}</p>
-              <p className="mx-auto mt-2 max-w-[34ch] font-label text-[11px] leading-relaxed text-[var(--pa-ink-muted)]">{p.source}</p>
+              <p className="mb-5 mt-3 text-[16px] leading-[1.45] text-[var(--pa-ink)]">{p.label}</p>
+              <p className="mt-auto border-t border-dashed border-[var(--pa-outline-variant)] pt-3 text-[13px] leading-[1.45] text-[var(--pa-ink-muted)]">{p.source}</p>
             </div>
           ))}
         </div>
