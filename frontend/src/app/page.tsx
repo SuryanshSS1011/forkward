@@ -170,6 +170,11 @@ export default async function Landing() {
               );
             })}
           </ol>
+          <p className="mt-8 text-center">
+            <Link href="/how" className="font-label text-[15px] text-[var(--pa-primary)] underline underline-offset-4 hover:text-[var(--pa-ink)]">
+              How Forkward decides, and what the gate can prove
+            </Link>
+          </p>
         </div>
       </section>
 

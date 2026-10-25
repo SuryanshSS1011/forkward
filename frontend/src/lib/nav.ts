@@ -3,7 +3,7 @@ export type NavLink = { href: string; label: string; also?: string[] };
 
 export const PUBLIC_LINKS: NavLink[] = [
   { href: "/demo", label: "Demo" },
-  { href: "/#how", label: "How it works" },
+  { href: "/how", label: "How it works" },
   { href: "/billing", label: "Pricing" },
 ];
 

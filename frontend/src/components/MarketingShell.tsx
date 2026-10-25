@@ -5,7 +5,7 @@ import { MobileMenu } from "./MobileMenu";
 
 export const MARKETING_LINKS = [
   { href: "/demo", label: "Demo" },
-  { href: "/#how", label: "How it works" },
+  { href: "/how", label: "How it works" },
   { href: "/billing", label: "Pricing" },
 ] as const;
 
@@ -32,7 +32,7 @@ export function MarketingShell({
   const navlink = "rounded-lg px-2 py-1 transition-colors hover:bg-[var(--pa-surface-high)] hover:text-[var(--pa-ink)]";
   const on = "bg-[var(--pa-surface-high)] font-bold text-[var(--pa-ink)]";
   const off = "text-[var(--pa-ink-muted)]";
-  const current = { demo: "/demo", how: "/#how", pricing: "/billing" }[active ?? "demo"];
+  const current = { demo: "/demo", how: "/how", pricing: "/billing" }[active ?? "demo"];
   return (
     <div className="parchment flex min-h-screen flex-col">
       <header className="sticky top-0 z-50 px-4 pt-4 sm:px-6 lg:px-12">

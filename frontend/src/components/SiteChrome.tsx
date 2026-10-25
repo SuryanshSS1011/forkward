@@ -12,7 +12,7 @@ import { useMe } from "./useMe";
  * when signed in, so there the Nav waits for the session instead of flashing over the pricing
  * header.
  */
-const SHELL_ROUTES = new Set(["/", "/demo", "/signin"]);
+const SHELL_ROUTES = new Set(["/", "/demo", "/how", "/signin"]);
 
 export function SiteChrome({ children }: { children: React.ReactNode }) {
   const path = usePathname();
