@@ -74,7 +74,7 @@ function Settings({ repo, onSaved, onCancel }: { repo: RepoRow; onSaved: () => v
         )}
       </div>
       <p id={`up-hint-${repo.id}`} className={`t-label sm:col-span-3 ${error ? "text-danger" : "text-muted"}`} role={error ? "alert" : undefined}>
-        {error ?? "The repository and branch your fork takes fixes from, for example torvalds/linux@master."}
+        {error ?? "For example torvalds/linux@master."}
       </p>
     </form>
   );
@@ -209,7 +209,7 @@ export default function ReposClient({ installUrl }: { installUrl: string | null 
     return (
       <div className="wrap pb-16 pt-10">
         <h1 className="t-h1">Your repositories</h1>
-        <p className="mt-2 text-muted">Sign in to see the forks Forkward keeps in sync.</p>
+        <p className="mt-2 text-muted">Sign in to see your forks.</p>
         <Link href="/signin?next=/repos" className="btn btn-accent mt-6">
           Sign in with GitHub
         </Link>
@@ -224,8 +224,7 @@ export default function ReposClient({ installUrl }: { installUrl: string | null 
             Your forks{repos && repos.length > 0 && <span className="ml-3 align-middle font-mono text-[18px] font-normal text-faint">{repos.length}</span>}
           </h1>
           <p className="mt-2 max-w-[62ch] text-muted">
-            Each line is a fork and the project it follows. <strong className="font-semibold text-ink">Preview</strong> resolves the conflicts and pushes nothing.{" "}
-            <strong className="font-semibold text-ink">Sync now</strong> opens a pull request on a new branch. Both use units.
+            <strong className="font-semibold text-ink">Preview</strong> is a dry run. <strong className="font-semibold text-ink">Sync now</strong> opens a pull request.
           </p>
         </div>
         {installUrl && (
@@ -248,7 +247,7 @@ export default function ReposClient({ installUrl }: { installUrl: string | null 
       {repos?.length === 0 && (
         <div className="mt-8 border-t border-line pt-6">
           <h2 className="t-h2">Connect a fork</h2>
-          <p className="mt-2 max-w-[56ch] text-muted">Install the GitHub App on the forks to keep in step. Forkward only pushes new forkward/ branches.</p>
+          <p className="mt-2 max-w-[56ch] text-muted">Install the GitHub App on the forks you want kept current.</p>
           {installUrl ? (
             <a href={installUrl} className="btn btn-accent mt-5">
               Install the GitHub App

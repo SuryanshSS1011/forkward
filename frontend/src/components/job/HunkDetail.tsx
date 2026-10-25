@@ -88,8 +88,8 @@ export function HunkDetail({ hunk, onReview, readOnly }: { hunk: HunkRow; onRevi
         {d.passed_checks !== undefined && st !== "auto" && (
           <p className="mt-1 max-w-[70ch] t-label text-muted">
             {d.passed_checks
-              ? "It passed the vote, rule and classifier checks. Only the calibrated confidence bar held it back."
-              : "It did not pass the vote, rule and classifier checks, so it waits for a person whatever its confidence."}
+              ? "Passed every check except the confidence bar."
+              : "Did not pass every check, so it waits for you."}
           </p>
         )}
       </header>
@@ -155,9 +155,9 @@ export function HunkDetail({ hunk, onReview, readOnly }: { hunk: HunkRow; onRevi
       {candidates.length > 0 && (
         <section aria-labelledby="cand-title" className="mt-8">
           <h3 id="cand-title" className="text-[16px] font-semibold">
-            What each resolver proposed
+            Proposals
           </h3>
-          <p className="mt-1 text-[14px] text-muted">Dots are AI agent votes. Rules, which need no model, are named on the right.</p>
+          <p className="mt-1 text-[14px] text-muted">Dots are model votes. Matching rules are on the right.</p>
           <ul className="mt-3 divide-y divide-line border-y border-line">
             {candidates.map((c, i) => (
               <li key={i} className="py-3">

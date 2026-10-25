@@ -2,7 +2,7 @@
  * Every status that route can send has an entry here; the test checks the route against it. */
 export const GITHUB_STATUS: Record<string, { text: string; ok: boolean }> = {
   installed: {
-    text: "The Forkward GitHub App is installed. Its repositories are listed below.",
+    text: "Installed. Your forks are below.",
     ok: true,
   },
   requested: {
@@ -22,7 +22,7 @@ export const GITHUB_STATUS: Record<string, { text: string; ok: boolean }> = {
     ok: false,
   },
   "not-yours": {
-    text: "That installation is not one your GitHub account can access, so nothing was recorded.",
+    text: "Your GitHub account cannot access that installation.",
     ok: false,
   },
   "not-admin": {

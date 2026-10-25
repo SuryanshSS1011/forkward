@@ -31,29 +31,26 @@ export default async function Demo() {
           One real sync, every decision on the record.
         </h1>
         <p className="mt-3 max-w-[72ch] text-[17px] leading-relaxed text-[var(--pa-ink-muted)]">
-          Forkward merged{" "}
+          A preview of{" "}
           <a
             className={linkClass}
             href={`https://github.com/${repoOf(SAMPLE_JOB.upstream_ref)}`}
           >
             {SAMPLE_JOB.upstream_ref}
           </a>{" "}
-          into{" "}
+          merging into{" "}
           <a
             className={linkClass}
             href={`https://github.com/${SAMPLE_JOB.repo}`}
           >
             {SAMPLE_JOB.repo}
-          </a>{" "}
-          and resolved its {hunks.length} conflicts with {models.join(", ")}. It
-          was a preview, so nothing was pushed. All {toPerson} hunks went to a
-          person, because the safety gate is not yet certified for this model.{" "}
-          {passed} of {hunks.length} passed every other check: a deterministic
-          rule agreed with the models, and the classifier backed it.
+          </a>
+          , resolved by {models.join(", ")}. All {toPerson} conflicts went to a
+          person because the gate is not certified for this model yet. {passed}{" "}
+          of {hunks.length} passed every other check.
         </p>
         <p className="mt-3 font-label text-[12px] text-[var(--pa-ink-muted)]">
-          Run {SAMPLE_JOB.summary.run_id}. The full log is in the repository
-          under results/demo-run-tinyring.
+          Run {SAMPLE_JOB.summary.run_id} · log in results/demo-run-tinyring
         </p>
         {!signedIn && (
           <Link
@@ -73,8 +70,7 @@ export default async function Demo() {
           <span className="flex items-baseline gap-2">
             <span className="kind-pill">Recorded run</span>
             <span>
-              Read only. Pick a hunk to see both sides, every candidate and who
-              proposed it.
+              Pick a conflict to see both sides and every proposal.
             </span>
           </span>
         }

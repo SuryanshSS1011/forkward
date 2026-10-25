@@ -22,28 +22,28 @@ const features: { icon: string; iconWrap: string; h: string; p: string; radius: 
     icon: "history",
     iconWrap: "bg-[var(--pa-secondary-fixed)] text-[var(--pa-on-secondary-fixed)]",
     h: "Remembers your fixes",
-    p: "Approve a resolution once and Forkward reuses it the next time the same upstream change conflicts.",
+    p: "Approve a fix once. Forkward reuses it when the same change conflicts again.",
     radius: "11px 5px 14px 6px",
   },
   {
     icon: "groups",
     iconWrap: "bg-[var(--pa-primary-fixed)] text-[var(--pa-primary)]",
     h: "Many proposers, one vote",
-    p: "Deterministic rules and several AI proposers suggest a fix for every conflict, and they have to agree.",
+    p: "Rules and several AI models each propose a fix, and they have to agree.",
     radius: "8px 14px 6px 12px",
   },
   {
     icon: "calendar_today",
     iconWrap: "bg-[var(--pa-surface-high)] text-[var(--pa-tertiary)]",
     h: "Syncs on your schedule",
-    p: "Every hour, day or week, set per repository, or whenever you press Sync.",
+    p: "Hourly, daily, weekly, or whenever you press Sync.",
     radius: "12px 6px 15px 5px",
   },
   {
     icon: "lock",
     iconWrap: "bg-[var(--pa-surface-container)] text-[var(--pa-secondary)]",
     h: "Never touches main",
-    p: "Every sync arrives on a new branch as a pull request. Nothing ships until you approve it.",
+    p: "Every sync is a pull request on a new branch. Nothing merges until you approve.",
     radius: "9px 13px 7px 11px",
   },
 ];
@@ -53,13 +53,13 @@ const tools: { icon: string; iconColor: string; name: string }[] = [
   { icon: "psychology", iconColor: "text-[var(--pa-primary)]", name: "Claude Code" },
   { icon: "near_me", iconColor: "text-[var(--pa-secondary)]", name: "Cursor" },
   { icon: "code", iconColor: "text-[var(--pa-ink-muted)]", name: "VS Code" },
-  { icon: "hub", iconColor: "text-[var(--pa-tertiary)]", name: "MCP clients" },
+  { icon: "hub", iconColor: "text-[var(--pa-tertiary)]", name: "Other MCP clients" },
 ];
 
 const steps: { n: string; h: string; p: string; accent: "secondary" | "primary"; radius: string }[] = [
-  { n: "01", h: "Connect", p: "Sign in with GitHub and install the Forkward app on the forks you want kept up to date.", accent: "secondary", radius: "8px 12px 6px 10px" },
-  { n: "02", h: "Resolve", p: "It merges upstream on a new branch and proposes a fix for every conflict.", accent: "secondary", radius: "12px 7px 11px 5px" },
-  { n: "03", h: "Check", p: "A safety gate checks each fix. Until it is certified for a model, every fix waits for you.", accent: "primary", radius: "6px 14px 7px 12px" },
+  { n: "01", h: "Connect", p: "Sign in with GitHub and pick your forks.", accent: "secondary", radius: "8px 12px 6px 10px" },
+  { n: "02", h: "Resolve", p: "Forkward merges upstream on a new branch and proposes a fix for each conflict.", accent: "secondary", radius: "12px 7px 11px 5px" },
+  { n: "03", h: "Check", p: "A safety gate checks every fix. Until it is certified, you approve each one.", accent: "primary", radius: "6px 14px 7px 12px" },
   { n: "04", h: "Review", p: "You approve the pull request hunk by hunk, and Forkward learns from what you keep.", accent: "secondary", radius: "10px 6px 14px 8px" },
 ];
 
@@ -67,8 +67,8 @@ const proof: { to: number; decimals?: number; suffix?: string; label: string; so
   {
     to: 76,
     suffix: "%",
-    label: "of held-out kernel conflicts matched what the vendor's engineers committed (54 of 71).",
-    source: "Rockchip test split, DeepSeek V4.1 Flash on Luminal, evaluated once before this event. Always keeping the vendor side scores 71.8%.",
+    label: "of real kernel conflicts resolved exactly as the vendor's engineers did (54 of 71).",
+    source: "Rockchip test set, DeepSeek V4.1 Flash, measured before this event. Always keeping the fork's side scores 71.8%.",
     valueColor: "text-[var(--pa-ink)]",
     radius: "11px 5px 14px 6px",
   },
@@ -83,7 +83,7 @@ const proof: { to: number; decimals?: number; suffix?: string; label: string; so
   },
   {
     to: PLANS.trial.monthly_units,
-    label: "free units a month. One unit is one conflict resolved on the default model.",
+    label: "free units a month. One unit is one conflict.",
     source: "No card needed.",
     valueColor: "text-[var(--pa-secondary)]",
     radius: "12px 6px 15px 5px",

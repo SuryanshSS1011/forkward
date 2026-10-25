@@ -12,7 +12,7 @@ const n = (x: number) => x.toLocaleString("en-US");
 const TOOL_NAMES: Record<string, string> = { open_sync_pr: "Syncs", preview: "Previews", resolve_conflicts: "Resolve calls" };
 
 /** Shown on paid plans while this server cannot take payment, instead of a button that would fail. */
-const NOT_ON_SALE = "Not on sale yet. The free plan has every feature.";
+const NOT_ON_SALE = "Not on sale yet.";
 
 // Each plan card's hand-cut paper corners, by index.
 const CARD = [
@@ -77,7 +77,7 @@ export default function BillingClient({ checkoutReady }: { checkoutReady: boolea
         <section className="mx-auto w-full max-w-7xl px-6 pb-10 pt-12 lg:px-12 md:pt-16">
           <h1 className="max-w-[20ch] font-display text-[32px] font-extrabold tracking-tight text-[var(--pa-ink)] md:text-[44px]">Simple, pay as you go.</h1>
           <p className="mt-3 max-w-[58ch] text-[18px] leading-relaxed text-[var(--pa-ink-muted)]">
-            One resolution is one unit, whether Forkward applies it or sends it to you. Previews count too, and anything that fails is free.
+            One unit is one conflict, applied or sent to you. Failed runs are free.
           </p>
           <div className="mt-10 grid gap-8 md:grid-cols-3">
             {plans.map((p, i) => {
@@ -128,7 +128,7 @@ export default function BillingClient({ checkoutReady }: { checkoutReady: boolea
     <div className="wrap pb-6 pt-12 md:pt-16">
       <h1 className="t-h1 max-w-[20ch]">Usage and plan</h1>
       <p className="t-lead mt-3 max-w-[58ch]">
-        A unit is one conflict Forkward proposes a resolution for on the default model, applied or sent to you. Previews use units too. Failed runs are free.
+        One unit is one conflict, applied or sent to you. Failed runs are free.
       </p>
 
       {u === undefined && !usageError && <p className="mt-8 text-muted">Loading your usage…</p>}
@@ -158,7 +158,7 @@ export default function BillingClient({ checkoutReady }: { checkoutReady: boolea
             <div className="h-full bg-honey" style={{ width: `${Math.min(100, (u.unitsReserved / Math.max(1, u.unitsLimit)) * 100)}%` }} />
           </div>
           <p className="t-label mt-2 text-muted">
-            {n(u.unitsLeft)} units left. {n(u.unitsIncluded)} included in the plan.
+            {n(u.unitsLeft)} left this month.
             {u.unitsReserved > u.unitsUsed && <> {n(u.unitsReserved - u.unitsUsed)} reserved by syncs still running.</>}
             {u.amountDueUsd > 0 && <> Estimated bill ${u.amountDueUsd.toFixed(2)}.</>}
           </p>

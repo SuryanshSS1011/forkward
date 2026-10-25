@@ -87,13 +87,13 @@ export default function ConnectClient({ installUrl }: { installUrl: string | nul
   return (
     <div className="wrap pb-16 pt-10">
       <h1 className="t-h1">Connect Forkward to your tools</h1>
-      <p className="mt-2 max-w-[62ch] text-muted">Install the GitHub App, then add Forkward to your assistant and ask it to sync a fork.</p>
+      <p className="mt-2 max-w-[62ch] text-muted">Pick your forks, then add Forkward to your coding assistant.</p>
 
       <section aria-labelledby="github-app" className="sheet mt-8 max-w-2xl p-5">
         <h2 id="github-app" className="flex items-center gap-2 font-semibold">
-          <span className="step-num">1</span>Give Forkward your repositories
+          <span className="step-num">1</span>Choose your forks
         </h2>
-        <p className="t-label mt-1 text-muted">Pick the forks Forkward can see. You can change this on GitHub at any time.</p>
+        <p className="t-label mt-1 text-muted">Forkward only sees the forks you pick here.</p>
         {githubNote && (
           <p role="status" className={`t-label mt-3 border-l-2 pl-3 ${githubNote.ok ? "border-success" : "border-danger"}`}>
             {githubNote.text}
@@ -106,11 +106,11 @@ export default function ConnectClient({ installUrl }: { installUrl: string | nul
         )}
         {installUrl ? (
           me ? (
-            <a href={installUrl} className="btn btn-primary btn-sm mt-4 inline-flex">
+            <a href={installUrl} className="btn btn-accent btn-sm mt-4 inline-flex">
               {repos?.length ? "Add or remove repositories" : "Install the GitHub App"}
             </a>
           ) : (
-            <Link href="/signin?next=/connect" className="btn btn-primary btn-sm mt-4 inline-flex">
+            <Link href="/signin?next=/connect" className="btn btn-accent btn-sm mt-4 inline-flex">
               Sign in with GitHub first
             </Link>
           )
@@ -132,42 +132,7 @@ export default function ConnectClient({ installUrl }: { installUrl: string | nul
       <h2 className="mt-10 flex items-center gap-2 font-semibold">
         <span className="step-num">2</span>Add Forkward to your assistant
       </h2>
-      <div className="sheet mt-3 max-w-2xl p-5">
-        <label htmlFor="apikey" className="t-label">
-          Your API key
-        </label>
-        <input
-          id="apikey"
-          type="password"
-          autoComplete="off"
-          spellCheck={false}
-          placeholder="fw_..."
-          value={key}
-          onChange={(e) => setKey(e.target.value)}
-          className="mt-1 w-full rounded-btn border border-line bg-surface px-3 py-2 font-mono text-[14px] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus)]"
-        />
-        <p className="t-label mt-2 text-muted">
-          {me ? (
-            <>
-              Signed in as {me.name || me.email}.{" "}
-              <Link href="/keys" className="underline underline-offset-4">
-                Create or revoke keys
-              </Link>
-              .{" "}
-            </>
-          ) : (
-            <>
-              <Link href="/signin?next=/keys" className="underline underline-offset-4">
-                Sign in with GitHub
-              </Link>{" "}
-              to get a key.{" "}
-            </>
-          )}
-          It fills the setup below and never leaves this page.
-        </p>
-      </div>
-
-      <div className="mt-8 grid gap-6 md:grid-cols-[220px_minmax(0,1fr)]">
+      <div className="mt-4 grid gap-6 md:grid-cols-[220px_minmax(0,1fr)]">
         <nav aria-label="Clients" className="flex flex-wrap gap-2 md:flex-col md:gap-1">
           {clients.map((c) => (
             <button
@@ -202,8 +167,27 @@ export default function ConnectClient({ installUrl }: { installUrl: string | nul
               ))}
             </div>
           )}
-          <p className="t-label mt-4 text-muted">{showLocal ? "Runs Forkward locally with your own model key; nothing is metered." : showSignIn ? client.signIn!.where : client.where}</p>
+          <p className="t-label mt-4 text-muted">{showLocal ? "Runs on your machine with your own model key. Free." : showSignIn ? client.signIn!.where : client.where}</p>
 
+          {mode === "hosted" && !client.urlOnly && (
+            <div className="mt-4 flex flex-wrap items-end gap-3">
+              <label className="grid min-w-[240px] flex-1 gap-1 t-label">
+                API key
+                <input
+                  type="password"
+                  autoComplete="off"
+                  spellCheck={false}
+                  placeholder="fw_..."
+                  value={key}
+                  onChange={(e) => setKey(e.target.value)}
+                  className="input font-mono text-[14px]"
+                />
+              </label>
+              <Link href={me ? "/keys" : "/signin?next=/keys"} className="btn btn-secondary btn-sm">
+                {me ? "Create a key" : "Sign in to get a key"}
+              </Link>
+            </div>
+          )}
           <div className="mt-3 overflow-hidden rounded-btn border border-line bg-sunken">
             <div className="flex items-center justify-between border-b border-line px-3 py-1.5">
               <span className="t-label text-muted">{client.lang === "text" ? "URL" : client.lang}</span>
@@ -217,14 +201,13 @@ export default function ConnectClient({ installUrl }: { installUrl: string | nul
           </div>
 
           {oneClick && (
-            <a href={oneClick.href} className="btn btn-primary mt-4 inline-flex">
+            <a href={oneClick.href} className="btn btn-accent mt-4 inline-flex">
               {oneClick.label}
             </a>
           )}
-          {mode === "hosted" && client.oneClick && !key.trim() && <p className="t-label mt-3 text-muted">Paste your key above to enable one-click install.</p>}
-          {needsKey && <p className="t-label mt-3 text-muted">Paste your API key above to copy this setup.</p>}
+                    {needsKey && <p className="t-label mt-3 text-muted">Paste a key to copy this{client.oneClick ? " or install in one click" : ""}.</p>}
           {(showSignIn || (mode === "hosted" && client.urlOnly)) && (
-            <p className="t-label mt-3 text-muted">No key needed. It signs you in with GitHub the first time it connects.</p>
+            <p className="t-label mt-3 text-muted">No key needed. You sign in with GitHub the first time it connects.</p>
           )}
 
           <div className="mt-8 border-t border-line pt-5">

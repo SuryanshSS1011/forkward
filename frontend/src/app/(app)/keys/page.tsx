@@ -43,7 +43,7 @@ export default function Keys() {
   };
 
   const revoke = async (k: ApiKey) => {
-    if (!window.confirm(`Revoke ${k.key_id}? Anything using it stops working on its next call.`)) return;
+    if (!window.confirm(`Revoke ${k.key_id}? Anything using it will stop working.`)) return;
     setError(null);
     try {
       await revokeKey(k.id);
@@ -69,19 +69,19 @@ export default function Keys() {
     return (
       <div className="wrap max-w-xl pb-16 pt-10">
         <h1 className="t-h1">API keys</h1>
-        <p className="mt-3 text-muted">Sign in to create keys for the hosted MCP server.</p>
-        <Link href="/signin?next=/keys" className="btn btn-primary mt-6">Sign in with GitHub</Link>
+        <p className="mt-3 text-muted">Sign in to manage your keys.</p>
+        <Link href="/signin?next=/keys" className="btn btn-accent mt-6">Sign in with GitHub</Link>
       </div>
     );
 
   return (
     <div className="wrap max-w-2xl pb-16 pt-10">
       <h1 className="t-h1">API keys</h1>
-      <p className="mt-2 text-muted">A key lets an editor or script call the hosted MCP server as your workspace. Usage from every key counts against your plan.</p>
+      <p className="mt-2 text-muted">Keys let scripts, CI and editors use Forkward as you.</p>
 
       {created && (
         <div className="sheet mt-8 p-5">
-          <p className="font-semibold">Copy your new key now. It is shown once, and only its hash is stored.</p>
+          <p className="font-semibold">Copy it now. You will not see it again.</p>
           <div className="mt-3 flex flex-wrap items-center gap-3">
             <code className="break-all font-mono text-[14px]" aria-label="Your new API key">{created.apiKey}</code>
             <button className="btn btn-secondary btn-sm" onClick={copy}>{copied ? "Copied" : "Copy"}</button>
@@ -98,13 +98,13 @@ export default function Keys() {
           <input id="keyname" value={name} maxLength={100} placeholder="For example, laptop or CI" onChange={(e) => setName(e.target.value)}
             className="mt-1 w-full rounded-btn border border-line bg-raised px-3 py-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus)]" />
         </div>
-        <button type="submit" className="btn btn-primary" disabled={busy}>{busy ? "Creating…" : "Create key"}</button>
+        <button type="submit" className="btn btn-accent" disabled={busy}>{busy ? "Creating…" : "Create key"}</button>
       </form>
       {error && <p role="alert" className="t-label mt-4 border-l-2 border-[var(--danger)] pl-3 text-[var(--danger)]">{error}</p>}
 
       {keys === null && !error && <p className="mt-6 text-muted">Loading your keys…</p>}
       {keys?.length === 0 && (
-        <p className="mt-6 text-muted">No keys yet. Name one above to call Forkward from CI, a script or an editor that cannot sign in.</p>
+        <p className="mt-6 text-muted">No keys yet.</p>
       )}
       {keys && keys.length > 0 && (
         <ul className="sheet mt-6 divide-y divide-line px-5">

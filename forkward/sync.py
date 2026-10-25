@@ -555,13 +555,11 @@ async def resolve(
         else:
             gate = "needs_review"
             why = (
-                "No rule produced the resolution the models chose, so nothing independent confirms it"
+                "Only the models proposed this; no rule backs it"
                 if not d.has_op
-                else f"The classifier expected {LABEL_WORDS.get(d.classifier or '', 'something else')}, "
-                "which is not what the resolvers chose"
+                else f"The classifier expected {LABEL_WORDS.get(d.classifier or '', 'something else')} instead"
                 if s.use_classifier and not d.classifier_agrees
-                else "The safety gate is not certified for this model yet, so every hunk goes to a "
-                "person"
+                else "The gate is not certified for this model yet"
                 if threshold >= UNCALIBRATED
                 else f"Confidence {d.confidence:.2f} is under the calibrated bar of {threshold:.2f}"
             )

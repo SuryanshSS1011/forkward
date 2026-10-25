@@ -22,9 +22,9 @@ const usd = (x: number) => `$${x.toLocaleString("en-US", { maximumFractionDigits
 
 /** What the pricing page shows for each plan, derived from the numbers above. */
 export const PLAN_COPY: Record<PlanId, { name: string; blurb: string; cta: string }> = {
-  trial: { name: "Starter", blurb: "Every feature, for as many repositories as you like. No card needed.", cta: "Start free" },
-  team: { name: "Team", blurb: "For teams keeping a few repositories in step with upstream.", cta: "Choose Team" },
-  enterprise: { name: "Enterprise", blurb: "For companies with many long-lived repositories.", cta: "Choose Enterprise" },
+  trial: { name: "Starter", blurb: "Every feature. No card needed.", cta: "Start free" },
+  team: { name: "Team", blurb: "For a team with a few forks.", cta: "Choose Team" },
+  enterprise: { name: "Enterprise", blurb: "For many long-lived forks.", cta: "Choose Enterprise" },
 };
 
 export function planDisplay(id: PlanId) {

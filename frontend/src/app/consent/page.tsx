@@ -57,7 +57,7 @@ export default function Consent() {
       {client && (
         <>
           <p className="mt-3 text-muted">
-            <span className="font-semibold text-ink">{client}</span> wants to use Forkward as you. It can call the Forkward MCP tools, and its usage counts against your plan.
+            <span className="font-semibold text-ink">{client}</span> wants to use Forkward as you. Its usage counts toward your plan.
           </p>
           <ul className="mt-6 list-disc space-y-1 pl-5 text-muted">
             <li>Use the Forkward MCP server</li>
@@ -66,7 +66,7 @@ export default function Consent() {
             ))}
           </ul>
           <div className="mt-8 flex gap-3">
-            <button className="btn btn-primary" onClick={() => decide(true)} disabled={busy}>Allow</button>
+            <button className="btn btn-accent" onClick={() => decide(true)} disabled={busy}>Allow</button>
             <button className="btn btn-secondary" onClick={() => decide(false)} disabled={busy}>Deny</button>
           </div>
         </>
