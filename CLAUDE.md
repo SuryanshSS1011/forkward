@@ -17,7 +17,7 @@ The story is that a fix upstream is not yet a fix in your fork. Device kernels f
 
 ## Tracks
 
-We enter the HackPSU Grand Prize, the Research Track, the Nittany AI Challenge and these MLH prizes: Gemini API, Solana, Tiger Data, Vultr, Auth0, ElevenLabs and GoDaddy Registry. We enter the SpaceXSI raffle only if we actually build with Cursor and Grok Bot. We do not enter the AI Strategy Case Competition, the Mystery Stack general track or the FNB Challenge.
+We enter the HackPSU Grand Prize, the Research Track, the Nittany AI Challenge and these MLH prizes: Gemini API, Solana, Tiger Data, Vultr, Auth0 and GoDaddy Registry. We skip ElevenLabs, because voice has no real role in reviewing merge conflicts. We enter the SpaceXSI raffle only if we actually build with Cursor and Grok Bot. We do not enter the AI Strategy Case Competition, the Mystery Stack general track or the FNB Challenge.
 
 ## Data (frozen before the event)
 
