@@ -12,7 +12,9 @@ function Code({ title, lines, empty }: { title: string; lines: string[]; empty: 
         <span className="t-label text-faint">{lines.length === 1 ? "1 line" : `${lines.length} lines`}</span>
       </figcaption>
       {lines.length ? (
-        <pre className="code-pane"><code>{dedent(lines).join("\n")}</code></pre>
+        <pre className="code-pane">
+          <code>{dedent(lines).join("\n")}</code>
+        </pre>
       ) : (
         <p className="code-pane code-empty">{empty}</p>
       )}
@@ -29,9 +31,18 @@ function Votes({ c, proposers }: { c: Candidate; proposers: number }) {
         {Array.from({ length: proposers }, (_, i) => (
           <span key={i} className={`vote-dot ${i < models.length ? "vote-on" : ""}`} aria-hidden />
         ))}
-        <span>{models.length} of {proposers} models</span>
+        <span>
+          {models.length} of {proposers} models
+        </span>
       </span>
-      {rules.length > 0 && <span>{rules.map(sourceName).filter((v, i, a) => a.indexOf(v) === i).join(", ")}</span>}
+      {rules.length > 0 && (
+        <span>
+          {rules
+            .map(sourceName)
+            .filter((v, i, a) => a.indexOf(v) === i)
+            .join(", ")}
+        </span>
+      )}
     </div>
   );
 }
@@ -70,8 +81,17 @@ export function HunkDetail({ hunk, onReview, readOnly }: { hunk: HunkRow; onRevi
   return (
     <article aria-labelledby="hunk-title" className="min-w-0">
       <header className="mb-5">
-        <h2 id="hunk-title" className="min-w-0 text-[18px] font-semibold"><PathLabel file={hunk.file} n={n} /></h2>
+        <h2 id="hunk-title" className="min-w-0 text-[18px] font-semibold">
+          <PathLabel file={hunk.file} n={n} />
+        </h2>
         <p className={`mt-1 max-w-[70ch] text-[14px] hunk-status-${st}`}>{statusLine(HUNK_STATE_LABEL[st], hunk.reason, st === "needs" || st === "error")}</p>
+        {d.passed_checks !== undefined && st !== "auto" && (
+          <p className="mt-1 max-w-[70ch] t-label text-muted">
+            {d.passed_checks
+              ? "It passed the vote, rule and classifier checks. Only the calibrated confidence bar held it back."
+              : "It did not pass the vote, rule and classifier checks, so it waits for a person whatever its confidence."}
+          </p>
+        )}
       </header>
 
       <div className="grid gap-4 lg:grid-cols-2">
@@ -81,7 +101,9 @@ export function HunkDetail({ hunk, onReview, readOnly }: { hunk: HunkRow; onRevi
 
       <section aria-labelledby="res-title" className="resolution mt-6">
         <div className="flex flex-wrap items-baseline justify-between gap-2">
-          <h3 id="res-title" className="text-[16px] font-semibold">{st === "auto" ? "Applied resolution" : "Proposed resolution"}</h3>
+          <h3 id="res-title" className="text-[16px] font-semibold">
+            {st === "auto" ? "Applied resolution" : "Proposed resolution"}
+          </h3>
           {edited && reviewable && <span className="t-label text-muted">Edited by you</span>}
         </div>
         {reviewable && st !== "rejected" ? (
@@ -94,31 +116,47 @@ export function HunkDetail({ hunk, onReview, readOnly }: { hunk: HunkRow; onRevi
             onChange={(e) => setText(e.target.value)}
           />
         ) : (
-          <pre className="code-pane mt-2"><code>{proposed || "(empty: the block is deleted)"}</code></pre>
+          <pre className="code-pane mt-2">
+            <code>{proposed || "(empty: the block is deleted)"}</code>
+          </pre>
         )}
         {reviewable && (
           <div className="mt-3 flex flex-wrap items-center gap-2">
             {st !== "accepted" && (
-              <button className="btn btn-accent btn-sm" disabled={busy} onClick={() => act("accepted")}>{edited ? "Accept with my edit" : "Accept"}</button>
+              <button className="btn btn-accent btn-sm" disabled={busy} onClick={() => act("accepted")}>
+                {edited ? "Accept with my edit" : "Accept"}
+              </button>
             )}
             {st === "accepted" && edited && (
-              <button className="btn btn-accent btn-sm" disabled={busy} onClick={() => act("accepted")}>Save my edit</button>
+              <button className="btn btn-accent btn-sm" disabled={busy} onClick={() => act("accepted")}>
+                Save my edit
+              </button>
             )}
             {st !== "rejected" && (
-              <button className="btn btn-secondary btn-sm" disabled={busy} onClick={() => act("rejected")}>I&rsquo;ll fix this myself</button>
+              <button className="btn btn-secondary btn-sm" disabled={busy} onClick={() => act("rejected")}>
+                I&rsquo;ll fix this myself
+              </button>
             )}
             {(st === "accepted" || st === "rejected") && (
-              <button className="btn btn-secondary btn-sm" disabled={busy} onClick={() => act(null)}>Undo</button>
+              <button className="btn btn-secondary btn-sm" disabled={busy} onClick={() => act(null)}>
+                Undo
+              </button>
             )}
             {busy && <span className="spinner text-muted" aria-label="Saving" />}
           </div>
         )}
-        {error && <p role="alert" className="mt-2 t-label text-danger">{error}</p>}
+        {error && (
+          <p role="alert" className="mt-2 t-label text-danger">
+            {error}
+          </p>
+        )}
       </section>
 
       {candidates.length > 0 && (
         <section aria-labelledby="cand-title" className="mt-8">
-          <h3 id="cand-title" className="text-[16px] font-semibold">What each resolver proposed</h3>
+          <h3 id="cand-title" className="text-[16px] font-semibold">
+            What each resolver proposed
+          </h3>
           <p className="mt-1 text-[14px] text-muted">Dots are AI agent votes. Rules, which need no model, are named on the right.</p>
           <ul className="mt-3 divide-y divide-line border-y border-line">
             {candidates.map((c, i) => (
@@ -131,9 +169,13 @@ export function HunkDetail({ hunk, onReview, readOnly }: { hunk: HunkRow; onRevi
                     </span>
                     <Votes c={c} proposers={d.proposers ?? 3} />
                   </summary>
-                  <pre className="code-pane mt-2"><code>{dedent(c.lines).join("\n") || "(empty: the block is deleted)"}</code></pre>
+                  <pre className="code-pane mt-2">
+                    <code>{dedent(c.lines).join("\n") || "(empty: the block is deleted)"}</code>
+                  </pre>
                   {reviewable && st !== "rejected" && c.lines.join("\n") !== text && (
-                    <button className="btn btn-secondary btn-sm mt-2" onClick={() => setText(c.lines.join("\n"))}>Use this one</button>
+                    <button className="btn btn-secondary btn-sm mt-2" onClick={() => setText(c.lines.join("\n"))}>
+                      Use this one
+                    </button>
                   )}
                 </details>
               </li>
