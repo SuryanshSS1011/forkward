@@ -18,7 +18,6 @@
     "pull_requests": "write",
     "checks": "write",
     "metadata": "read",
-    "email_addresses": "read",
     "members": "read"
   },
   "default_events": [
