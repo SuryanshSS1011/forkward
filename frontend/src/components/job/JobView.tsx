@@ -44,6 +44,7 @@ export function JobView({
   const current = hunks.find((h) => h.id === selected) ?? null;
 
   const accepted = hunks.filter((h) => hunkState(h) === "accepted").length;
+  const undecided = hunks.filter((h) => hunkState(h) === "needs").length;
   const [applying, setApplying] = useState(false);
   const [applyError, setApplyError] = useState<string | null>(null);
   const reviewOpen = !sample && job.kind === "sync" && ["waiting_ci", "waiting_approval"].includes(job.status);
@@ -62,6 +63,16 @@ export function JobView({
       setApplying(false);
     }
   };
+
+  // After a decision, move to the next conflict still waiting, so a review is one pass down the list.
+  const review: ReviewFn | undefined = onReview
+    ? async (h, decision, resolution) => {
+        await onReview(h, decision, resolution);
+        if (!decision) return;
+        const next = hunks.find((x) => x.id !== h.id && hunkState(x) === "needs");
+        if (next) setSelected(next.id);
+      }
+    : undefined;
 
   const select = (id: string) => {
     setSelected(id);
@@ -84,7 +95,11 @@ export function JobView({
             {" with "}
             <span className="font-mono text-[14px] text-ink">{job.upstream_ref}</span>
           </p>
-          <h1 className="t-h1 mt-2 max-w-[24ch]">{headline(job)}</h1>
+          <h1 className="t-h1 mt-2 max-w-[24ch]">
+            {reviewOpen && undecided === 0 && accepted > 0 && !committing
+              ? `${accepted} ${accepted === 1 ? "fix" : "fixes"} accepted. Commit ${accepted === 1 ? "it" : "them"} to the branch.`
+              : headline(job)}
+          </h1>
           {job.status === "failed" && job.error && (
             <p role="alert" className="mt-3 max-w-[70ch] border-l-2 border-danger pl-3 text-[15px]">
               {job.error}
@@ -102,7 +117,8 @@ export function JobView({
               </a>
             )}
             {extraActions}
-            <span className="t-label text-faint">
+            {/* Times follow the viewer's timezone, which the server cannot know. */}
+            <span className="t-label text-faint" suppressHydrationWarning>
               {sample ? "Recorded" : "Started"} {when(job.created_at)}
               {models.length > 0 && <> with {models.join(", ")}</>}
             </span>
@@ -128,7 +144,7 @@ export function JobView({
           <div id="hunk-detail" className="min-w-0 scroll-mt-24">
             {current && (
               <div key={current.id} className="fade-swap">
-                <HunkDetail hunk={current} onReview={reviewOpen ? onReview : undefined} />
+                <HunkDetail hunk={current} onReview={reviewOpen ? review : undefined} />
               </div>
             )}
           </div>
@@ -150,7 +166,7 @@ export function JobView({
           <ol className="mt-3 space-y-2">
             {job.events.map((e) => (
               <li key={e.id} className={`event event-${e.kind} grid grid-cols-[96px_1fr] gap-3 text-[14px]`}>
-                <time className="tabular-nums text-faint">
+                <time className="tabular-nums text-faint" dateTime={e.ts} suppressHydrationWarning>
                   {new Date(e.ts).toLocaleTimeString([], { hour: "numeric", minute: "2-digit", second: "2-digit" })}
                 </time>
                 <span>{e.message}</span>
