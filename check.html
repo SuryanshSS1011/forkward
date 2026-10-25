@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_standard" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&amp;family=Inter:wght@400;500;700&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={"darkMode":"class","theme":{"extend":{"colors":{"error":"#ba1a1a","on-background":"#1e1b16","on-primary":"#ffffff","surface-container-lowest":"#ffffff","secondary-container":"#c3dcff","on-tertiary-fixed-variant":"#514616","secondary-fixed":"#d2e4ff","surface":"#fff8f0","surface-tint":"#a23d31","on-surface":"#1e1b16","on-error-container":"#93000a","primary-fixed-dim":"#ffb4a9","primary":"#7e2319","primary-fixed":"#ffdad5","on-secondary-container":"#49617f","tertiary-fixed-dim":"#d6c689","surface-container-highest":"#e8e2d9","on-primary-fixed-variant":"#82261c","on-secondary-fixed-variant":"#304865","error-container":"#ffdad6","on-tertiary-fixed":"#221b00","tertiary":"#6a5e2c","on-primary-container":"#ffc6be","on-primary-fixed":"#410000","secondary-fixed-dim":"#b0c8eb","surface-bright":"#fff8f0","surface-container-low":"#faf3e9","on-secondary-fixed":"#001c37","outline":"#8a716e","surface-dim":"#e0d9d0","background":"#fff8f0","surface-container":"#f4ede4","on-tertiary":"#ffffff","surface-container-high":"#eee7de","on-surface-variant":"#57423f","on-tertiary-container":"#493f0f","inverse-primary":"#ffb4a9","tertiary-container":"#baab71","on-error":"#ffffff","on-secondary":"#ffffff","secondary":"#48607e","tertiary-fixed":"#f3e2a3","inverse-on-surface":"#f7f0e7","inverse-surface":"#33302a","surface-variant":"#e8e2d9","outline-variant":"#ddc0bc","primary-container":"#9e3a2e"},"borderRadius":{"DEFAULT":"0.125rem","lg":"0.25rem","xl":"0.5rem","full":"0.75rem"},"spacing":{"space-sm":"0.5rem","space-lg":"1.5rem","space-xl":"2.5rem","space-md":"1rem","margin":"1.5rem","margin-desktop":"3rem","gutter":"1.25rem","gutter-desktop":"2rem","space-xs":"0.25rem"},"fontFamily":{"headline-xl":["Epilogue"],"label-sm":["JetBrains Mono"],"body-lg":["Karla"],"body-sm":["Karla"],"headline-xl-mobile":["Epilogue"],"annotation":["Karla"],"headline-lg":["Epilogue"],"label-md":["JetBrains Mono"],"headline-sm":["Epilogue"],"headline-md":["Epilogue"],"body-md":["Karla"],"headline-lg-mobile":["Epilogue"]},"fontSize":{"headline-xl":["44px",{"lineHeight":"52px","letterSpacing":"-0.02em","fontWeight":"800"}],"label-sm":["11px",{"lineHeight":"16px","letterSpacing":"0.04em","fontWeight":"500"}],"body-lg":["18px",{"lineHeight":"28px","fontWeight":"400"}],"body-sm":["14px",{"lineHeight":"20px","fontWeight":"400"}],"headline-xl-mobile":["32px",{"lineHeight":"40px","letterSpacing":"-0.02em","fontWeight":"800"}],"annotation":["14px",{"lineHeight":"20px","letterSpacing":"0.01em","fontWeight":"700"}],"headline-lg":["32px",{"lineHeight":"40px","letterSpacing":"-0.01em","fontWeight":"700"}],"label-md":["13px",{"lineHeight":"18px","letterSpacing":"0.02em","fontWeight":"500"}],"headline-sm":["20px",{"lineHeight":"28px","fontWeight":"600"}],"headline-md":["24px",{"lineHeight":"32px","fontWeight":"700"}],"body-md":["16px",{"lineHeight":"24px","fontWeight":"400"}],"headline-lg-mobile":["26px",{"lineHeight":"34px","letterSpacing":"-0.01em","fontWeight":"700"}]}}}}</script></head><body class="bg-background font-body-md text-on-surface antialiased"><header class="fixed top-0 left-0 right-0 z-50 pt-4 px-margin lg:px-margin-desktop pointer-events-none"><div class="max-w-7xl mx-auto flex items-center justify-between pointer-events-auto h-20 px-space-lg bg-surface-container-lowest border-2 border-outline-variant shadow-[2px_3px_0px_rgba(56,53,47,0.12)]" style="border-radius: 255px 15px 225px 15px/15px 225px 15px 255px;"><a class="flex items-center gap-space-sm text-primary" data-path="landing-page" href="#"><div class="w-9 h-9 rounded-full bg-primary-fixed flex items-center justify-center border border-outline shadow-[1px_1px_0px_#8a716e]"><span class="material-symbols-outlined text-primary text-[20px]">restaurant</span></div><span class="font-headline-md text-headline-md text-on-surface tracking-tight">Forkward</span></a><nav class="hidden md:flex items-center gap-space-md" data-active-classes="bg-surface-container-high text-on-surface font-bold rounded-lg shadow-[1px_1px_0px_#8a716e]"><a class="px-space-sm py-space-xs font-body-md text-body-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-colors rounded-lg" data-path="demo" href="#">Demo</a><a class="px-space-sm py-space-xs font-body-md text-body-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-colors rounded-lg" data-path="how-it-works" href="#">How it works</a><a class="px-space-sm py-space-xs font-body-md text-body-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-colors rounded-lg" data-path="pricing" href="#">Pricing</a></nav><div class="flex items-center gap-space-md"><a class="font-annotation text-annotation text-on-surface-variant hover:text-on-surface underline underline-offset-4 decoration-outline-variant hover:decoration-on-surface transition-colors" data-path="sign-in" href="#">Sign in</a><a class="px-space-md py-space-xs bg-primary-container text-on-primary font-annotation text-annotation border-2 border-inverse-surface shadow-[3px_3px_0px_#33302a] active:translate-x-[2px] active:translate-y-[2px] active:shadow-[1px_1px_0px_#33302a] transition-all" data-path="chooser" href="#" style="border-radius: 9px 4px 17px 5px / 4px 12px 5px 9px;">Get started</a><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div></header><main class="w-full pt-20 bg-background min-h-screen"><div class="flex flex-col w-full text-on-surface select-none pb-space-xl">
+<!-- ==================== HERO SECTION ==================== -->
+<section class="w-full max-w-7xl mx-auto px-margin lg:px-margin-desktop pt-8 pb-14">
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter-desktop items-start">
+<!-- Left Column: Copy & CTAs -->
+<div class="lg:col-span-7 flex flex-col pt-4">
+<!-- Studio Label Pin -->
+<div class="inline-flex items-center gap-space-xs self-start px-space-sm py-0.5 bg-surface-container-high rounded-sm shadow-[1px_1px_0px_#8a716e] mb-4">
+<span class="w-2 h-2 rounded-full bg-primary animate-ping"></span>
+<span class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant">Deterministic Merge Assistant</span>
+</div>
+<!-- Headline with sketch red accent underline -->
+<div class="relative mb-6">
+<h1 class="font-headline-xl text-headline-xl text-on-surface font-extrabold tracking-tight leading-tight">
+            Every upstream fix, forwarded to your fork.
+          </h1>
+<!-- Organic hand-drawn red stroke SVG -->
+<svg class="w-72 h-4 text-primary -mt-1 ml-1" fill="none" viewbox="0 0 288 16" xmlns="http://www.w3.org/2000/svg">
+<path d="M2.5 11.5C45.2 6.1 112.4 3.8 198.8 7.3C228.6 8.5 264.1 11.2 285.5 13.1" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="4.5"></path>
+</svg>
+</div>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-xl mb-8 leading-relaxed">
+          Forkward pulls in upstream changes, suggests a fix for every merge conflict, and applies only the ones it is sure about. You review the rest in a pull request.
+        </p>
+<!-- CTA Buttons and annotation note -->
+<div class="relative flex flex-wrap items-center gap-space-md mb-12">
+<!-- Primary CTA Button -->
+<button class="px-space-lg py-space-sm bg-primary-container text-on-primary font-annotation text-annotation border-2 border-inverse-surface shadow-[4px_4px_0px_#33302a] active:translate-x-[2px] active:translate-y-[2px] active:shadow-[1px_1px_0px_#33302a] transition-all cursor-pointer" style="border-radius: 8px 16px 6px 14px / 14px 6px 13px 7px;">
+            Get started
+          </button>
+<!-- Hand-drawn style blue pointer annotation -->
+<div class="hidden sm:flex items-center gap-1 text-secondary -ml-1">
+<svg class="w-6 h-6 transform -rotate-12" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M19 12H5M5 12L11 6M5 12L11 18" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<span class="font-label-md text-label-md italic font-semibold text-secondary -rotate-2">
+              free to start, 50 units
+            </span>
+</div>
+<!-- Secondary Scrap CTA -->
+<button class="px-space-lg py-space-sm bg-surface-container-low text-on-surface font-annotation text-annotation border-2 border-outline shadow-[3px_3px_0px_#8a716e] hover:bg-surface-container-high transition-colors cursor-pointer" style="border-radius: 12px 6px 14px 8px / 7px 15px 8px 13px;">
+            Watch it work
+          </button>
+</div>
+<!-- Four Benefits Grid (Staggered Note Index Cards) -->
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-space-md pt-2">
+<!-- Benefit 1 -->
+<div class="relative p-space-md bg-surface-container-lowest border-2 border-outline-variant shadow-[3px_3px_0px_#ddc0bc] rotate-[-0.6deg]" style="border-radius: 9px 5px 12px 4px;">
+<div class="w-8 h-8 rounded-full bg-surface-container flex items-center justify-center text-secondary mb-2">
+<span class="material-symbols-outlined text-[18px]">history</span>
+</div>
+<h2 class="font-headline-sm text-headline-sm text-on-surface mb-1">Remembers what you approve</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant leading-snug">
+              A resolution you merge is reused when that change conflicts again.
+            </p>
+</div>
+<!-- Benefit 2 -->
+<div class="relative p-space-md bg-surface-container-lowest border-2 border-outline-variant shadow-[3px_3px_0px_#ddc0bc] rotate-[0.8deg] mt-1" style="border-radius: 6px 14px 5px 11px;">
+<div class="w-8 h-8 rounded-full bg-secondary-fixed flex items-center justify-center text-on-secondary-fixed mb-2">
+<span class="material-symbols-outlined text-[18px]">bolt</span>
+</div>
+<h2 class="font-headline-sm text-headline-sm text-on-surface mb-1">2.5x faster</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant leading-snug">
+              Agents resolve conflicts in parallel with zero lock-step halts.
+            </p>
+</div>
+<!-- Benefit 3 -->
+<div class="relative p-space-md bg-surface-container-lowest border-2 border-outline-variant shadow-[3px_3px_0px_#ddc0bc] rotate-[0.5deg]" style="border-radius: 11px 4px 10px 6px;">
+<div class="w-8 h-8 rounded-full bg-surface-container-high flex items-center justify-center text-tertiary mb-2">
+<span class="material-symbols-outlined text-[18px]">calendar_today</span>
+</div>
+<h2 class="font-headline-sm text-headline-sm text-on-surface mb-1">Syncs on your schedule</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant leading-snug">
+              Hourly, daily, or weekly, tuned per individual repository.
+            </p>
+</div>
+<!-- Benefit 4 -->
+<div class="relative p-space-md bg-surface-container-lowest border-2 border-outline-variant shadow-[3px_3px_0px_#ddc0bc] rotate-[-0.7deg] mt-1" style="border-radius: 7px 12px 6px 14px;">
+<div class="w-8 h-8 rounded-full bg-primary-fixed flex items-center justify-center text-primary mb-2">
+<span class="material-symbols-outlined text-[18px]">lock</span>
+</div>
+<h2 class="font-headline-sm text-headline-sm text-on-surface mb-1">Never commits to main</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant leading-snug">
+              Every single proposal is a PR waiting on human eyes and your CI.
+            </p>
+</div>
+</div>
+</div>
+<!-- Right Column: Interactive Live Product Scrap Card -->
+<div class="lg:col-span-5 relative mt-6 lg:mt-0 flex justify-center">
+<!-- Masking Tape strip atop card -->
+<div class="absolute -top-3 z-20 w-32 h-6 bg-tertiary-fixed/70 shadow-sm rotate-[-2deg]" style="border-radius: 2px 5px 3px 4px;"></div>
+<!-- The Scrap Paper Ledger Container -->
+<div class="w-full max-w-md bg-surface-container-lowest border-2 border-outline shadow-[5px_5px_0px_#8a716e] p-space-md relative z-10" style="border-radius: 12px 5px 16px 8px / 6px 15px 7px 14px;">
+<!-- Scrap Card Header -->
+<div class="flex items-center justify-between pb-space-sm border-b border-dashed border-outline-variant">
+<div class="flex items-center gap-space-sm">
+<!-- Friendly Bot Mascot Avatar -->
+<div class="w-9 h-9 rounded-full bg-primary-fixed border border-outline flex items-center justify-center overflow-hidden">
+<span class="material-symbols-outlined text-primary text-[22px]">smart_toy</span>
+</div>
+<div>
+<p class="font-label-sm text-label-sm uppercase text-on-surface-variant tracking-wider">Recorded sync · hunk 3 of 3</p>
+<p class="font-annotation text-annotation text-on-surface font-bold">Applied in this recording</p>
+</div>
+</div>
+<!-- Applied Badge -->
+<div class="flex items-center gap-1 px-space-xs py-0.5 bg-[#d4edda] text-[#155724] border border-[#c3e6cb] rounded" style="border-radius: 4px 7px 3px 6px;">
+<span class="material-symbols-outlined text-[14px]">check_circle</span>
+<span class="font-label-sm text-label-sm font-bold">Applied</span>
+</div>
+</div>
+<!-- File path monospace strip -->
+<div class="py-2 font-label-sm text-label-sm text-on-surface-variant border-b border-dashed border-outline-variant/60 flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">description</span>
+<span>../translate/attention.rs#1</span>
+</div>
+<!-- Side-by-Side Diff Section -->
+<div class="grid grid-cols-2 gap-2 my-space-sm font-label-sm text-label-sm">
+<!-- Fork Column -->
+<div class="bg-surface-container-low p-2 border-l-2 border-secondary rounded-sm">
+<span class="block text-secondary font-bold mb-1">Your fork</span>
+<pre class="overflow-x-auto text-on-surface leading-tight text-[10px]"><code>let mut attn = scores.softmax();
+let row_max = scores
+  .max(q_ndim - 1);</code></pre>
+</div>
+<!-- Upstream Column -->
+<div class="bg-surface-container-low p-2 border-l-2 border-primary rounded-sm">
+<span class="block text-primary font-bold mb-1">Upstream</span>
+<pre class="overflow-x-auto text-on-surface leading-tight text-[10px]"><code>let mut attn = scores.softmax_fp16();
+// patched fast-path</code></pre>
+</div>
+</div>
+<!-- Decision Summary Box -->
+<div class="p-space-sm bg-surface-container-high border-2 border-outline-variant rounded-md mb-space-sm shadow-[2px_2px_0px_#ddc0bc]">
+<div class="flex items-center justify-between text-on-surface">
+<span class="font-annotation text-annotation font-bold">Upstream's change applied</span>
+<div class="flex items-center gap-1 bg-surface-container-lowest px-2 py-0.5 rounded border border-outline-variant">
+<span class="material-symbols-outlined text-[14px] text-tertiary">group</span>
+<span class="font-label-sm text-label-sm font-bold">3/3</span>
+</div>
+</div>
+<div class="mt-1 flex items-center justify-between font-label-sm text-label-sm text-on-surface-variant">
+<span>Keep your fork's side</span>
+<span class="text-outline">0/3</span>
+</div>
+</div>
+<!-- Reassurance Checklist (Sap green marks) -->
+<div class="space-y-1.5 py-2 border-t border-dashed border-outline-variant">
+<div class="flex items-center gap-2 font-body-sm text-body-sm text-on-surface">
+<span class="material-symbols-outlined text-[16px] text-[#2F7A3E]">check_box</span>
+<span>All 3 agents agree</span>
+</div>
+<div class="flex items-center gap-2 font-body-sm text-body-sm text-on-surface">
+<span class="material-symbols-outlined text-[16px] text-[#2F7A3E]">check_box</span>
+<span>A rule agrees (upstream change on fork)</span>
+</div>
+<div class="flex items-center gap-2 font-body-sm text-body-sm text-on-surface">
+<span class="material-symbols-outlined text-[16px] text-[#2F7A3E]">check_box</span>
+<span>Classifier agrees</span>
+</div>
+<div class="flex items-center gap-2 font-body-sm text-body-sm text-on-surface">
+<span class="material-symbols-outlined text-[16px] text-[#2F7A3E]">verified</span>
+<span class="font-label-sm text-label-sm font-bold bg-tertiary-fixed/60 px-1.5 rounded">Confidence 0.97</span>
+</div>
+</div>
+<!-- Hand-written margin footnote -->
+<div class="mt-3 p-2 bg-surface-container-low border-l-2 border-tertiary text-on-surface-variant font-body-sm text-body-sm italic leading-snug">
+            "Every proposal agreed with a deterministic rule, the classifier backed it, and confidence cleared the calibrated bar."
+          </div>
+<!-- Bottom bar -->
+<div class="mt-3 pt-2 border-t border-outline-variant flex items-center justify-between text-on-surface-variant font-label-sm text-label-sm">
+<span>Recorded under verified gate</span>
+<a class="text-primary underline font-bold hover:text-on-surface" href="#">Open the whole run</a>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- ==================== WORKS WITH YOUR TOOLS ==================== -->
+<section class="w-full max-w-7xl mx-auto px-margin lg:px-margin-desktop py-8">
+<div class="p-space-lg bg-surface-container border-2 border-outline-variant shadow-[3px_3px_0px_#ddc0bc] flex flex-col md:flex-row items-center justify-between gap-space-lg" style="border-radius: 14px 6px 18px 5px / 6px 17px 6px 14px;">
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-secondary font-bold">Works with your tools</span>
+<h2 class="font-headline-sm text-headline-sm text-on-surface mt-1">Open pull requests directly into your workflow</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">Opens the pull request and reads your CI automatically.</p>
+</div>
+<!-- Scraps of tool badges -->
+<div class="flex flex-wrap items-center gap-space-sm justify-start md:justify-end">
+<div class="px-space-md py-1 bg-surface-container-lowest border-2 border-outline-variant shadow-[2px_2px_0px_#8a716e] flex items-center gap-1.5 rotate-[-1deg]" style="border-radius: 6px 9px 5px 8px;">
+<span class="material-symbols-outlined text-[16px] text-on-surface">terminal</span>
+<span class="font-annotation text-annotation font-bold">GitHub</span>
+</div>
+<div class="px-space-md py-1 bg-surface-container-lowest border-2 border-outline-variant shadow-[2px_2px_0px_#8a716e] flex items-center gap-1.5 rotate-[1.5deg]" style="border-radius: 8px 4px 7px 5px;">
+<span class="material-symbols-outlined text-[16px] text-primary">psychology</span>
+<span class="font-annotation text-annotation font-bold">Claude Code</span>
+</div>
+<div class="px-space-md py-1 bg-surface-container-lowest border-2 border-outline-variant shadow-[2px_2px_0px_#8a716e] flex items-center gap-1.5 rotate-[-1.5deg]" style="border-radius: 5px 8px 6px 7px;">
+<span class="material-symbols-outlined text-[16px] text-secondary">near_me</span>
+<span class="font-annotation text-annotation font-bold">Cursor</span>
+</div>
+<div class="px-space-md py-1 bg-surface-container-lowest border-2 border-outline-variant shadow-[2px_2px_0px_#8a716e] flex items-center gap-1.5 rotate-[0.5deg]" style="border-radius: 7px 5px 8px 4px;">
+<span class="material-symbols-outlined text-[16px] text-on-surface-variant">code</span>
+<span class="font-annotation text-annotation font-bold">VS Code</span>
+</div>
+<div class="px-space-md py-1 bg-surface-container-lowest border-2 border-outline-variant shadow-[2px_2px_0px_#8a716e] flex items-center gap-1.5 rotate-[-0.8deg]" style="border-radius: 6px 7px 5px 9px;">
+<span class="material-symbols-outlined text-[16px] text-tertiary">hub</span>
+<span class="font-annotation text-annotation font-bold">MCP clients</span>
+</div>
+</div>
+</div>
+</section>
+<!-- ==================== PROBLEM SECTION ==================== -->
+<section class="w-full max-w-7xl mx-auto px-margin lg:px-margin-desktop py-12">
+<div class="max-w-2xl mb-10">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-primary font-bold">Why forks fall behind</span>
+<h2 class="font-headline-lg text-headline-lg text-on-surface font-extrabold mt-1">
+        A fix upstream is not yet a fix in your fork.
+      </h2>
+<p class="font-body-md text-body-md text-on-surface-variant mt-3 leading-relaxed">
+        Every sync means conflicts, so long-lived forks put syncs off. The longer they wait, the more security and stability fixes they miss, and the bigger the next merge gets.
+      </p>
+</div>
+<!-- Three Large Hand-drawn Stat Cards on Scrap Paper -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-gutter-desktop">
+<!-- Stat 1 -->
+<div class="relative p-space-lg bg-surface-container-lowest border-2 border-outline shadow-[4px_4px_0px_#8a716e] rotate-[-0.5deg] flex flex-col justify-between" style="border-radius: 11px 5px 14px 6px / 7px 16px 5px 12px;">
+<div class="absolute -top-2 left-6 w-16 h-4 bg-tertiary-fixed/60 shadow-sm rotate-2" style="border-radius: 2px;"></div>
+<div>
+<span class="font-headline-xl text-headline-xl font-extrabold text-primary block tracking-tighter">
+            29 to 158
+          </span>
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-bold mt-2">
+            Stable releases behind
+          </h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-2 leading-relaxed">
+            How far the vendor device kernels in our study trailed their upstream stable branches.
+          </p>
+</div>
+<div class="mt-6 pt-3 border-t border-dashed border-outline-variant font-label-sm text-label-sm text-secondary">
+          empirical survey · 14 LTS forks
+        </div>
+</div>
+<!-- Stat 2 -->
+<div class="relative p-space-lg bg-surface-container-lowest border-2 border-outline shadow-[4px_4px_0px_#8a716e] rotate-[0.7deg] flex flex-col justify-between" style="border-radius: 8px 14px 6px 12px / 14px 6px 12px 7px;">
+<div class="absolute -top-2 right-8 w-16 h-4 bg-tertiary-fixed/60 shadow-sm -rotate-3" style="border-radius: 2px;"></div>
+<div>
+<span class="font-headline-xl text-headline-xl font-extrabold text-on-surface block tracking-tighter">
+            65
+          </span>
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-bold mt-2">
+            Weekly syncs, zero conflicts
+          </h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-2 leading-relaxed">
+            Raspberry Pi merged 65 stable releases in a row into rpi-6.12.y without one conflict. Syncing often keeps each merge small.
+          </p>
+</div>
+<div class="mt-6 pt-3 border-t border-dashed border-outline-variant font-label-sm text-label-sm text-secondary">
+          frequency mitigates conflict volume
+        </div>
+</div>
+<!-- Stat 3 -->
+<div class="relative p-space-lg bg-surface-container-lowest border-2 border-outline shadow-[4px_4px_0px_#8a716e] rotate-[-0.8deg] flex flex-col justify-between" style="border-radius: 12px 6px 15px 5px / 6px 13px 7px 15px;">
+<div class="absolute -top-2 left-10 w-16 h-4 bg-tertiary-fixed/60 shadow-sm rotate-1" style="border-radius: 2px;"></div>
+<div>
+<span class="font-headline-xl text-headline-xl font-extrabold text-secondary block tracking-tighter">
+            300,000
+          </span>
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-bold mt-2">
+            Verified hunks for five nines
+          </h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-2 leading-relaxed">
+            Certifying 1 wrong auto-merge in 100,000 at 95% confidence takes about that many. Every merged pull request adds to the record.
+          </p>
+</div>
+<div class="mt-6 pt-3 border-t border-dashed border-outline-variant font-label-sm text-label-sm text-secondary">
+          empirical goal, never a reckless claim
+        </div>
+</div>
+</div>
+</section>
+<!-- ==================== HOW IT WORKS ==================== -->
+<section class="w-full max-w-7xl mx-auto px-margin lg:px-margin-desktop py-12">
+<!-- Irregular Paper Strip Container -->
+<div class="p-space-xl bg-surface-container-high border-2 border-outline shadow-[4px_4px_0px_#8a716e] relative" style="border-radius: 15px 7px 20px 9px / 9px 18px 8px 16px;">
+<div class="flex flex-col md:flex-row md:items-end justify-between mb-10 pb-4 border-b border-dashed border-outline-variant">
+<div>
+<span class="font-label-sm text-label-sm uppercase tracking-widest text-primary font-bold">The Continuous Pipeline</span>
+<h2 class="font-headline-lg text-headline-lg text-on-surface font-extrabold mt-1">How it works</h2>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant max-w-sm mt-2 md:mt-0">
+          From deterministic heuristics to agent consensus, gated by empirical safety thresholds.
+        </p>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-space-lg relative">
+<!-- Step 01 -->
+<div class="p-space-md bg-surface-container-lowest border-2 border-outline-variant shadow-[2px_2px_0px_#ddc0bc] flex flex-col justify-between" style="border-radius: 8px 12px 6px 10px;">
+<div>
+<div class="w-9 h-9 rounded-full border-2 border-secondary bg-secondary-fixed/50 flex items-center justify-center font-label-md text-label-md font-bold text-secondary mb-3">
+              01
+            </div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-bold mb-1">Connect</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
+              Install the GitHub app on the forks you want synced. No write access to main required.
+            </p>
+</div>
+<div class="mt-4 pt-2 border-t border-dashed border-outline-variant font-label-sm text-label-sm text-outline">
+            webhook integration
+          </div>
+</div>
+<!-- Step 02 -->
+<div class="p-space-md bg-surface-container-lowest border-2 border-outline-variant shadow-[2px_2px_0px_#ddc0bc] flex flex-col justify-between" style="border-radius: 12px 7px 11px 5px;">
+<div>
+<div class="w-9 h-9 rounded-full border-2 border-secondary bg-secondary-fixed/50 flex items-center justify-center font-label-md text-label-md font-bold text-secondary mb-3">
+              02
+            </div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-bold mb-1">Propose</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
+              Seven rules and several AI agents resolve each conflict in parallel isolation.
+            </p>
+</div>
+<div class="mt-4 pt-2 border-t border-dashed border-outline-variant font-label-sm text-label-sm text-outline">
+            parallel resolution
+          </div>
+</div>
+<!-- Step 03 -->
+<div class="p-space-md bg-surface-container-lowest border-2 border-outline-variant shadow-[2px_2px_0px_#ddc0bc] flex flex-col justify-between" style="border-radius: 6px 14px 7px 12px;">
+<div>
+<div class="w-9 h-9 rounded-full border-2 border-primary bg-primary-fixed/50 flex items-center justify-center font-label-md text-label-md font-bold text-primary mb-3">
+              03
+            </div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-bold mb-1">Gate</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
+              A hunk is applied on its own only under a certified, statistically backed error bound.
+            </p>
+</div>
+<div class="mt-4 pt-2 border-t border-dashed border-outline-variant font-label-sm text-label-sm text-outline">
+            strict safety cutoff
+          </div>
+</div>
+<!-- Step 04 -->
+<div class="p-space-md bg-surface-container-lowest border-2 border-outline-variant shadow-[2px_2px_0px_#ddc0bc] flex flex-col justify-between" style="border-radius: 10px 6px 14px 8px;">
+<div>
+<div class="w-9 h-9 rounded-full border-2 border-secondary bg-secondary-fixed/50 flex items-center justify-center font-label-md text-label-md font-bold text-secondary mb-3">
+              04
+            </div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-bold mb-1">Review</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
+              Everything else waits for you in the pull request, and what you merge informs the next sync.
+            </p>
+</div>
+<div class="mt-4 pt-2 border-t border-dashed border-outline-variant font-label-sm text-label-sm text-outline">
+            continuous learning loop
+          </div>
+</div>
+</div>
+</div>
+</section>
+<!-- ==================== VALIDATION CHART SECTION ==================== -->
+<section class="w-full max-w-7xl mx-auto px-margin lg:px-margin-desktop py-12">
+<div class="p-space-lg lg:p-space-xl bg-surface-container-lowest border-2 border-outline shadow-[5px_5px_0px_#8a716e] relative" style="border-radius: 16px 8px 14px 10px / 8px 16px 9px 15px;">
+<!-- Top Section Title -->
+<div class="max-w-3xl mb-8">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-secondary font-bold">Empirical Validation Bench</span>
+<h2 class="font-headline-lg text-headline-lg text-on-surface font-extrabold mt-1">
+          A child replaces the incumbent only when it wins on validation by more than the noise.
+        </h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-2">
+          Train is 70 NXP hunks and validation is 45 ST hunks. Validation picks the winner, so its line runs optimistic.
+        </p>
+</div>
+<!-- Controls & Details Row -->
+<div class="flex flex-wrap items-center justify-between gap-space-md mb-6 pb-4 border-b border-dashed border-outline-variant">
+<!-- Round Selectors -->
+<div class="flex items-center gap-space-xs">
+<span class="font-annotation text-annotation mr-2 text-on-surface font-bold">Pick a round:</span>
+<button class="w-8 h-8 rounded-sm bg-surface-container font-label-md text-label-md font-bold text-on-surface-variant border border-outline hover:bg-surface-container-high">0</button>
+<button class="w-8 h-8 rounded-sm bg-surface-container font-label-md text-label-md font-bold text-on-surface-variant border border-outline hover:bg-surface-container-high">1</button>
+<button class="w-8 h-8 rounded-sm bg-surface-container font-label-md text-label-md font-bold text-on-surface-variant border border-outline hover:bg-surface-container-high">2</button>
+<button class="w-8 h-8 rounded-sm bg-surface-container font-label-md text-label-md font-bold text-on-surface-variant border border-outline hover:bg-surface-container-high">3</button>
+<!-- Active round 4 -->
+<button class="w-8 h-8 rounded-sm bg-secondary text-on-secondary font-label-md text-label-md font-bold border-2 border-inverse-surface shadow-[2px_2px_0px_#33302a]">4</button>
+</div>
+<!-- Highlight status chip -->
+<div class="inline-flex items-center gap-2 px-space-md py-1 bg-tertiary-fixed border border-tertiary rounded-sm">
+<span class="w-2 h-2 rounded-full bg-[#2F7A3E]"></span>
+<span class="font-label-sm text-label-sm font-bold text-on-tertiary-fixed">Round 4: Promoted</span>
+</div>
+</div>
+<!-- Main Chart & Side Stats Bento -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter-desktop items-center">
+<!-- Hand-sketched Line Chart (Inline SVG) -->
+<div class="lg:col-span-8 bg-surface-container-low p-space-md border-2 border-outline-variant rounded-md shadow-inner">
+<div class="flex items-center justify-between text-on-surface-variant font-label-sm text-label-sm mb-2">
+<span>Accuracy &amp; Retention Curve (%)</span>
+<div class="flex items-center gap-4">
+<span class="flex items-center gap-1.5"><span class="w-3 h-0.5 bg-outline"></span> Best on train</span>
+<span class="flex items-center gap-1.5"><span class="w-3 h-0.5 bg-secondary"></span> Incumbent validation</span>
+<span class="flex items-center gap-1.5"><span class="w-3 h-0.5 bg-primary"></span> Fork baseline</span>
+</div>
+</div>
+<!-- Hand sketched Chart SVG -->
+<svg class="w-full h-56" fill="none" viewbox="0 0 600 220" xmlns="http://www.w3.org/2000/svg">
+<!-- Grid lines dashed -->
+<line stroke="#ddc0bc" stroke-dasharray="4 4" stroke-width="1" x1="40" x2="580" y1="30" y2="30"></line>
+<line stroke="#ddc0bc" stroke-dasharray="4 4" stroke-width="1" x1="40" x2="580" y1="80" y2="80"></line>
+<line stroke="#ddc0bc" stroke-dasharray="4 4" stroke-width="1" x1="40" x2="580" y1="130" y2="130"></line>
+<line stroke="#ddc0bc" stroke-dasharray="4 4" stroke-width="1" x1="40" x2="580" y1="180" y2="180"></line>
+<!-- Y Axis labels -->
+<text fill="#57423f" font-family="JetBrains Mono" font-size="10" x="12" y="34">80%</text>
+<text fill="#57423f" font-family="JetBrains Mono" font-size="10" x="12" y="84">70%</text>
+<text fill="#57423f" font-family="JetBrains Mono" font-size="10" x="12" y="134">60%</text>
+<text fill="#57423f" font-family="JetBrains Mono" font-size="10" x="12" y="184">50%</text>
+<!-- X Axis labels -->
+<text fill="#57423f" font-family="JetBrains Mono" font-size="10" x="60" y="205">Round 0</text>
+<text fill="#57423f" font-family="JetBrains Mono" font-size="10" x="180" y="205">Round 1</text>
+<text fill="#57423f" font-family="JetBrains Mono" font-size="10" x="310" y="205">Round 2</text>
+<text fill="#57423f" font-family="JetBrains Mono" font-size="10" x="440" y="205">Round 3</text>
+<text fill="#57423f" font-family="JetBrains Mono" font-size="10" x="545" y="205">Round 4</text>
+<!-- Fork Baseline Line (Red pencil dashed) -->
+<path d="M60 138 C180 138, 350 142, 570 140" stroke="#9e3a2e" stroke-dasharray="3 3" stroke-width="2"></path>
+<text fill="#9e3a2e" font-family="Karla" font-size="11" font-weight="700" x="65" y="132">Always keep the fork, validation</text>
+<!-- Best on Train Curve (Charcoal pencil stroke) -->
+<path d="M60 115 L180 62 L320 32 L460 30 L570 30" stroke="#33302a" stroke-dasharray="5 3" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"></path>
+<text fill="#33302a" font-family="Karla" font-size="12" font-weight="700" x="210" y="48">Best strategy on train</text>
+<!-- Incumbent on Validation (Teal/Slate ink line) -->
+<path d="M60 90 L180 90 L320 85 L460 85 L570 76" stroke="#48607e" stroke-linecap="round" stroke-linejoin="round" stroke-width="3"></path>
+<circle cx="60" cy="90" fill="#fff8f0" r="4.5" stroke="#48607e" stroke-width="2.5"></circle>
+<circle cx="180" cy="90" fill="#fff8f0" r="4.5" stroke="#48607e" stroke-width="2.5"></circle>
+<circle cx="320" cy="85" fill="#fff8f0" r="4.5" stroke="#48607e" stroke-width="2.5"></circle>
+<circle cx="460" cy="85" fill="#fff8f0" r="4.5" stroke="#48607e" stroke-width="2.5"></circle>
+<circle cx="570" cy="76" fill="#48607e" r="5" stroke="#33302a" stroke-width="2"></circle>
+<text fill="#48607e" font-family="Karla" font-size="12" font-weight="700" x="180" y="106">Incumbent on validation</text>
+</svg>
+</div>
+<!-- Scrap Note with Exact Measurements -->
+<div class="lg:col-span-4 flex flex-col gap-space-md">
+<div class="p-space-md bg-surface-container border-2 border-outline-variant shadow-[3px_3px_0px_#ddc0bc] rotate-[1deg]" style="border-radius: 9px 5px 12px 6px;">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase">Validation score</span>
+<div class="flex items-baseline gap-2 mt-1">
+<span class="font-headline-lg text-headline-lg font-extrabold text-on-surface">34 / 45</span>
+<span class="font-label-md text-label-md text-secondary font-bold">(75.6%)</span>
+</div>
+</div>
+<div class="p-space-md bg-surface-container border-2 border-outline-variant shadow-[3px_3px_0px_#ddc0bc] rotate-[-1deg]" style="border-radius: 6px 12px 5px 10px;">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase">Measured Gain</span>
+<div class="flex items-baseline gap-2 mt-1">
+<span class="font-headline-lg text-headline-lg font-extrabold text-[#2F7A3E]">+6.7 pts</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">vs incumbent</span>
+</div>
+</div>
+<div class="p-space-md bg-surface-container border-2 border-outline-variant shadow-[3px_3px_0px_#ddc0bc] rotate-[0.5deg]" style="border-radius: 11px 4px 10px 7px;">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase">Confidence Noise Band</span>
+<div class="flex items-baseline gap-2 mt-1">
+<span class="font-headline-lg text-headline-lg font-extrabold text-primary">±5.8 pts</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">95% interval</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Expandable details disclosure -->
+<details class="mt-6 pt-4 border-t border-dashed border-outline-variant group">
+<summary class="cursor-pointer font-annotation text-annotation text-secondary hover:text-on-surface flex items-center gap-1.5 focus:outline-none">
+<span class="material-symbols-outlined text-[18px] group-open:rotate-90 transition-transform">chevron_right</span>
+<span>View statistical breakdown and bootstrap interval notes</span>
+</summary>
+<div class="mt-3 p-space-md bg-surface-container-high rounded border border-outline-variant font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
+          The 95% bootstrap confidence interval covers -4.4 pts to +17.8 pts, which still spans zero. The gate requires multiple continuous validation passes before flipping any automatic pull request merge rule live on client repositories.
+        </div>
+</details>
+</div>
+</section>
+
+<section class="w-full max-w-7xl mx-auto px-margin lg:px-margin-desktop py-12">
+<div class="max-w-2xl mb-10">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-secondary font-bold">Empirical Evaluation</span>
+<h2 class="font-headline-lg text-headline-lg text-on-surface font-extrabold mt-1">
+        Measured on real kernel forks.
+      </h2>
+<p class="font-body-md text-body-md text-on-surface-variant mt-2">
+        Scored line for line, ignoring whitespace, against what NXP, ST, and Rockchip engineers committed, with DeepSeek V4.1 Flash as the resolver model.
+      </p>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-gutter-desktop">
+<!-- Card 1 -->
+<div class="p-space-lg bg-surface-container-lowest border-2 border-outline shadow-[4px_4px_0px_#8a716e] rotate-[-0.6deg] flex flex-col justify-between" style="border-radius: 9px 13px 7px 11px;">
+<div>
+<span class="font-headline-xl text-headline-xl font-extrabold text-on-surface block tracking-tight">
+            76.1%
+          </span>
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-bold mt-2">
+            Matched the engineers
+          </h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-2 leading-relaxed">
+            54 of 71 hunks on Rockchip, a vendor never used in prompt tuning, tested once.
+          </p>
+</div>
+<div class="mt-6 pt-3 border-t border-dashed border-outline-variant font-label-sm text-label-sm text-secondary">
+          zero tuning bleed
+        </div>
+</div>
+<!-- Card 2 -->
+<div class="p-space-lg bg-surface-container-lowest border-2 border-outline shadow-[4px_4px_0px_#8a716e] rotate-[0.8deg] flex flex-col justify-between" style="border-radius: 12px 6px 14px 8px;">
+<div>
+<span class="font-headline-xl text-headline-xl font-extrabold text-on-surface block tracking-tight">
+            71.8%
+          </span>
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-bold mt-2">
+            Always keeping fork
+          </h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-2 leading-relaxed">
+            51 of 71. Forkward gets 3 more right, closing an engineering gap not yet shown to be significant.
+          </p>
+</div>
+<div class="mt-6 pt-3 border-t border-dashed border-outline-variant font-label-sm text-label-sm text-secondary">
+          safe baseline match
+        </div>
+</div>
+<!-- Card 3 -->
+<div class="p-space-lg bg-surface-container-lowest border-2 border-outline shadow-[4px_4px_0px_#8a716e] rotate-[-0.5deg] flex flex-col justify-between" style="border-radius: 7px 11px 5px 13px;">
+<div>
+<span class="font-headline-xl text-headline-xl font-extrabold text-secondary block tracking-tight">
+            2.5x
+          </span>
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-bold mt-2">
+            Faster in parallel
+          </h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-2 leading-relaxed">
+            1.9 s a hunk against 4.7 s, measured on 8 hunks running concurrently across worker nodes.
+          </p>
+</div>
+<div class="mt-6 pt-3 border-t border-dashed border-outline-variant font-label-sm text-label-sm text-secondary">
+          speed without degradation
+        </div>
+</div>
+<!-- Card 4: Honest Yellow Highlight Sheet -->
+<div class="relative p-space-lg bg-tertiary-fixed border-2 border-primary shadow-[4px_4px_0px_#9E3A2E] rotate-[1.2deg] flex flex-col justify-between" style="border-radius: 14px 8px 12px 6px;">
+<!-- Tape at top right corner -->
+<div class="absolute -top-3 right-4 w-14 h-5 bg-tertiary/20 shadow-sm rotate-6" style="border-radius: 2px;"></div>
+<div>
+<div class="inline-flex items-center gap-1 text-primary font-bold mb-1">
+<span class="material-symbols-outlined text-[18px]">warning</span>
+<span class="font-label-sm text-label-sm uppercase tracking-wider">Honest Callout</span>
+</div>
+<span class="font-headline-xl text-headline-xl font-extrabold text-primary block tracking-tight">
+            8 of 18
+          </span>
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-bold mt-2">
+            Gate hunks were wrong
+          </h3>
+<p class="font-body-sm text-body-sm text-on-surface leading-relaxed mt-2 font-medium">
+            At the frozen threshold on Rockchip. Auto-apply stays off until the gate certifies its error bound.
+          </p>
+</div>
+<div class="mt-6 pt-3 border-t border-dashed border-primary/40 font-label-sm text-label-sm text-on-tertiary-fixed font-bold">
+          why we default to draft PRs
+        </div>
+</div>
+</div>
+<!-- Sample run link -->
+<div class="mt-8 flex justify-center">
+<a class="inline-flex items-center gap-2 font-annotation text-annotation text-primary hover:text-on-surface underline decoration-primary decoration-2 underline-offset-4" href="#">
+<span>Open the recorded sample run transcript</span>
+<span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+</a>
+</div>
+</section>
+<!-- ==================== CLOSING STATEMENT ABOVE FOOTER ==================== -->
+<section class="w-full max-w-7xl mx-auto px-margin lg:px-margin-desktop pt-8 pb-16">
+<div class="relative p-space-xl bg-surface-container border-2 border-outline shadow-[5px_5px_0px_#8a716e] text-center flex flex-col items-center justify-center overflow-hidden" style="border-radius: 18px 8px 24px 10px / 10px 22px 9px 19px;">
+<!-- Mascot stamp in background -->
+<div class="w-16 h-16 rounded-full bg-primary-fixed border-2 border-outline flex items-center justify-center mb-4 shadow-[2px_2px_0px_#8a716e]">
+<span class="material-symbols-outlined text-primary text-[32px]">handyman</span>
+</div>
+<h2 class="font-headline-xl text-headline-xl text-primary font-extrabold max-w-2xl leading-tight tracking-tight">
+        Keep your fork alive without losing your weekend.
+      </h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-lg mt-4 mb-8">
+        Run your first merge triage in three minutes. All conflicts mapped, certified fixes applied, and the rest packaged in a clean pull request.
+      </p>
+<!-- Primary Action CTA -->
+<button class="px-space-xl py-space-md bg-primary-container text-on-primary font-annotation text-annotation border-2 border-inverse-surface shadow-[4px_4px_0px_#33302a] active:translate-x-[2px] active:translate-y-[2px] active:shadow-[1px_1px_0px_#33302a] transition-all cursor-pointer text-body-lg" style="border-radius: 8px 18px 6px 14px / 14px 6px 15px 7px;">
+        Get started with your first sync
+      </button>
+<span class="font-label-sm text-label-sm text-on-surface-variant mt-4">
+        No credit card required · Free 50 triage units
+      </span>
+</div>
+</section>
+</div></main><footer class="w-full bg-inverse-surface text-inverse-on-surface py-space-xl border-t border-dashed border-outline"><div class="max-w-7xl mx-auto px-margin lg:px-margin-desktop"><div class="flex flex-col md:flex-row items-center justify-between gap-space-lg pb-space-lg border-b border-dashed border-outline-variant/40"><div class="flex items-center gap-space-sm"><div class="w-8 h-8 rounded-full bg-surface-container flex items-center justify-center"><span class="material-symbols-outlined text-inverse-surface text-[18px]">restaurant</span></div><span class="font-headline-sm text-headline-sm text-surface-bright">Forkward</span></div><div class="flex flex-wrap items-center justify-center gap-space-lg"><a class="font-body-sm text-body-sm text-surface-variant hover:text-surface-bright transition-colors" data-path="how-it-works" href="#">How it works</a><a class="font-body-sm text-body-sm text-surface-variant hover:text-surface-bright transition-colors" data-path="sample-run" href="#">Sample run</a><a class="font-body-sm text-body-sm text-surface-variant hover:text-surface-bright transition-colors" data-path="pricing" href="#">Pricing</a><a class="font-body-sm text-body-sm text-surface-variant hover:text-surface-bright transition-colors" data-path="sign-in" href="#">Sign in</a></div></div><div class="pt-space-md flex flex-col md:flex-row items-center justify-between gap-space-sm font-label-sm text-label-sm text-surface-variant"><p>© 2025 Forkward Studio Desk. All rights reserved.</p><p class="font-annotation text-annotation text-tertiary-fixed">Parchment edition v1.2</p></div></div></footer></body></html>
